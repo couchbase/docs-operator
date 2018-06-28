@@ -1,4 +1,4 @@
-# Upgrading A Couchbase Cluster
+= Upgrading A Couchbase Cluster
 
 The Couchbase operator provides support to automatically upgrade a running cluster.  It performs a rolling upgrade one node at a time.  First a new node is created with the same pod configuration as the chosen node to upgrade, thus maintaining the same services e.g. data, index etc.  Data is rebalanced across the cluster so that the old node is evacuated and ejected from the cluster and the new node takes the load as data is transferred.  By manintaining N+1 nodes during the process we are able to handle all queries seemlessly without any performance degrdation.  Finally the selected upgrade node is deleted.
 
@@ -8,21 +8,23 @@ Upgrades must be upgrades, going from a lower version to a higher version.  Upgr
 
 Due to the constraints on versioning this feature cannot be used on non-semantically versioned container images e.g. couchbase/server:latest will result in an error.
 
-## Initiating an Upgrade
+== Initiating an Upgrade
 
-Simply edit the cluster specification and change the version string to a valid container.  Instructions for updating your specification can be found [here](updatingCouchbase.md)
+Simply edit the cluster specification and change the version string to a valid container.  Instructions for updating your specification can be found xref:updating-couchbase.adoc[here]
 
-## Logging and Monitoring
+== Logging and Monitoring
 
 You can monitor the progress of an upgrade via Kubernetes resource status and events:
 
-```console
+[source,console]
+----
 $ kubectl describe couchbasecluster cb-example
-```
+----
 
 The status object shows the version the cluster is being upgraded to, the node that is upgrading and its upgraded replacement and the list of nodes ready to be upgraded.
 
-```console
+[source,console]
+----
 Status:
   Upgrade:
     Ready Nodes:
@@ -31,11 +33,12 @@ Status:
     Target Version:  enterprise-5.1.0
     Upgraded Node:   cb-example-0003
     Upgrading Node:  cb-example-0000
-```
+----
 
 The events object shows members being created/deleted and data being rebalanced.  From the timestamps in the event stream you can calculate how long each node upgrade takes, then combining with the number of nodes remaining in the status you can easily calculate the expected duration of the entire operation.
 
-```console
+[source,console]
+----
 Events:
   Type    Reason            Age   From                                 Message
   ----    ------            ----  ----                                 -------
@@ -50,4 +53,4 @@ Events:
   Normal  RebalanceStarted  15m   couchbase-operator-789c895556-7gbf7  A rebalance has been started to balance data across the cluster
   Normal  MemberRemoved     15m   couchbase-operator-789c895556-7gbf7  Existing member cb-example-0002 removed from the cluster
   Normal  UpgradeFinished   15m   couchbase-operator-789c895556-7gbf7  Finished upgrade to 'enterprise-5.1.0'
-```
+----
