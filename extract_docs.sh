@@ -1,0 +1,74 @@
+#!/bin/bash
+
+set -exu -o pipefail
+
+# brew install git-filter-repo
+
+# download *new* copy of operator
+rm -rf ./couchbase-operator
+gh repo clone couchbase/couchbase-operator
+
+rm -rf ./docs-operator
+mv couchbase-operator docs-operator
+cd docs-operator
+
+REFS="master 2.8.x 2.7.x 2.6.x 2.5.x 2.4.x"
+IFS=' '
+for REF in $REFS; do
+    git checkout $REF;
+done
+unset IFS
+
+git filter-repo \
+    --subdirectory-filter docs/user/ \
+    --path docs/dev/drawio-charts \
+    --path-rename docs/dev/drawio-charts/:drawio-charts/ \
+    --refs $REFS \
+    --force
+
+git filter-repo \
+    --invert-paths \
+    --path modules/ROOT/pages/resource \
+    --path modules/ROOT/pages/tools \
+    --path modules/ROOT/attachments \
+    --refs $REFS
+
+git remote rm origin
+git remote add origin https://github.com/couchbase/docs-operator.git
+
+cp ../extract_docs.sh .
+# Github doesn't process include:: https://github.com/github/markup/issues/1095
+# so workaround by splitting README into head and tail portions
+cat ../README.adoc.head extract_docs.sh ../README.adoc.tail > README.adoc
+git add README.adoc extract_docs.sh
+git commit -m "DOC-13085: extract docs from couchbase-operator monorepo"
+
+git branch -m release/2.4
+git push -u origin release/2.4 --force
+
+git tag docs-repo-extraction release/2.4
+
+git checkout 2.5.x
+git branch -m release/2.5
+git cherry-pick docs-repo-extraction
+git push -u origin release/2.5 --force
+
+git checkout 2.6.x
+git branch -m release/2.6
+git cherry-pick docs-repo-extraction
+git push -u origin release/2.6 --force
+
+git checkout 2.7.x
+git branch -m release/2.7
+git cherry-pick docs-repo-extraction
+git push -u origin release/2.7 --force
+
+git checkout 2.8.x
+git branch -m release/2.8
+git cherry-pick docs-repo-extraction
+git push -u origin release/2.8 --force
+
+git checkout master
+git branch -m release/2.8.1
+git cherry-pick docs-repo-extraction
+git push -u origin release/2.8.1 --force
