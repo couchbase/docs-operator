@@ -36,6 +36,20 @@ For large, production databases, ensure an adequate maintenance window is schedu
 For further information read the xref:concept-upgrade.adoc[Couchbase Upgrade] concepts page.
 ====
 
+[#release-v270-addendum]
+== Addendum to Release 2.7.0
+
+Since Couchbase Autonomous Operator 2.7.0 was released, the following issues have been identified.
+
+[#table-known-issues-v270-addendum,cols="25,66"]
+|===
+| Issue | Description
+
+a| https://issues.couchbase.com/browse/K8S-3968[K8S-3968^]
+a| *Summary:*  There is a scenario where a Pod deletion takes too long to shut down, allowing Operator to see it as still active within the Couchbase Cluster, but not existing in the Kubernetes Resource database (`etcd`).  This results in Operator classifying the Pod as an "Unknown" Pod, and summarily ejecting it from the Couchbase Cluster, which can result in a loss of Couchbase logs present on the Persistent Volumes of the Pod.
+
+|===
+
 [#release-v270]
 == Release 2.7.0
 
