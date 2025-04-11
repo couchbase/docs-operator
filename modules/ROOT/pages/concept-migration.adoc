@@ -1,10 +1,5 @@
 = Couchbase Cluster Migration
 
-[WARNING]
-====
-This feature is currently in preview, use it with caution.
-====
-
 [abstract]
 The Operator can manage the migration of an unmanaged Couchbase cluster to an Operator managed cluster running on Kubernetes.
 
@@ -120,6 +115,30 @@ For example, if the unmanaged cluster has 10 nodes and `numUnmanagedNodes` is se
 
 `maxConcurrentMigrations`: The maximum number of nodes migrations the Operator will run concurrently.
 
+==== Migration Order
+By default the Operator will randomly select nodes for migration, this can be controlled with the `spec.migration.migrationOrderOverride` field.
+
+There are three possible override strategies:
+
+* `ByServerGroup`: The Operator will migrate nodes in the order of server groups defined in `spec.migration.migrationOrderOverride.serverGroupOrder`. If no server group order is specified, groups will be migrated in alphabetical order.
+
+* `ByServerClass`: The Operator will migrate nodes in the order of server classes defined in `spec.migration.migrationOrderOverride.serverClassOrder`. If no server class order is specified, classes will be migrated in the order they appear in `spec.servers`.
+
+* `ByNode`: The Operator will migrate individual nodes in the order defined in `spec.migration.migrationOrderOverride.nodeOrder`. If no node order is specified, nodes will be migrated in alphabetical order.
+
+Here is an example of overriding the migration order by server class:
+
+[source,yaml]
+----
+  migration:
+    unmanagedClusterHost: cb-example.default.svc.cluster.local
+    migrationOrderOverride:
+      migrationOrderOverrideStrategy: ByServerClass
+      serverClassOrder:
+        - data
+        - query
+        - index
+----
 
 === Pre-migration Nodes
 To add nodes to the source cluster before performing any migration pre-migration nodes can be defined. These nodes will be added before any migration happens. Pre-migration nodes are simply defined by adding a Server Class for nodes that don't exist on the source cluster. Using the examples above two single pre-migration nodes can be added by modifying the spec like:
