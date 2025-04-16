@@ -179,3 +179,8 @@ Currently, the Operator does not support running nodes with the Backup Service. 
 Buckets that are not defined as kubernetes objects will be deleted if the cluster spec enables operator managed buckets. 
 The Admission Controller will warn when the cluster spec has this setting enabled and will not allow the migration spec 
 to be deleted if there are no buckets detected in the migrated cluster.
+
+=== Users, Roles and Groups
+Users that are not defined as a kubernetes object will be deleted if the cluster spec enables operator managed rbac.
+The Admission Controller will warn when the cluster spec has this setting enabled and will not allow the migration spec
+to be deleted if there are no users detected in the migrated cluster.
