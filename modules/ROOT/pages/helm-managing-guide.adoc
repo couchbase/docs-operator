@@ -48,8 +48,7 @@ Refer to the xref:howto-operator-upgrade.adoc#update-crd[Operator upgrade docume
 To replace the CRDs pull the current helm chart:
 [source,console, subs="attributes,verbatim"]
 ----
-helm pull {helm-repo}
-tar -xf couchbase-operator-<version>.tgz
+helm pull {helm-repo} --untar
 ----
 
 Then update the CRDs with the latest version:
