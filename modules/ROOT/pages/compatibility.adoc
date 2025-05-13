@@ -1,7 +1,4 @@
 = Couchbase Cloud-Native Database Compatibility Matrix
-include::partial$cloud-native-compatibility-links-cao.adoc[]
-include::partial$cloud-native-compatibility-links-csb.adoc[]
-
 
 [abstract]
 The Couchbase Cloud-Native Database compatibility matrix describes the various cloud-native components that are compatible with each version of the Couchbase Autonomous Operator.
