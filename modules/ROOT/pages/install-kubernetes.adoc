@@ -28,6 +28,21 @@ Make sure to `cd` into this directory before you run the commands in this guide.
 
 All commands in this guide are run as a system administrator account; they require the creation of cluster scoped resources or the granting of roles to service accounts (privilege escalation).
 
+== Certified Kubernetes Platforms
+
+There are numerous certified Kubernetes offerings that are conformant to the https://www.cncf.io/certification/software-conformance/[CNCF Certified Kubernetes program^].
+This program ensures that every vendor’s version of Kubernetes supports the required APIs, as do open source community versions.
+
+Couchbase runs its own certification suites on the most widely used vendors to ensure the Couchbase Autonomous Operator is fully compatible and supported.
+
+The following certified Kubernetes hosted vendors are supported by the Autonomous Operator:
+
+* Amazon Elastic Kubernetes Service (EKS)
+* Google Kubernetes Engine (GKE)
+* Microsoft Azure Kubernetes Service (AKS)
+* Red Hat OpenShift Container Platform
+* Rancher Kubernetes Engine (RKE)
+
 == Install the CRD
 
 The first step in installing the Operator is to install the custom resource definitions (CRD) that describe the Couchbase resource types.

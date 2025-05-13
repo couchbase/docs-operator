@@ -5,7 +5,15 @@ Enable and setup Prometheus Monitoring for the Couchbase Autonomous Operator.
 
 include::partial$tutorial.adoc[]
 
-This guide walks through recommended procedures for enabling and configuring Prometheus monitoring of the Couchbase Autonomous Operator.
+== Overview
+
+https://prometheus.io/[Prometheus^] is a leading open-source monitoring solution.
+As a https://www.cncf.io/announcements/2018/08/09/prometheus-graduates/[graduated project^] of the Cloud Native Computing Foundation, it has become the de facto standard for metrics collection and alert generation on cloud platforms.
+
+The Couchbase Autonomous Operator can optionally manage a sidecar container that can provide detailed metrics to Prometheus about the health of a Couchbase cluster.
+
+Prometheus provides significant visibility into the health and operation of a Couchbase cluster.
+Metrics can be used to develop alerts for system issues, identify maintenance windows and other valuable business intelligence insights, as well as provide the basis for xref:operator::concept-couchbase-autoscaling.adoc[auto-scaling Couchbase clusters].
 
 == Prerequisites
 

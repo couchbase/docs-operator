@@ -1,8 +1,14 @@
 = Introduction
 
-The Couchbase Autonomous Operator provides native integration of Couchbase Server with open source Kubernetes and Red Hat OpenShift.
-It enables you to automate the management of common Couchbase tasks such as the configuration, creation, scaling, and recovery of Couchbase clusters.
-By reducing the complexity of running a Couchbase cluster, it lets you focus on the desired configuration and not worry about the details of manual deployment and life-cycle management.
+The Couchbase Cloud-Native Database is the native integration of Couchbase Server with cloud-native technologies, facilitated by the Couchbase Autonomous Operator.
+This integration empowers organizations to build and run scalable stateful applications in modern, dynamic environments such as public, private, and hybrid clouds.
+Containers, service meshes, microservices, immutable infrastructure, and declarative APIs exemplify this approach.
+
+image::kubernettes_2.svg[,400]
+
+The Couchbase Cloud-Native Database is the culmination of Couchbase Server and native integration with cloud-native open-source technologies such as Kubernetes, Prometheus, Helm, CNI, CoreDNS, Operator Framework, Ceph, Gluster, Istio Service Mesh, and the Open Service Broker API.
+
+image::cloud-native-overview.png[]
 
 == What Does it Support?
 
