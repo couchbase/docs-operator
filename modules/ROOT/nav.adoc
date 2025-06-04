@@ -95,6 +95,7 @@
  ** xref:howto-filter-operator-logs-by-cluster.adoc[]
  ** xref:howto-changing the operator-logging-level.adoc[]
  ** xref:howto-viewing-cluster-conditions-and-events.adoc[]
+ ** xref:howto-port-forward-to-couchbase-server-ui.adoc[]
 * Helm
  ** xref:helm-setup-guide.adoc[Helm Deployment]
  ** xref:helm-managing-guide.adoc[Helm Management]
