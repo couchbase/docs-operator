@@ -1,0 +1,22 @@
+= Filtering operator logs by cluster
+:description: pass:q[A guide demonstrating how to use the `kubectl` command to filter operator logs.]
+:page-topic-type: guide
+
+[abstract]
+{description}
+
+Using the `kubectl` and `jq` commands, you can page through the Kubernetes logs a command line similar to the following:
+
+[source, shell]
+----
+kubectl logs couchbase-operator-pod --follow | jq 'select(.cluster = "default/cb-example")'
+----
+
+This will filter the logs based on the result of the `jq` statement:
+
+.Example output from `kubectl`
+image::jq-log-command.png[]
+
+
+
+

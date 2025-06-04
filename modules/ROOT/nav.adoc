@@ -92,6 +92,7 @@
   *** xref:howto-client-sdks.adoc[Configure Client SDKs]
 * Kubernetes
  ** xref:howto-storage-class.adoc[Create a Lazy Bound Storage Class]
+ ** xref:howto-filter-operator-logs-by-cluster.adoc[]
  ** xref:howto-changing the operator-logging-level.adoc[]
  ** xref:howto-viewing-cluster-conditions-and-events.adoc[]
 * Helm
