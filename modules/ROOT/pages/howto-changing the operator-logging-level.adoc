@@ -1,0 +1,29 @@
+= Changing the Logging Level (Couchbase Operator)
+:description: pass:q[A guide demonstrating the use of the `zap-log-level` argument to change the Kubernetes logging level]
+:page-topic-type: guide
+
+[abstract]
+{description}
+
+You can change the logging level set for Kubernetes by altering the `zap-log-level` in your Couchbase Operator container.
+
+Toc change the value in a running K8S deployment, set the level in template specification:
+
+[source, yaml]
+----
+  template:
+    spec:
+      containers:
+      - args:
+        - --zap-log-level=debug
+        - ...
+----
+
+Set the value to `debug`, `info`, or `error`.
+
+See the xref:tools/cao.adoc[] page and xref:reference-operator-configuration.adoc[] for more information.
+
+
+If the operator has been installed using helm, this value can be set with `couchbaseOperator.commandArgs.zap-log-level="<log level>"`  in your `.values` file.
+
+ 
