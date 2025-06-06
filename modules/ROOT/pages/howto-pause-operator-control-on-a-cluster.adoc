@@ -1,0 +1,34 @@
+= Pausing Operator Control on a Cluster
+:description: pass:q[Demonstrating how to use the `kubectl` command to pause operator control on a cluster]
+:page-topic-type: guide
+[abstract]
+{description}
+
+In some cases, it may be necessary to pause Couchbase Operator's monitoring operation to take some manual action on your cluster.
+To do this, you will need to edit the couchbase cluster definition using the `kubectl edit` command:
+
+. Execute the following command in your shell environment.
++
+[source,shell]
+----
+kubectl edit couchbasecluster <NAME-OF-CLUSTER>
+----
++
+This will open your system editor with the cluster definition:
++
+.Cluster definition resource file
+image::cluster-definition.png[]
++
+. Find the `spec.paused` value and change it to `true`
+. Save the resource.
+. verify the pod has been successfully paused by executing the following command:
++
+[source,shell]
+----
+kubectl logs couchbase-operator-pod-name | jq
+----
++
+. Look for the `paused` message in the output:
++
+.`kubectl logs` output
+image::paused-message.png[]
