@@ -1,0 +1,45 @@
+= Port Forwarding to the Couchbase Server UI console
+:description: A guide demonstrating how to set up port forwarding for Couchbase Operator.
+
+[abstract]
+{description}
+
+
+
+ 
+To access services through Couchbase Server the admin UI, you must port forward from your local machine to a pod inside the kubernetes cluster.
+
+To start with, you need to get a list of the services within your kubernetes environment. Use  command:
+ 
+[source, shell]
+----
+kubectl get services
+----
+
+This will return a list of available services within your cluster.
+
+.List of services
+image::get-services.png[]
+
+Next, you will need to port forward to the service matching the name of your cluster. In this case, it is `cb-example`. 
+If you have `spec.networking.exposeAdminUI` enabled, you will see a service with the name `cluster-name-ui`. 
+This service is the preferred service to use; however, the cluster name service will work as well. 
+
+To port forward, run the command: 
+
+[source,shell]
+----
+kubectl port-forward service/cb-example 8091
+----
+
+This command forwards the local port 8091 to port 8091 on the `cb-example` service:
+
+.Port forwarding to 8091
+image::forward-to-port.png[]
+
+Now you can access the pod through the admin console on your local machine using the following URL:
+
+[source, httprequest]
+----
+http://localhost:8091/ui/index.html
+----
