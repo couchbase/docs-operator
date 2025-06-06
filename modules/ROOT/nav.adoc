@@ -93,6 +93,7 @@
 * Kubernetes
  ** xref:howto-storage-class.adoc[Create a Lazy Bound Storage Class]
  ** xref:howto-changing the operator-logging-level.adoc[]
+ ** xref:howto-viewing-cluster-conditions-and-events.adoc[]
 * Helm
  ** xref:helm-setup-guide.adoc[Helm Deployment]
  ** xref:helm-managing-guide.adoc[Helm Management]

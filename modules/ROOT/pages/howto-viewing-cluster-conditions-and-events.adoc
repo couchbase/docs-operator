@@ -1,0 +1,24 @@
+= Viewing Cluster Conditions and Events
+:description: pass:q[This guide demonstrates how to combine `kubectl` and `jq` \
+ to inspect conditions and events in your cluster.]
+]
+:page-topic-type: guide
+
+[abstract]
+{description}
+
+Cluster Conditions will give you an overview of your cluster's current state.
+To view the current conditions of your cluster, run the following command line:
+
+[source,shell]
+----
+kubectl get couchbasecluster cb-example -o=jsonpath='\{.status.conditions[*]}' | jq 'select(.status == "True")'
+----
+
+The pipe to the  `jq` command will filter and format the output on currently applied conditions:
+
+.Conditions and events output
+image::conditions-output.png[]
+
+
+
