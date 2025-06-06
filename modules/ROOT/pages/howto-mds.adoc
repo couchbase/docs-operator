@@ -36,6 +36,13 @@ Different classes may have different scales to handle different workloads on dif
 The xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-pod[`couchbaseclusters.spec.servers.pod`] template can even allow execution on different hardware types.
 
 <.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-name[`couchbaseclusters.spec.servers.name`] must be a unique per-server class.
++
+[IMPORTANT]
+.Changing cluster configurations
+====
+When changing an existing cluster configuration (for example, relocating the query service from nodes that currently host both query and index services onto dedicated nodes),
+ it is important to change `couchbaseclusters.spec.servers.name`  to prevent name clashes during the upgrade process.
+====
 
 <.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-size[`couchbaseclusters.spec.servers.size`] is the number of pods to create per-server class.
 This can be independently scaled per-server class.
