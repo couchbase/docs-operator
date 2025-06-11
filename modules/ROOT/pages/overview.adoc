@@ -4,12 +4,6 @@ The Couchbase Cloud-Native Database is the native integration of Couchbase Serve
 This integration empowers organizations to build and run scalable stateful applications in modern, dynamic environments such as public, private, and hybrid clouds.
 Containers, service meshes, microservices, immutable infrastructure, and declarative APIs exemplify this approach.
 
-image::kubernettes_2.svg[,400]
-
-The Couchbase Cloud-Native Database is the culmination of Couchbase Server and native integration with cloud-native open-source technologies such as Kubernetes, Prometheus, Helm, CNI, CoreDNS, Operator Framework, Ceph, Gluster, Istio Service Mesh, and the Open Service Broker API.
-
-image::cloud-native-overview.png[]
-
 == What Does it Support?
 
 The Operator can deploy and manage:
