@@ -2,17 +2,17 @@
 include::partial$constants.adoc[]
 
 [abstract]
-Use the official Couchbase Helm Chart to deploy multiple components, including the Autonomous Operator, Admission Controller, Couchbase clusters, and Sync Gateway.
+Use the official Couchbase Helm Chart to deploy multiple components, including the Kubernetes Operator, Admission Controller, Couchbase clusters, and Sync Gateway.
 
 https://helm.sh/[Helm^] is a tool that streamlines the installation and management of applications on Kubernetes platforms.
-The official Couchbase Helm Chart can help you easily set up the Couchbase Autonomous Operator and deploy Couchbase clusters.
+The official Couchbase Helm Chart can help you easily set up the Couchbase Kubernetes Operator and deploy Couchbase clusters.
 
-This page describes how to use the Couchbase Helm Chart to create various deployments of the Autonomous Operator, Admission Controller, Couchbase clusters, and Sync Gateway.
+This page describes how to use the Couchbase Helm Chart to create various deployments of the Kubernetes Operator, Admission Controller, Couchbase clusters, and Sync Gateway.
 
 The Couchbase Helm Chart is primarily intended to make it easy to deploy with the defaults to get a working system in an empty cluster.
 For more complex scenarios, make sure to refer to the operator documentation as well, particularly the xref:concept-operator.adoc[operator architecture] and xref:reference-reference-architecture.adoc[reference architecture].
 
-A particular use case that is complex is upgrading so make sure to cover all the xref:howto-operator-upgrade.adoc[Autonomous Operator upgrade] and xref:concept-upgrade.adoc[Couchbase Server upgrade] sections.
+A particular use case that is complex is upgrading so make sure to cover all the xref:howto-operator-upgrade.adoc[Kubernetes Operator upgrade] and xref:concept-upgrade.adoc[Couchbase Server upgrade] sections.
 
 The recommendation, for more complex scenarios, is to manage the operator directly rather than relying on Helm to do it as the operator provides a lot more direct control and this approach simplifies the upgrade process.
 
@@ -46,7 +46,7 @@ helm repo update
 == Install the Couchbase Helm Chart
 
 Use the following commands to install the default Couchbase Helm Chart.
-The default chart deploys the Autonomous Operator, the Admission Controller, and a Couchbase cluster.
+The default chart deploys the Kubernetes Operator, the Admission Controller, and a Couchbase cluster.
 
 
 [{tabs}]
@@ -104,13 +104,13 @@ helm install <my-release> -f openshift_values.yaml {helm-repo}
 --
 ====
 
-Installing the default chart provides a quick way to try out using the Autonomous Operator for managing Couchbase Server on Kubernetes platforms.
+Installing the default chart provides a quick way to try out using the Kubernetes Operator for managing Couchbase Server on Kubernetes platforms.
 However, for more involved development and production use-cases, you will need to customize the installation to better your needs.
 
 [#custom-installation]
 == Customize the Installation
 
-The Couchbase Helm Chart can be installed as-is for previewing Autonomous Operator functionality.
+The Couchbase Helm Chart can be installed as-is for previewing Kubernetes Operator functionality.
 However, customizing the installation with your own configuration will be necessary for production environments.
 
 Customizing the chart installation allows you to do two things:
@@ -118,7 +118,7 @@ Customizing the chart installation allows you to do two things:
 . Specify which components will be deployed
 . Configure the deployed components
 
-The Couchbase Helm Chart is capable of installing and configuring the Autonomous Operator, Admission Controller, Couchbase cluster, and Sync Gateway.
+The Couchbase Helm Chart is capable of installing and configuring the Kubernetes Operator, Admission Controller, Couchbase cluster, and Sync Gateway.
 Enabling and configuring each component is accomplished by https://helm.sh/docs/chart_template_guide/values_files/[overriding^] the default values in the Couchbase Helm Chart's xref:helm-couchbase-config.adoc[`values.yaml` file].
 
 There are two methods for specifying overrides during chart installation: `--values` and `--set`.
@@ -206,8 +206,8 @@ install:
   syncGateway: false
 ----
 
-For example, if you wanted to have a Helm release that exclusively managed the Autonomous Operator and Admission Controller, then you would override the value for `couchbaseCluster` with a value of `false`, leaving only `couchbaseOperator: true` and `admissionController: true`, and all others `false`.
-Likewise, if you already had the Autonomous Operator and Admission Controller deployed in your environment, and you just wanted to deploy a Couchbase cluster, then you would override the values for `couchbaseOperator` and `admissionController` with a value of `false`, leaving only `couchbaseCluster: true`, and all others `false`.
+For example, if you wanted to have a Helm release that exclusively managed the Kubernetes Operator and Admission Controller, then you would override the value for `couchbaseCluster` with a value of `false`, leaving only `couchbaseOperator: true` and `admissionController: true`, and all others `false`.
+Likewise, if you already had the Kubernetes Operator and Admission Controller deployed in your environment, and you just wanted to deploy a Couchbase cluster, then you would override the values for `couchbaseOperator` and `admissionController` with a value of `false`, leaving only `couchbaseCluster: true`, and all others `false`.
 
 Even though the Couchbase Helm Chart has full configuration parameters for each component, if a component is disabled in the `install` section, then that component's configuration parameters are ignored.
 
@@ -256,14 +256,14 @@ To change the type of service that is used to expose Sync Gateway, you can speci
 helm install mobile --set install.syncGateway=true --set syncGateway.config.use_tls_server=false --set syncGateway.exposeServiceType=LoadBalancer {helm-repo}
 ----
 
-For more information about using Sync Gateway with the Autonomous Operator, you can refer to the xref:tutorial-sync-gateway.adoc[Sync Gateway Tutorial].
+For more information about using Sync Gateway with the Kubernetes Operator, you can refer to the xref:tutorial-sync-gateway.adoc[Sync Gateway Tutorial].
 
 [#deploy-production]
 == Production Considerations
 
 === TLS Encryption
 
-Production deployments should enable TLS to encrypt traffic between the Autonomous Operator and the Couchbase cluster.
+Production deployments should enable TLS to encrypt traffic between the Kubernetes Operator and the Couchbase cluster.
 TLS certificates can be auto-generated, or provided by the user.
 
 [#tls-certificate-gen]
@@ -276,17 +276,17 @@ Install the chart with `tls` enabled:
 helm install my-release --set tls.generate=true {helm-repo}
 ----
 
-The Autonomous Operator will create the certificates and then configure them as Kubernetes Secrets for the cluster.
+The Kubernetes Operator will create the certificates and then configure them as Kubernetes Secrets for the cluster.
 
 [NOTE]
 ====
-There is an issue (https://issues.couchbase.com/browse/K8S-1900[K8S-1900^]) that may cause a certificate error when using the Helm chart to upgrade the Autonomous Operator:
+There is an issue (https://issues.couchbase.com/browse/K8S-1900[K8S-1900^]) that may cause a certificate error when using the Helm chart to upgrade the Kubernetes Operator:
 
 ----
 certificate cannot be verified for zone
 ----
 
-This issue is caused by the certificate not having the necessary subject alternative names (SANs) required by the new version of the Autonomous Operator.
+This issue is caused by the certificate not having the necessary subject alternative names (SANs) required by the new version of the Kubernetes Operator.
 
 To resolve this issue, start by regenerating the Secrets from the new chart version:
 
@@ -304,7 +304,7 @@ Now update the Secrets in Kubernetes with the new ones:
 kubectl apply -f secrets.yaml
 ----
 
-The Autonomous Operator should now pick up the new certificates and proceed through the upgrade process.
+The Kubernetes Operator should now pick up the new certificates and proceed through the upgrade process.
 ====
 
 [#tls-certificate-byo]
@@ -332,7 +332,7 @@ helm install my-release -f tls_values.yaml {helm-repo}
 === Deploying Multiple Chart Instances (Releases)
 
 The example installation commands on this page assume the default namespace is used (these commands don't specify the `-n` option).
-This is important to note because the Couchbase Helm Chart deploys both the Autonomous Operator and the Admission Controller by default, _and these components should not be deployed more than once in the same namespace_.
+This is important to note because the Couchbase Helm Chart deploys both the Kubernetes Operator and the Admission Controller by default, _and these components should not be deployed more than once in the same namespace_.
 
 _The Admission Controller should only be deployed once per Kubernetes cluster_ as indicated in <<selective-deployment,Selective Deployment>> and in the xref:concept-operator.adoc#dynamic-admission-controller[operator architecture].
 To prevent deployment of the Admission Controller by the Couchbase Helm Chart, you can set the `install.admissionController=false` parameter either in the values file or on the command line:
@@ -342,7 +342,7 @@ To prevent deployment of the Admission Controller by the Couchbase Helm Chart, y
 helm install my-release --set install.admissionController=false {helm-repo}
 ----
 
-If you install the default Couchbase Helm Chart multiple times in the same namespace, then you'll end up with multiple instances of the Autonomous Operator and the Admission Controller, which will cause errors in your deployments.
+If you install the default Couchbase Helm Chart multiple times in the same namespace, then you'll end up with multiple instances of the Kubernetes Operator and the Admission Controller, which will cause errors in your deployments.
 
 In addition, the example installation commands on this page also specify `my-release` as the name for the https://helm.sh/docs/glossary/#release[chart release^].
 If you plan to use Helm to install multiple instances (releases) of the Couchbase Helm Chart, you should consider giving each release a unique name to help you more easily identify the resources that are associated with each release.
@@ -375,7 +375,7 @@ NAME                        	                      CHART VERSION	APP VERSION	DES
 https://hub.helm.sh/charts/couchbase/couchbase-...	2.1.0        	2.1.0      	A Helm chart to deploy the Couchbase Autonomous...
 ----
 
-Here, the `CHART VERSION` is *2.1.0*, and the `APP VERSION` (the Autonomous Operator version) is *2.1.0*.
+Here, the `CHART VERSION` is *2.1.0*, and the `APP VERSION` (the Kubernetes Operator version) is *2.1.0*.
 
 To install a specific version of the Couchbase Helm Chart chart, include the `--version` argument during installation:
 

@@ -8,7 +8,7 @@ include::partial$tutorial.adoc[]
 
 == What is cert-manager?
 
-https://cert-manager.io/[cert-manager^] is a Kubernetes controller -- much like the Autonomous Operator -- that defines Kubernetes resource types that represent X.509 primitives.
+https://cert-manager.io/[cert-manager^] is a Kubernetes controller -- much like the Kubernetes Operator -- that defines Kubernetes resource types that represent X.509 primitives.
 The key resources we will examine in further depth are:
 
 Issuer::
@@ -27,7 +27,7 @@ Certificates are initially issued by cert-manager, then at a defined time before
 Certificates are stored in a Kubernetes `Secret` resource, broadly similar to the standard `kubernetes.io/tls` secret type.
 The one major difference is that, along with `tls.crt` and `tls.key` secret data, there is also a `ca.crt` copied in from the `Issuer`.
 
-(You may notice that this has heavily influenced the design of the Autonomous Operator's TLS interface.)
+(You may notice that this has heavily influenced the design of the Kubernetes Operator's TLS interface.)
 
 [[before-we-begin]]
 == Before We Begin
@@ -37,11 +37,11 @@ Before continuing with this tutorial, please ensure the following:
 * You have installed cert-manager.
 Follow the official installation guides at https://cert-manager.io/docs/installation/[`cert-manager.io`^].
 
-* You have installed Autonomous Operator 2.2 or higher.
-This tutorial assumes that the installed resources are present, and also leverages the xref:tools/cao.adoc[`cao`] command line tool that comes with the Autonomous Operator binary package.
+* You have installed Kubernetes Operator 2.2 or higher.
+This tutorial assumes that the installed resources are present, and also leverages the xref:tools/cao.adoc[`cao`] command line tool that comes with the Kubernetes Operator binary package.
 +
-NOTE: You can actually integrate/perform the steps in this tutorial as part of the process of installing the Autonomous Operator.
-However, for the sake of making the tutorial more straightforward, it is assumed that you've already performed a basic xref:install-kubernetes.adoc[installation] of the Autonomous Operator.
+NOTE: You can actually integrate/perform the steps in this tutorial as part of the process of installing the Kubernetes Operator.
+However, for the sake of making the tutorial more straightforward, it is assumed that you've already performed a basic xref:install-kubernetes.adoc[installation] of the Kubernetes Operator.
 
 Another thing to note is that all of the commands in this tutorial are run from the same, default, namespace.
 cert-manager runs cluster scoped, and can see Issuers and Certificates in any namespace, so you can use any namespace you desire.
@@ -120,13 +120,13 @@ $ kubectl apply -f ca-issuer.yaml
 
 == Using cert-manager with the DAC
 
-The DAC xref:concept-operator.adoc#dynamic-admission-controller[component] of the Autonomous Operator distribution has built-in certificate rotation detection and handling.
+The DAC xref:concept-operator.adoc#dynamic-admission-controller[component] of the Kubernetes Operator distribution has built-in certificate rotation detection and handling.
 This makes it a perfect candidate for automation.
 
 [[uninstall-the-existing-dac]]
 === Uninstall the Existing DAC
 
-As mentioned in the <<before-we-begin, prerequisites>> section, this tutorial assumes that you've already performed a basic xref:install-kubernetes.adoc[installation] of the Autonomous Operator.
+As mentioned in the <<before-we-begin, prerequisites>> section, this tutorial assumes that you've already performed a basic xref:install-kubernetes.adoc[installation] of the Kubernetes Operator.
 As part of the installation, you would have also installed the DAC.
 Before we can continue with the tutorial, we need to _uninstall_ the DAC.
 (Don't worry, we'll be re-installing it soon.)
@@ -210,7 +210,7 @@ couchbase-operator-admission   True    couchbase-operator-admission   4s
 
 === Update the DAC Configuration Settings
 
-When you install the Autonomous Operator, the xref:tools/cao.adoc[`cao`] tool automatically creates a default TLS configuration for you.
+When you install the Kubernetes Operator, the xref:tools/cao.adoc[`cao`] tool automatically creates a default TLS configuration for you.
 However, we don't have to worry about this default configuration because we removed it entirely when we uninstalled the DAC in the section <<uninstall-the-existing-dac>>.
 Therefore, in this next step, we will generate a brand new DAC configuration, modify it to make use of our managed certificates, and then submit it to Kubernetes to redeploy the DAC.
 
@@ -289,7 +289,7 @@ If this is the case, check that the correct CA is installed in the webhooks, and
 
 == Using cert-manager with a Couchbase Cluster
 
-The Autonomous Operator has been capable of rotating Couchbase Server certificates since version 2.0.
+The Kubernetes Operator has been capable of rotating Couchbase Server certificates since version 2.0.
 With the 2.2 release, we introduced the ability to use new certificate formats, in particular the standard form used by cert-manager.
 This allows the database's TLS configuration to be specified in code, along with security policies.
 The key benefits of using this are 1.) oversight -- the ability to peer review configuration; and 2.) auditing -- providing simple, policy driven security constraints.
@@ -368,7 +368,7 @@ couchbase-operator-admission   True    couchbase-operator-admission   32m
 === Create the Couchbase Cluster
 
 Consuming certificates issued by cert-manager is fairly straightforward.
-Using the `couchbase-cluster.yaml` template from the Autonomous Operator binary package, make the following edits to the `CouchbaseCluster` custom resource:
+Using the `couchbase-cluster.yaml` template from the Kubernetes Operator binary package, make the following edits to the `CouchbaseCluster` custom resource:
 
 [source,console]
 ----
@@ -409,9 +409,9 @@ spec:
         - query
 ----
 
-<.> The `secretSource` TLS provider tells the Autonomous Operator that the secrets will be in `kubernetes.io/tls` format.
+<.> The `secretSource` TLS provider tells the Kubernetes Operator that the secrets will be in `kubernetes.io/tls` format.
 This also requires a `ca.crt` key, which cert-manager provides automatically.
-<.> The `serverSecretName` tells the Autonomous Operator to use the cert-manager issued secret defined in the previous section <<create-the-Couchbase-server-certificate>>.
+<.> The `serverSecretName` tells the Kubernetes Operator to use the cert-manager issued secret defined in the previous section <<create-the-Couchbase-server-certificate>>.
 
 Run the following command to create the `Certificate` resource:
 
@@ -437,4 +437,4 @@ cb-example   7.2.3     3      Available   8c531b1cc11680c286d04616cc7a8185   3m3
 
 == Summary
 
-By embracing the `kubernetes.io/tls` format, the Autonomous Operator is able to draw upon great 3rd-party tools, like cert-manager, that offer simplicity, security, and regulation within your Kubernetes environment.
+By embracing the `kubernetes.io/tls` format, the Kubernetes Operator is able to draw upon great 3rd-party tools, like cert-manager, that offer simplicity, security, and regulation within your Kubernetes environment.

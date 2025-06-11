@@ -1,5 +1,5 @@
 = How-to Guide: XDCR with Scopes and Collections
-:description: A how-to guide on configuring cross data center replication (XDCR) using the Autonomous Operator.
+:description: A how-to guide on configuring cross data center replication (XDCR) using the Kubernetes Operator.
 :page-toclevels: 2
 
 [abstract]
@@ -16,12 +16,12 @@ This guide will take you through a few examples on how to configure XDCR.
 
 * If you are new to role-based access control in Couchbase, refer to the xref:server:learn:security/roles.adoc[Roles Page]
 
-* If you are new to Couchbase Autonomous Operator (CAO), refer to the xref:overview.adoc[Autonomous Operator Introduction]
+* If you are new to Couchbase Kubernetes Operator (CAO), refer to the xref:overview.adoc[Kubernetes Operator Introduction]
 
 * Couchbase Scopes and Collections was added in Version 7.0.
 Refer to the xref:concept-scopes-and-collections.adoc[Couchbase Scopes and Collections] page to learn more about these
 
-* To install the Couchbase Autonomous Operator please refer to xref:install-kubernetes.adoc[Install Operator on Kubernetes] or xref:install-openshift.adoc[Install Operator on OpenShift]
+* To install the Couchbase Kubernetes Operator please refer to xref:install-kubernetes.adoc[Install Operator on Kubernetes] or xref:install-openshift.adoc[Install Operator on OpenShift]
 
 == Configure XDCR
 

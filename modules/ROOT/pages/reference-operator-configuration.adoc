@@ -3,7 +3,7 @@
 
 == Operator Deployment
 
-The Couchbase Autonomous Operator configuration is defined below.
+The Couchbase Kubernetes Operator configuration is defined below.
 This is intended as a reference only, and you should prefer the use of the xref:tools/cao.adoc[`cao` utility] or xref:helm-setup-guide.adoc[Helm], as these will handle configuration for you and provide an abstraction layer, less prone to modification.
 
 IMPORTANT: Most of the fields in the Operator configuration should never be changed and it is recommended that you use the configuration as is. However, there are some exceptions noted below.
@@ -140,9 +140,9 @@ Controls at what level a log message generates a stack trace for debugging purpo
 
 == Environment Variables
 
-When running in different contexts such as Red Hat Marketplace in https://docs.openshift.com/container-platform/4.6/operators/operator_sdk/osdk-generating-csvs.html#olm-enabling-operator-for-restricted-network_osdk-generating-csvs[disconnected mode^], additional environment variables may be added to adjust behavior of the Autonomous Operator.
+When running in different contexts such as Red Hat Marketplace in https://docs.openshift.com/container-platform/4.6/operators/operator_sdk/osdk-generating-csvs.html#olm-enabling-operator-for-restricted-network_osdk-generating-csvs[disconnected mode^], additional environment variables may be added to adjust behavior of the Kubernetes Operator.
 
-The following example shows supported image variables that can be used to override the default images provided to the Autonomous Operator.
+The following example shows supported image variables that can be used to override the default images provided to the Kubernetes Operator.
 [source,yaml]
 ----
   spec:

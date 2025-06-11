@@ -3,14 +3,14 @@
 include::partial$constants.adoc[]
 
 [abstract]
-You can configure the Autonomous Operator to take periodic, automated backups of your Couchbase cluster with the existing functionality provided by `cbbackupmgr`, as well as being able to trigger automated immediate backups.
+You can configure the Kubernetes Operator to take periodic, automated backups of your Couchbase cluster with the existing functionality provided by `cbbackupmgr`, as well as being able to trigger automated immediate backups.
 
 == Overview
 
 This page details how to backup a Couchbase cluster and restore data in the face of disaster.
-A conceptual overview of using the Autonomous Operator to backup and restore Couchbase clusters can be found in xref:concept-backup.adoc[].
+A conceptual overview of using the Kubernetes Operator to backup and restore Couchbase clusters can be found in xref:concept-backup.adoc[].
 
-The Autonomous Operator supports two of the backup strategies available in `cbbackupmgr`: _Full Only_ and _Full/Incremental_.
+The Kubernetes Operator supports two of the backup strategies available in `cbbackupmgr`: _Full Only_ and _Full/Incremental_.
 Complete descriptions and explanations of these strategies can be found in the xref:server:backup-restore:cbbackupmgr-strategies.adoc[`cbbackupmgr` documentation].
 The examples on this page assume a backup schedule based on the _Full/Incremental_ strategy for both creating backups and performing restores.
 
@@ -25,7 +25,7 @@ For further information about setting file system groups see the xref:concept-pe
 
 == Enable Automated Backup
 
-In order for the Autonomous Operator to manage the automated backup of a cluster, the feature must be enabled in the `CouchbaseCluster` resource.
+In order for the Kubernetes Operator to manage the automated backup of a cluster, the feature must be enabled in the `CouchbaseCluster` resource.
 
 [source,yaml,subs="attributes,verbatim"]
 ----
@@ -40,7 +40,7 @@ spec:
 
 <.> The only required field to enable automated backup is xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-backup-managed[`couchbaseclusters.spec.backup.managed`].
 
-<.> If the xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-backup-image[`couchbaseclusters.spec.backup.image`] field is left unspecified, then it will be automatically populated with the most recent container image that was available when the installed version of the Autonomous Operator was released.
+<.> If the xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-backup-image[`couchbaseclusters.spec.backup.image`] field is left unspecified, then it will be automatically populated with the most recent container image that was available when the installed version of the Kubernetes Operator was released.
 The default image for open source Kubernetes comes from https://hub.docker.com/r/couchbase/operator-backup[Docker Hub^], and the default image for OpenShift comes from the https://access.redhat.com/containers/#/vendor/couchbase[Red Hat Container Catalog^].
 +
 When running on Red Hat OpenShift, you will want to modify this to use the Red Hat Container Catalog image.
@@ -96,15 +96,15 @@ spec:
 
 <1> Periodic backups require `spec.strategy` to be either `full_only` or `full_incremental`
 
-<2> On detection of the `CouchbaseBackup` resource, the Autonomous Operator creates the correct cron jobs for the `spec.full.schedule` and the `spec.incremental.schedule`.
+<2> On detection of the `CouchbaseBackup` resource, the Kubernetes Operator creates the correct cron jobs for the `spec.full.schedule` and the `spec.incremental.schedule`.
 In this example a full backup would be performed at 3:00AM on a Sunday and then an incremental backup on every other day of the week at 3:00AM.
 
-<3> The Autonomous Operator will also create a PersistentVolumeClaim (PVC) to store the backups and logs with the same name that is specified in `metadata.name`.
+<3> The Kubernetes Operator will also create a PersistentVolumeClaim (PVC) to store the backups and logs with the same name that is specified in `metadata.name`.
 So if a PVC called "my-backup" does not yet exist in this case, one will be created.
 This would also happen if for some reason the PVC was deleted.
 
 
-An immediate backup can also be triggered immediately using `CouchbaseBackup` resources with the `immediate_full` or `immediate_incremental` strategies. When the Autonomous Operator detects `CouchbaseBackup` resource with either of these strategies it will attempt to trigger a backup Job immediately. The following is a simple configuration with the minimum required fields set to take an immediate backup.
+An immediate backup can also be triggered immediately using `CouchbaseBackup` resources with the `immediate_full` or `immediate_incremental` strategies. When the Kubernetes Operator detects `CouchbaseBackup` resource with either of these strategies it will attempt to trigger a backup Job immediately. The following is a simple configuration with the minimum required fields set to take an immediate backup.
 
 [source,yaml]
 ----
@@ -229,7 +229,7 @@ spec:
 A `CouchbaseBackupRestore` resource behaves differently from a `CouchbaseBackup` resource in that it spawns just a singular, one-time job which attempts to restore the requested backup or range of backups.
 
 In the example above, the `CouchbaseBackupRestore` resource configuration is restoring the first backup in the repository `"cb-example-2020-02-12T19_00_03"`.
-The first backup in any repository will be a full backup since the Autonomous Operator performs a full backup of the cluster after the creation of each backup repository.
+The first backup in any repository will be a full backup since the Kubernetes Operator performs a full backup of the cluster after the creation of each backup repository.
 
 If you don't know the name of the backup repository that you want to restore from, you can find the name without having to explore the contents of a Persistent Volume Claim by simply referring to the xref:resource/couchbasebackup.adoc#couchbasebackups-status[`couchbasebackups.status`] object of the existing `CouchbaseBackup` resource.
 
@@ -249,8 +249,8 @@ spec:
     str: latest
 ----
 
-In this example above, the Autonomous Operator would restore a range of backups from the latest backup repository.
-The omission of the `spec.repo` field means that the Autonomous Operator will look for the most recent backup repository.
+In this example above, the Kubernetes Operator would restore a range of backups from the latest backup repository.
+The omission of the `spec.repo` field means that the Kubernetes Operator will look for the most recent backup repository.
 
 [IMPORTANT]
 ====
@@ -574,7 +574,7 @@ Attempts to edit things like the name or strategy will fail.
 [[online-backup-volume-resizing]]
 === Online Backup Volume Resizing
 
-A Backup PVC that is referenced by an existing xref:resource/couchbasebackup.adoc[`CouchbaseBackup`] resource can be resized _manually_ by the user, or _automatically_ by the Autonomous Operator.
+A Backup PVC that is referenced by an existing xref:resource/couchbasebackup.adoc[`CouchbaseBackup`] resource can be resized _manually_ by the user, or _automatically_ by the Kubernetes Operator.
 
 [IMPORTANT]
 ====
@@ -591,12 +591,12 @@ To perform a manual resize, simply edit xref:resource/couchbasebackup.adoc#couch
 The resize will then be performed with the next scheduled backup job.
 
 NOTE: The underlying StorageClass must be configured to allow volume expansion in order to modify the size of the Backup PVC (as stated <<online-backup-volume-resizing,previously>>).
-Changes to the volume size may go through,but the Autonomous Operator will error until the change is reverted.
+Changes to the volume size may go through,but the Kubernetes Operator will error until the change is reverted.
 
 [[automated-backup-volume-resizing]]
 ==== Automated Backup Volume Resizing
 
-A xref:resource/couchbasebackup.adoc[`CouchbaseBackup`] resource can be modified to allow the Autonomous Operator to automatically resize the Backup PVC once a specific percentage of space is left.
+A xref:resource/couchbasebackup.adoc[`CouchbaseBackup`] resource can be modified to allow the Kubernetes Operator to automatically resize the Backup PVC once a specific percentage of space is left.
 
 [source,yaml]
 ----
@@ -632,7 +632,7 @@ In this case, if the volume is currently 80 GiB when the threshold is reached, t
 When this field is not defined, no bounds are imposed.
 
 NOTE: The underlying StorageClass must be configured to allow volume expansion in order to modify the size of the Backup PVC (as stated <<online-backup-volume-resizing,previously>>).
-Changes to the volume size may go through, but the Autonomous Operator will error until the change is reverted.
+Changes to the volume size may go through, but the Kubernetes Operator will error until the change is reverted.
 
 === Deleting a Backup Configuration
 
@@ -727,7 +727,7 @@ Like with other Couchbase custom resources, this means specifying a label for RB
 
 <.> Tolerations are applied to pods, and allow (but do not require) the pods to be scheduled onto nodes with matching taints.
 With taints and tolerations, you can grant backup pods exclusive access to specific nodes.
-In this example, if we wish to run all backup pods on a dedicated node and isolate them from the rest of the Autonomous Operator pods, we can do this by tainting a node with the key-value of `app:cbbackup` and defining a matching toleration.
+In this example, if we wish to run all backup pods on a dedicated node and isolate them from the rest of the Kubernetes Operator pods, we can do this by tainting a node with the key-value of `app:cbbackup` and defining a matching toleration.
 
 Further reference on all of these fields can be found in the xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-backup[`couchbaseclusters.spec.backup`] resource configuration.
 For more overall information please see xref:concept-scheduling[Couchbase Scheduling and Isolation].

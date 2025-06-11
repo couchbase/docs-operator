@@ -1,11 +1,11 @@
 = Install the Operator on OpenShift
 
 [abstract]
-This guide walks through the recommended procedure for installing the Couchbase Autonomous Operator on a Red Hat OpenShift project.
+This guide walks through the recommended procedure for installing the Couchbase Kubernetes Operator on a Red Hat OpenShift project.
 
 [IMPORTANT]
 ====
-If you are looking to upgrade an existing installation of the Operator, see xref:howto-operator-upgrade.adoc[Upgrading the Autonomous Operator].
+If you are looking to upgrade an existing installation of the Operator, see xref:howto-operator-upgrade.adoc[Upgrading the Kubernetes Operator].
 ====
 
 == Prerequisites
@@ -45,7 +45,7 @@ Refer to the xref:concept-operator.adoc[operator architecture document] for addi
 
 [IMPORTANT]
 ====
-If you use the Openshift Marketplace UI to deploy the Couchbase Autonomous Operator, the dynamic admission controller (DAC) will not be deployed.
+If you use the Openshift Marketplace UI to deploy the Couchbase Kubernetes Operator, the dynamic admission controller (DAC) will not be deployed.
 It is recommended that you use the `cao create admission` command to deploy the DAC after installing the Operator.
 ====
 

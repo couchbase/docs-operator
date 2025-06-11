@@ -32,7 +32,7 @@ Refer to xref:howto-tls.adoc#creating-secrets[TLS Secret Create] documentation t
 
 
 == Passphrase registration
-The Autonomous Operator is capable of registering a local script or a rest endpoint to generate the secret passphrase used by a private key.
+The Kubernetes Operator is capable of registering a local script or a rest endpoint to generate the secret passphrase used by a private key.
 Passphrase TLS can be enabled from a non-TLS cluster or from a cluster with plain TLS keys.
 When enabling passphrase TLS on a Cluster that is already provisioned, the Couchbase Cluster will enter a rolling upgrade of the Server Pods.
 

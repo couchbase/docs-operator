@@ -24,7 +24,7 @@ By default, Couchbase cluster deployments process logs within the Couchbase Serv
 When a Couchbase cluster deployment is configured to use xref:concept-persistent-volumes.adoc[persistent volumes] -- as is xref:best-practices.adoc#storage[recommended] for all production deployments -- log files are written to either the `default` or `logs` volume.
 
 When using default logging, logs cannot be collected from the Couchbase Server container's standard console output, as is https://kubernetes.io/docs/concepts/cluster-administration/logging/[typical^] in Kubernetes environments.
-Instead, the Autonomous Operator package is distributed with a support tool -- xref:tools/cao.adoc[`cao`] -- which can be used to collect a log snapshot at any time.
+Instead, the Kubernetes Operator package is distributed with a support tool -- xref:tools/cao.adoc[`cao`] -- which can be used to collect a log snapshot at any time.
 This tool is often used for collecting resources, logs, and events from the Kubernetes cluster for use in Couchbase Support requests.
 It is also capable of collecting just Couchbase-related logs via its `--collectinfo` option.
 
@@ -39,19 +39,19 @@ To avoid these limitations, you can choose to configure <<log-forwarding,log for
 == Log Forwarding
 
 Log forwarding can be used in addition to, or as an alternative for, <<default-logging,default logging>>.
-Although Couchbase Server doesn't natively support log forwarding, the Autonomous Operator can optionally deploy and manage a third-party log processor on each Couchbase pod that enables Couchbase Server logs to be forwarded to the log processor's standard console output as well as other destinations.
+Although Couchbase Server doesn't natively support log forwarding, the Kubernetes Operator can optionally deploy and manage a third-party log processor on each Couchbase pod that enables Couchbase Server logs to be forwarded to the log processor's standard console output as well as other destinations.
 Forwarding logs to standard console output is desirable since it allows for https://kubernetes.io/docs/tasks/debug-application-cluster/debug-running-pod/#examine-pod-logs[simple debugging^] and standards-based integration with centralized log management systems running in the Kubernetes cluster.
 
 === How Log Forwarding Works
 
 There are two primary components that provide log forwarding:
 
-. A _log processor image_ is used by the Autonomous Operator to deploy the `logging` sidecar container onto each Couchbase Server pod.
+. A _log processor image_ is used by the Kubernetes Operator to deploy the `logging` sidecar container onto each Couchbase Server pod.
 The log processor reads the logs that Couchbase Server has written to a persistent volume, processes them, and then forwards them to a destination such as standard console output.
 
 . The _log forwarding configuration_, stored in a Kubernetes Secret, that gets consumed by the `logging` sidecar container and which controls its behavior.
 
-When log forwarding is enabled, the Autonomous Operator uses Couchbase-provided <<default-log-forwarding-image-and-configuration,defaults>> for both of these components.
+When log forwarding is enabled, the Kubernetes Operator uses Couchbase-provided <<default-log-forwarding-image-and-configuration,defaults>> for both of these components.
 
 [NOTE]
 ====
@@ -72,12 +72,12 @@ image::logging-sidecar-overview.png[]
 === About the Default Log Forwarding Image and Configuration
 
 Log forwarding can be enabled via the xref:resource/couchbasecluster.adoc[`CouchbaseCluster`] resource specification (it is _disabled_ by default).
-When log forwarding is enabled, the Autonomous Operator defaults to a Couchbase-supplied https://hub.docker.com/r/couchbase/fluent-bit[_log processor image_^] that is based on https://fluentbit.io/[Fluent Bit^].
-The Autonomous Operator also automatically deploys a default _log forwarding configuration_ in the form of a Kubernetes Secret that gets consumed by the `logging` sidecar container.
+When log forwarding is enabled, the Kubernetes Operator defaults to a Couchbase-supplied https://hub.docker.com/r/couchbase/fluent-bit[_log processor image_^] that is based on https://fluentbit.io/[Fluent Bit^].
+The Kubernetes Operator also automatically deploys a default _log forwarding configuration_ in the form of a Kubernetes Secret that gets consumed by the `logging` sidecar container.
 
 The default, Couchbase-supplied log processor image provides several benefits, such as built-in _parsers_, _filters_, and optional log _redaction_ (another type of filtering), as well as the ability to restart Fluent Bit without having to restart the entire pod, thus providing better performance and higher availability than the standard Fluent Bit image.
-The built-in parsers and filters are stored in individual configuration files, which are then combined to provide the default https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file[_main configuration_^] deployed by the Autonomous Operator.
-Alternatively, these built-in parsers and filters can be selectively invoked by a custom, user-supplied main configuration that can be used instead of the default one provided by the Autonomous Operator.
+The built-in parsers and filters are stored in individual configuration files, which are then combined to provide the default https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/configuration-file[_main configuration_^] deployed by the Kubernetes Operator.
+Alternatively, these built-in parsers and filters can be selectively invoked by a custom, user-supplied main configuration that can be used instead of the default one provided by the Kubernetes Operator.
 
 The default log forwarding configuration outputs log events to the `logging` container's standard console output.
 However, a custom configuration can include more than one output, allowing specific logs to be https://docs.fluentbit.io/manual/concepts/data-pipeline/router[routed^] to different -- even multiple -- destinations.

@@ -2,18 +2,18 @@
 :HorizontalPodAutoscaler: pass:q[https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#horizontalpodautoscaler-v2-autoscaling[`HorizontalPodAutoscaler`^]]
 
 [abstract]
-The Autonomous Operator can be configured to enable automatic scaling for Couchbase clusters.
+The Kubernetes Operator can be configured to enable automatic scaling for Couchbase clusters.
 
 == About Couchbase Cluster Auto-scaling
 
-The Autonomous Operator provides the necessary facilities for Couchbase clusters to be automatically scaled based on usage metrics.
+The Kubernetes Operator provides the necessary facilities for Couchbase clusters to be automatically scaled based on usage metrics.
 Thresholds can be set for native Kubernetes metrics (such as pod CPU utilization) as well as Couchbase metrics (such as bucket memory utilization) that, when crossed, trigger _horizontal scaling_ of individual server classes.
 
 Auto-scaling doesn't incur any cluster downtime, and allows for each Couchbase Service to be scaled _independently_ on the same cluster.
 For example, the Data Service can automatically scale in response to fluctuations in memory utilization, while the Query Service can automatically scale in response to CPU utilization.
 
 The sections on this page describe the conceptual information about Couchbase cluster auto-scaling.
-For information on how to configure and administrate auto-scaling using the Autonomous Operator, refer to xref:howto-couchbase-autoscaling.adoc[].
+For information on how to configure and administrate auto-scaling using the Kubernetes Operator, refer to xref:howto-couchbase-autoscaling.adoc[].
 
 IMPORTANT: Auto-scaling only supports adding or removing pod replicas of the associated server class.
 Auto-scaling does not currently scale a cluster _vertically_ by swapping pods with ones that have larger or smaller resource requests.
@@ -22,7 +22,7 @@ By extension, the _size_ of persistent storage also cannot be auto-scaled and mu
 [[how-auto-scaling-works]]
 == How Auto-scaling Works
 
-The Autonomous Operator maintains Couchbase cluster topology according to the xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers[`couchbaseclusters.spec.servers`] section of the xref:resource/couchbasecluster.adoc[`CouchbaseCluster`] resource.
+The Kubernetes Operator maintains Couchbase cluster topology according to the xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers[`couchbaseclusters.spec.servers`] section of the xref:resource/couchbasecluster.adoc[`CouchbaseCluster`] resource.
 Within this section, _server classes_ are defined with, among other things, specifications for the following:
 
 * The specific Couchbase Services that should run on a particular pod
@@ -58,17 +58,17 @@ spec:
 
 <.> This _server class_, named `data`, specifies that the Couchbase cluster should include `3` nodes running exclusively the Data Service, and that those nodes should each have `4` vCPU and `16Gi` memory.
 
-This ability to have independently-configurable server classes is how the Autonomous Operator supports xref:concept-mds.adoc[_Multi-Dimensional Scaling_].
+This ability to have independently-configurable server classes is how the Kubernetes Operator supports xref:concept-mds.adoc[_Multi-Dimensional Scaling_].
 Depending on the observed performance of a Couchbase cluster over time, its constituent server classes can be independently xref:howto-couchbase-scale.adoc[scaled] to meet the demands of current and future workloads.
 
 _Auto-scaling_ extends this capability by allowing server classes to automatically change in `size` (number of nodes) when observed metrics are detected to have crossed above or below user-configured thresholds.
-The Autonomous Operator provides this capability through an integration with the Kubernetes https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[Horizontal Pod Autoscaler (HPA)^].
+The Kubernetes Operator provides this capability through an integration with the Kubernetes https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[Horizontal Pod Autoscaler (HPA)^].
 
 image::autoscale-hpa-connection.png[]
 
 Cluster auto-scaling is fundamentally provided by the following components:
 
-* A xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resource created and managed by the Autonomous Operator
+* A xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resource created and managed by the Kubernetes Operator
 +
 Refer to <<about-the-couchbase-autoscaler>>
 
@@ -83,7 +83,7 @@ Refer to <<about-exposed-metrics>>
 [[about-the-couchbase-autoscaler]]
 == About the Couchbase Autoscaler
 
-The Autonomous Operator creates a separate xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resource for _each_ server class that has auto-scaling enabled.
+The Kubernetes Operator creates a separate xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resource for _each_ server class that has auto-scaling enabled.
 
 [source,yaml,subs="attributes,verbatim"]
 ----
@@ -100,28 +100,28 @@ spec:
     - query
 ----
 
-<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-autoscaleenabled[`couchbaseclusters.spec.servers.autoscaleEnabled`]: Setting this field to `true` triggers the Autonomous Operator to create a xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource for the server class named `query`.
+<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-autoscaleenabled[`couchbaseclusters.spec.servers.autoscaleEnabled`]: Setting this field to `true` triggers the Kubernetes Operator to create a xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource for the server class named `query`.
 
 Each xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource is named using the format `_<server-class>_._<couchbase-cluster>_`.
-For the example above, the Autonomous Operator would create a xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource named `query.cb-example`.
+For the example above, the Kubernetes Operator would create a xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource named `query.cb-example`.
 
-Once created, the Autonomous Operator keeps the size of the xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource in sync with the size of its associated server class.
+Once created, the Kubernetes Operator keeps the size of the xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource in sync with the size of its associated server class.
 
 image::autoscale-crd.png[]
 
 The xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource acts as the necessary bridge between the {HorizontalPodAutoscaler} resource and the xref:resource/couchbasecluster.adoc[`CouchbaseCluster`] resource.
 The size of a xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource is adjusted by the Horizontal Pod Autoscaler when the reported value of a user-specified metric crosses above or below a configured threshold.
-Once the changes have been propagated from the {HorizontalPodAutoscaler} resource to the xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource, the Autonomous Operator will observe those changes and scale the server class accordingly.
+Once the changes have been propagated from the {HorizontalPodAutoscaler} resource to the xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource, the Kubernetes Operator will observe those changes and scale the server class accordingly.
 
 image::autoscale-crd-hpa.png[]
 
 [IMPORTANT]
 ====
-xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resources are fully managed by the Autonomous Operator and should not be manually created, modified, or deleted by the user.
-If one is manually deleted, the Autonomous Operator will re-create it.
+xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resources are fully managed by the Kubernetes Operator and should not be manually created, modified, or deleted by the user.
+If one is manually deleted, the Kubernetes Operator will re-create it.
 However, it is possible to edit the xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] (refer to <<scale-subresource>> below).
 
-A xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource only gets deleted by the Autonomous Operator when xref:howto-couchbase-autoscaling.adoc#disabling-auto-scaling[auto-scaling is disabled] for the associated server class, or if the associated xref:resource/couchbasecluster.adoc[`CouchbaseCluster`] resource is deleted altogether.
+A xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource only gets deleted by the Kubernetes Operator when xref:howto-couchbase-autoscaling.adoc#disabling-auto-scaling[auto-scaling is disabled] for the associated server class, or if the associated xref:resource/couchbasecluster.adoc[`CouchbaseCluster`] resource is deleted altogether.
 ====
 
 [[scale-subresource]]
@@ -140,7 +140,7 @@ $ kubectl scale couchbaseautoscalers --replicas=6 query.cb-example
 ----
 
 The above command results in scaling the server class named `query` to support `6` replicas.
-The Autonomous Operator monitors the value of xref:resource/couchbaseautoscaler.adoc#couchbaseautoscalers-spec-size[`couchbaseautoscalers.spec.size`] and applies the value to xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-size[`couchbaseclusters.spec.servers.size`].
+The Kubernetes Operator monitors the value of xref:resource/couchbaseautoscaler.adoc#couchbaseautoscalers-spec-size[`couchbaseautoscalers.spec.size`] and applies the value to xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-size[`couchbaseclusters.spec.servers.size`].
 
 NOTE: The Horizontal Pod Autoscaler will reconcile the number of replicas with the last computed desired state.
 Manual changes to the number of replicas will be reverted if the specified size falls outside of `minReplicas` or `maxReplicas`, or if the Horizontal Pod Autoscaler is currently recommending a different size.
@@ -148,14 +148,14 @@ Manual changes to the number of replicas will be reverted if the specified size 
 [[about-the-horizontal-pod-autoscaler]]
 == About the Horizontal Pod Autoscaler
 
-The Autonomous Operator relies on the Kubernetes https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[Horizontal Pod Autoscaler (HPA)^] to provide auto-scaling capabilities.
+The Kubernetes Operator relies on the Kubernetes https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[Horizontal Pod Autoscaler (HPA)^] to provide auto-scaling capabilities.
 The Horizontal Pod Autoscaler is responsible for observing target metrics, making https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#algorithm-details[sizing calculations^], and sending sizing requests to the xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`].
 
 The Horizontal Pod Autoscaler is configured via a {HorizontalPodAutoscaler} resource.
 The {HorizontalPodAutoscaler} resource is the primary interface by which auto-scaling is configured, and must be manually created and managed by the user.
 Simply enabling auto-scaling for a server class in the xref:resource/couchbasecluster.adoc[`CouchbaseCluster`] resource will not result in any auto-scaling operations until a {HorizontalPodAutoscaler} resource has been manually created and configured to reference the appropriate xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resource.
 
-NOTE: The Autonomous Operator has no facility for creating or managing {HorizontalPodAutoscaler} resources.
+NOTE: The Kubernetes Operator has no facility for creating or managing {HorizontalPodAutoscaler} resources.
 Deleting a xref:resource/couchbasecluster.adoc[`CouchbaseCluster`] resource does not delete any associated {HorizontalPodAutoscaler} resources.
 
 [[referencing-the-couchbase-autoscaler]]
@@ -177,7 +177,7 @@ spec:
     name: query.cb-example # <.>
 ----
 
-<.> `scaleTargetRef.kind`: This field must be set to xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`], which is the `kind` of custom resource that gets automatically created by the Autonomous Operator when auto-scaling is enabled for a server class.
+<.> `scaleTargetRef.kind`: This field must be set to xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`], which is the `kind` of custom resource that gets automatically created by the Kubernetes Operator when auto-scaling is enabled for a server class.
 
 <.> `scaleTargetRef.name`: This field needs to reference the unique `name` of the xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resource.
 As discussed in <<about-the-couchbase-autoscaler>>, xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] resources are created with the name format `_<server-class>_._<couchbase-cluster>_`.
@@ -401,7 +401,7 @@ Refer to <<scaling-increments>> for more information.
 
 <.> The `periodSeconds` field defines the length of time in the past for which the policy must hold true before successive scaling changes in the same direction are allowed to occur.
 +
-NOTE: The `periodSeconds` setting is effectively unnecessary when it comes to auto-scaling Couchbase clusters with the Autonomous Operator, and should be left to its default value unless recommended otherwise by the xref:concept-couchbase-autoscaling-best-practices.adoc[].
+NOTE: The `periodSeconds` setting is effectively unnecessary when it comes to auto-scaling Couchbase clusters with the Kubernetes Operator, and should be left to its default value unless recommended otherwise by the xref:concept-couchbase-autoscaling-best-practices.adoc[].
 Instead, <<horizontal-pod-stabilization>> should be used, as it is the preferred method for controlling successive changes in scaling direction.
 
 <.> The `selectPolicy` field controls which policy is chosen by the Horizontal Pod Autoscaler if more than one policy is defined.
@@ -422,10 +422,10 @@ The Horizontal Pod Autoscaler can be prevented from ever scaling down a server c
 ----
 ====
 
-IMPORTANT: The Autonomous Operator can only auto-scale one server class at a time.
+IMPORTANT: The Kubernetes Operator can only auto-scale one server class at a time.
 This is an important point to consider when enabling auto-scaling for multiple server classes on the same Couchbase cluster.
 If any associated {HorizontalPodAutoscaler} resource makes a new scaling recommendation while the cluster is currently undergoing a scaling operation based on a previous recommendation, then the new recommendation will not be honored until the current scaling operation is complete.
-For example, in a hypothetical scenario where the Autonomous Operator has already begun scaling up a server class named `data` when another {HorizontalPodAutoscaler} resource recommends scaling up a server class named `query` on the same cluster, the Autonomous Operator will not balance in any `query` replicas until the `data` server class has been scaled up to the desired size.
+For example, in a hypothetical scenario where the Kubernetes Operator has already begun scaling up a server class named `data` when another {HorizontalPodAutoscaler} resource recommends scaling up a server class named `query` on the same cluster, the Kubernetes Operator will not balance in any `query` replicas until the `data` server class has been scaled up to the desired size.
 (Note that this scenario is only possible when the <<couchbase-stabilization-period>> is disabled.)
 
 [[scaling-increments]]
@@ -471,7 +471,7 @@ Refer to xref:concept-couchbase-autoscaling-best-practices.adoc[] for help with 
 If the targeted metric fluctuates back and forth across the configured scaling threshold over a short period of time, it can cause the cluster to scale up and down unnecessarily as it chases after the metric.
 This behavior is sometimes referred to as "flapping" or "thrashing".
 
-The Horizontal Pod Autoscaler and the Autonomous Operator _both_ provide different but equally important mechanisms to control the flapping of pod replicas.
+The Horizontal Pod Autoscaler and the Kubernetes Operator _both_ provide different but equally important mechanisms to control the flapping of pod replicas.
 These controls, described in the subsections below, are meant to be used in tandem with each other, and should be tested using different permutations when determining the appropriate auto-scaling configuration for a particular workload.
 
 [[couchbase-stabilization-period]]
@@ -480,8 +480,8 @@ These controls, described in the subsections below, are meant to be used in tand
 Both during and directly after a rebalance operation, some metrics may behave erratically while the cluster continues to stabilize.
 If the Horizontal Pod Autoscaler is monitoring a targeted metric that is unstable due to rebalance, it may lead the Horizontal Pod Autoscaler to erroneously scale the cluster in undesirable ways.
 
-The _Couchbase Stabilization Period_ is an internal safety mechanism provided by the Autonomous Operator that is meant to help prevent the types of over-scaling caused by metrics instability during rebalance.
-When the Couchbase Stabilization Period is specified, the Autonomous Operator will put _all_ {HorizontalPodAutoscaler} resources associated with the Couchbase cluster into https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#implicit-maintenance-mode-deactivation[_maintenance mode_^] during rebalance operations.
+The _Couchbase Stabilization Period_ is an internal safety mechanism provided by the Kubernetes Operator that is meant to help prevent the types of over-scaling caused by metrics instability during rebalance.
+When the Couchbase Stabilization Period is specified, the Kubernetes Operator will put _all_ {HorizontalPodAutoscaler} resources associated with the Couchbase cluster into https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/#implicit-maintenance-mode-deactivation[_maintenance mode_^] during rebalance operations.
 When in maintenance mode, the Horizontal Pod Autoscaler will not monitor targeted metrics, and therefore will stop making scaling recommendations.
 Once the rebalance operation is complete, the Horizontal Pod Autoscaler will remain in maintenance mode for the duration of the stabilization period, after which it will resume monitoring metrics.
 
@@ -580,7 +580,7 @@ $ kubectl get --raw /apis/custom.metrics.k8s.io/v1beta1
 ----
 
 If you receive a `NotFound` error then you will need to install a custom metrics service.
-The recommended custom metrics service to use with the Autonomous Operator is the https://github.com/DirectXMan12/k8s-prometheus-adapter[Prometheus Adapter^].
+The recommended custom metrics service to use with the Kubernetes Operator is the https://github.com/DirectXMan12/k8s-prometheus-adapter[Prometheus Adapter^].
 
 When performing auto-scaling based on Couchbase Server metrics, the discovery of available metrics can be performed through Prometheus queries that are beyond the scope of this document.
 However, the Couchbase Server docs contain a https://docs.couchbase.com/server/current/metrics-reference/metrics-reference.html[list of the Couchbase metrics available^].

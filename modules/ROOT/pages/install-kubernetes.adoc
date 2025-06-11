@@ -2,11 +2,11 @@
 :page-aliases: install-admission-controller, list-and-describe
 
 [abstract]
-This guide walks through the recommended procedure for installing the Couchbase Autonomous Operator on an open source Kubernetes cluster that has _RBAC enabled_.
+This guide walks through the recommended procedure for installing the Couchbase Kubernetes Operator on an open source Kubernetes cluster that has _RBAC enabled_.
 
 [IMPORTANT]
 ====
-If you are looking to upgrade an existing installation of the Operator, see xref:howto-operator-upgrade.adoc[Upgrading the Autonomous Operator].
+If you are looking to upgrade an existing installation of the Operator, see xref:howto-operator-upgrade.adoc[Upgrading the Kubernetes Operator].
 ====
 
 == Helm Installation
@@ -33,9 +33,9 @@ All commands in this guide are run as a system administrator account; they requi
 There are numerous certified Kubernetes offerings that are conformant to the https://www.cncf.io/certification/software-conformance/[CNCF Certified Kubernetes program^].
 This program ensures that every vendor’s version of Kubernetes supports the required APIs, as do open source community versions.
 
-Couchbase runs its own certification suites on the most widely used vendors to ensure the Couchbase Autonomous Operator is fully compatible and supported.
+Couchbase runs its own certification suites on the most widely used vendors to ensure the Couchbase Kubernetes Operator is fully compatible and supported.
 
-The following certified Kubernetes hosted vendors are supported by the Autonomous Operator:
+The following certified Kubernetes hosted vendors are supported by the Kubernetes Operator:
 
 * Amazon Elastic Kubernetes Service (EKS)
 * Google Kubernetes Engine (GKE)

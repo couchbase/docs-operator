@@ -1,7 +1,7 @@
 = Couchbase User RBAC
 
 [abstract]
-The Couchbase Autonomous Operator manages Couchbase Role-Based Access Control (RBAC) for the authorization of administrative users and groups.
+The Couchbase Kubernetes Operator manages Couchbase Role-Based Access Control (RBAC) for the authorization of administrative users and groups.
 
 == Overview
 
@@ -12,7 +12,7 @@ The `CouchbaseGroup` resource contains a set of roles that are to be applied to 
 .Basic User Role Binding
 image::user-binding-default.png[]
 
-The Autonomous Operator only creates users that are bound to groups.
+The Kubernetes Operator only creates users that are bound to groups.
 Therefore, all three resources are required in order to create an authorized user.
 
 == User Role Binding
@@ -48,7 +48,7 @@ a| * **security_admin:** Management of user roles
 The `CouchbaseGroup` represents a collection of administrative and bucket roles which can be applied to users.
 There is a direct association between the `CouchbaseGroup` resource and xref:server:learn:security/authorization-overview.adoc[Couchbase Server RBAC groups] such that Couchbase Server RBAC groups are created and deleted when corresponding `CouchbaseGroup` resources are created and deleted.
 
-Whenever users are bound to a group, the Autonomous Operator ensures that the corresponding Couchbase Server RBAC group exists with the requested roles, and then proceeds to add the requested users to the group.
+Whenever users are bound to a group, the Kubernetes Operator ensures that the corresponding Couchbase Server RBAC group exists with the requested roles, and then proceeds to add the requested users to the group.
 
 === Setting Roles
 
@@ -111,7 +111,7 @@ Multiple Buckets, Scopes and Collections can be specified.  However, `CouchbaseS
 === Referencing LDAP Groups
 
 Couchbase Server provides LDAP integration which allows external user authentication.
-The Autonomous Operator can be used to enable this functionality when an `ldapGroupRef` is specified within the `CouchbaseGroup` resource.
+The Kubernetes Operator can be used to enable this functionality when an `ldapGroupRef` is specified within the `CouchbaseGroup` resource.
 
 [source,yaml]
 ----
@@ -180,7 +180,7 @@ metadata:
 ----
 
 Note that `CouchbaseRoleBinding` resources don't support labels and don't directly utilize label selection.
-Instead, the Autonomous Operator looks at the names of the users and groups specified in the `CouchbaseRoleBinding` resource.
+Instead, the Kubernetes Operator looks at the names of the users and groups specified in the `CouchbaseRoleBinding` resource.
 If those names match the `CouchbaseUser` and `CouchbaseGroup` resources that are both being selected by the same cluster, then they will be bound together.
 Therefore, so long as the `CouchbaseUser` and `CouchbaseGroup` resources have the same label, the users and groups specified in the `CouchbaseRoleBinding` resource will be bound together.
 

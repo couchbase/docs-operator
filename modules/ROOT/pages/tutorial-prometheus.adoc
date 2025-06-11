@@ -1,7 +1,7 @@
 = Quick Start with Prometheus Monitoring
 
 [abstract]
-Enable and setup Prometheus Monitoring for the Couchbase Autonomous Operator.
+Enable and setup Prometheus Monitoring for the Couchbase Kubernetes Operator.
 
 include::partial$tutorial.adoc[]
 
@@ -10,7 +10,7 @@ include::partial$tutorial.adoc[]
 https://prometheus.io/[Prometheus^] is a leading open-source monitoring solution.
 As a https://www.cncf.io/announcements/2018/08/09/prometheus-graduates/[graduated project^] of the Cloud Native Computing Foundation, it has become the de facto standard for metrics collection and alert generation on cloud platforms.
 
-The Couchbase Autonomous Operator can optionally manage a sidecar container that can provide detailed metrics to Prometheus about the health of a Couchbase cluster.
+The Couchbase Kubernetes Operator can optionally manage a sidecar container that can provide detailed metrics to Prometheus about the health of a Couchbase cluster.
 
 Prometheus provides significant visibility into the health and operation of a Couchbase cluster.
 Metrics can be used to develop alerts for system issues, identify maintenance windows and other valuable business intelligence insights, as well as provide the basis for xref:operator::concept-couchbase-autoscaling.adoc[auto-scaling Couchbase clusters].
@@ -24,7 +24,7 @@ Clone the https://github.com/coreos/kube-prometheus[`kube-prometheus`^] reposito
 $ git clone https://github.com/coreos/kube-prometheus
 ----
 
-Make sure you have a Kubernetes cluster running the Autonomous Operator with xref:howto-prometheus.adoc[monitoring enabled] and follow the Prerequisites section in the https://github.com/prometheus-operator/kube-prometheus[`kube-prometheus`^] documentation.
+Make sure you have a Kubernetes cluster running the Kubernetes Operator with xref:howto-prometheus.adoc[monitoring enabled] and follow the Prerequisites section in the https://github.com/prometheus-operator/kube-prometheus[`kube-prometheus`^] documentation.
 
 == Manifests Setup
 
@@ -32,7 +32,7 @@ Currently, the `kube-prometheus` project includes a folder called `manifests` th
 run the Prometheus Operator. The Prometheus Operator creates our Prometheus deployment which scrapes endpoints continuously for Prometheus metrics.
 We will be creating these manifests in a xref:tutorial-prometheus.adoc#Create-the-manifests[later step].
 
-The Autonomous Operator, with monitoring enabled, exposes the Couchbase Prometheus metrics using Couchbase Server native support for metrics collection. Couchbase native support is available for Couchbase Server versions 7.0 or higher
+The Kubernetes Operator, with monitoring enabled, exposes the Couchbase Prometheus metrics using Couchbase Server native support for metrics collection. Couchbase native support is available for Couchbase Server versions 7.0 or higher
 Our task is then to get Prometheus to discover and scrape these endpoints in order to monitor the overall cluster through the Prometheus UI and with custom Grafana dashboards.
 
 In order for our Prometheus deployment to recognize and scrape Couchbase endpoints, we need to create a Couchbase specific service monitor, and a Couchbase metrics specific service.

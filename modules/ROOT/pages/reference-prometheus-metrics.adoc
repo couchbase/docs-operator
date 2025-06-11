@@ -1,7 +1,7 @@
 = Prometheus Metrics Reference
 
 [abstract]
-This page captures the metrics supplied to Prometheus by the Couchbase Autonomous Operator and links reference pages of a number of additional metrics that are exported by third party libraries.
+This page captures the metrics supplied to Prometheus by the Couchbase Kubernetes Operator and links reference pages of a number of additional metrics that are exported by third party libraries.
 
 == Operator Metrics
 

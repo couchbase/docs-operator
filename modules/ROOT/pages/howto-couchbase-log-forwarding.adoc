@@ -10,12 +10,12 @@ Couchbase Server produces a xref:server:manage:manage-logging/manage-logging.ado
 By default, these logs cannot be collected from the Couchbase Server container's standard console output.
 This limits the ability to integrate Couchbase logging with 3rd-party monitoring or collection technologies deployed within a Kubernetes cluster.
 
-However, the Autonomous Operator can optionally enable xref:concept-couchbase-logging.adoc#log-forwarding[_log forwarding_] by deploying a third party log processor in a sidecar container on each Couchbase pod, which then reads the log files and forwards them to standard console output.
+However, the Kubernetes Operator can optionally enable xref:concept-couchbase-logging.adoc#log-forwarding[_log forwarding_] by deploying a third party log processor in a sidecar container on each Couchbase pod, which then reads the log files and forwards them to standard console output.
 For this purpose, Couchbase supplies a default https://hub.docker.com/r/couchbase/fluent-bit[log processor image^] based on https://fluentbit.io/[Fluent Bit^].
 
 The sections on this page describe how to enable and configure log forwarding using the Couchbase-supplied log processor image.
 
-NOTE: The Couchbase-supplied log processor container image is only supported on Kubernetes platforms in conjunction with the Couchbase Autonomous Operator.
+NOTE: The Couchbase-supplied log processor container image is only supported on Kubernetes platforms in conjunction with the Couchbase Kubernetes Operator.
 
 NOTE: Log forwarding requires that logs be written to a persistent volume (i.e. the Couchbase deployment's `default` or `logs` volumes are backed by xref:best-practices.adoc#storage[persistent storage]).
 Fully-ephemeral clusters are not supported by this feature.
@@ -27,7 +27,7 @@ NOTE: Log forwarding requires that xref:resource/couchbasecluster.adoc#couchbase
 
 Log forwarding is fundamentally provided by two components:
 
-. the _log processor image_ that is used by the Autonomous Operator to deploy the `logging` sidecar container onto each Couchbase Server pod, and
+. the _log processor image_ that is used by the Kubernetes Operator to deploy the `logging` sidecar container onto each Couchbase Server pod, and
 
 . the _log forwarding configuration_, stored in a Kubernetes Secret, that gets consumed by the `logging` sidecar container and which controls its behavior.
 
@@ -35,7 +35,7 @@ Enabling log forwarding for a particular Couchbase cluster involves enabling the
 
 The required configuration parameters for enabling log forwarding are described in the example below.
 Specified values represent the defaults for their respective fields unless otherwise noted in a callout.
-(The Autonomous Operator will set the default values for any fields that are not specified by the user.)
+(The Kubernetes Operator will set the default values for any fields that are not specified by the user.)
 
 .Basic xref:resource/couchbasecluster.adoc[`CouchbaseCluster`] Parameters That Enable Log Forwarding
 [source,yaml,subs="attributes,verbatim"]
@@ -66,9 +66,9 @@ spec:
 ----
 
 <.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-enabled[`couchbaseclusters.spec.logging.server.enabled`]: This is technically the only field that must be changed in order to enable log forwarding.
-Setting this field to `true` (defaults to `false`) instructs the Autonomous Operator to deploy the `logging` sidecar container on each pod.
+Setting this field to `true` (defaults to `false`) instructs the Kubernetes Operator to deploy the `logging` sidecar container on each pod.
 
-<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-sidecar-image[`couchbaseclusters.spec.logging.server.sidecar.image`]: This field specifies the container image that the Autonomous Operator will use for deploying the `logging` sidecar container.
+<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-sidecar-image[`couchbaseclusters.spec.logging.server.sidecar.image`]: This field specifies the container image that the Kubernetes Operator will use for deploying the `logging` sidecar container.
 This field defaults to `couchbase/{logging-version}`, which pulls the Couchbase-supplied https://hub.docker.com/r/couchbase/fluent-bit[log processor image^].
 You may need to modify this field if your Kubernetes nodes can't pull from the Docker public registry.
 
@@ -86,7 +86,7 @@ $ kubectl logs cb-example-0000 logging
 == Configuring Log Forwarding
 
 As described in <<enabling-log-forwarding>>, there are two primary components that provide log forwarding: the _log processor image_ and the _log forwarding configuration_.
-The Autonomous Operator uses Couchbase-provided defaults for both of these components, which can be used _as-is_ (refer to <<using-default-log-forwarding>>).
+The Kubernetes Operator uses Couchbase-provided defaults for both of these components, which can be used _as-is_ (refer to <<using-default-log-forwarding>>).
 However, these components can be further customized to better meet the needs of your environment (refer to <<using-custom-log-forwarding>>).
 
 === Enable memory buffer limits
@@ -135,17 +135,17 @@ spec:
             memory: 500Mi
 ----
 
-<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-manageconfiguration[`couchbaseclusters.spec.logging.server.manageConfiguration`]: When this field is set to `true` (the default), the Autonomous Operator ensures that the `logging` sidecar container always uses the default log forwarding configuration.
-The Autonomous Operator accomplishes this by creating a Secret that contains the default log forwarding configuration, which is then consumed by the `logging` sidecar container.
+<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-manageconfiguration[`couchbaseclusters.spec.logging.server.manageConfiguration`]: When this field is set to `true` (the default), the Kubernetes Operator ensures that the `logging` sidecar container always uses the default log forwarding configuration.
+The Kubernetes Operator accomplishes this by creating a Secret that contains the default log forwarding configuration, which is then consumed by the `logging` sidecar container.
 The name of the Secret will be whatever name is specified in xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-configurationname[`couchbaseclusters.spec.logging.server.configurationName`].
-If a Secret already exists with the same name, the Autonomous Operator overwrites it, ensuring that the default log forwarding configuration is maintained.
+If a Secret already exists with the same name, the Kubernetes Operator overwrites it, ensuring that the default log forwarding configuration is maintained.
 
 <.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-configurationname[`couchbaseclusters.spec.logging.server.configurationName`]: This field defines the name of the Secret that contains the log forwarding configuration that will be consumed by the `logging` sidecar container.
-This field defaults to `fluent-bit-config` and will be the name of the Secret that gets automatically created by the Autonomous Operator when xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-manageconfiguration[`couchbaseclusters.spec.logging.server.manageConfiguration`] is set to `true`.
+This field defaults to `fluent-bit-config` and will be the name of the Secret that gets automatically created by the Kubernetes Operator when xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-manageconfiguration[`couchbaseclusters.spec.logging.server.manageConfiguration`] is set to `true`.
 +
 IMPORTANT: If running multiple clusters in the same Kubernetes namespace, make sure to use a different name for the Secret of each cluster rather than attempting to share the same Kubernetes Secret.
 
-<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-sidecar-image[`couchbaseclusters.spec.logging.server.sidecar.image`]: This field specifies the container image that the Autonomous Operator will use for deploying the `logging` sidecar container.
+<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-sidecar-image[`couchbaseclusters.spec.logging.server.sidecar.image`]: This field specifies the container image that the Kubernetes Operator will use for deploying the `logging` sidecar container.
 This field defaults to `couchbase/{logging-version}`, which pulls the Couchbase-supplied https://hub.docker.com/r/couchbase/fluent-bit[log processor image^].
 You may need to modify this field if your Kubernetes nodes can't pull from the Docker public registry.
 +
@@ -192,10 +192,10 @@ spec:
             memory: 500Mi
 ----
 
-<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-manageconfiguration[`couchbaseclusters.spec.logging.server.manageConfiguration`]: When this field is set to `false` (defaults to `true`), the Autonomous Operator allows the Secret specified in xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-configurationname[`couchbaseclusters.spec.logging.server.configurationName`] to contain a non-default log forwarding configuration.
-This field _must_ be set to `false` in order to use a custom log forwarding configuration, otherwise the Autonomous Operator will always reconcile and update the Secret with the _default_ log forwarding configuration.
+<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-manageconfiguration[`couchbaseclusters.spec.logging.server.manageConfiguration`]: When this field is set to `false` (defaults to `true`), the Kubernetes Operator allows the Secret specified in xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-configurationname[`couchbaseclusters.spec.logging.server.configurationName`] to contain a non-default log forwarding configuration.
+This field _must_ be set to `false` in order to use a custom log forwarding configuration, otherwise the Kubernetes Operator will always reconcile and update the Secret with the _default_ log forwarding configuration.
 +
-NOTE: If xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-manageconfiguration[`couchbaseclusters.spec.logging.server.manageConfiguration`] was ever set to `true` when you enabled log forwarding, then the Autonomous Operator will have already created the default Secret.
+NOTE: If xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-manageconfiguration[`couchbaseclusters.spec.logging.server.manageConfiguration`] was ever set to `true` when you enabled log forwarding, then the Kubernetes Operator will have already created the default Secret.
 In this situation, if you were to then set this field to `false`, the `logging` sidecar container would continue to consume the default Secret.
 You could then choose to add your custom log forwarding configuration to this same Secret.
 However, if you were to change xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-configurationname[`couchbaseclusters.spec.logging.server.configurationName`] to point to a different Secret, it won't get picked up until the next time a pod starts.
@@ -221,10 +221,10 @@ This field only needs to be modified if a custom image is specified in xref:reso
 Since a log forwarding configuration can contain sensitive information, it is stored in a Kubernetes Secret.
 The Secret is used to https://kubernetes.io/docs/concepts/configuration/secret/#restrictions[populate the volume mounted into the sidecar^] so that the actual _configuration files_ get picked up by the log processor.
 
-When <<using-default-log-forwarding, using default log forwarding>>, the Autonomous Operator automatically creates a Secret named `fluent-bit-config` that contains the default log forwarding configuration.
+When <<using-default-log-forwarding, using default log forwarding>>, the Kubernetes Operator automatically creates a Secret named `fluent-bit-config` that contains the default log forwarding configuration.
 This configuration, which can be viewed on https://github.com/couchbase/couchbase-fluent-bit/blob/main/conf/fluent-bit.conf[GitHub^], is used by the Couchbase-supplied https://hub.docker.com/r/couchbase/fluent-bit[log processor image^] in order to provide features like automatic _parsing_ of a number of supported logs, automatic _filtering_ for adding useful information to the logs (e.g. pod host names), as well as optional log _redaction_ (another type of filtering).
 
-When <<using-custom-log-forwarding, using _custom_ log forwarding>>, the Autonomous Operator does _not_ automatically create a log forwarding configuration Secret.
+When <<using-custom-log-forwarding, using _custom_ log forwarding>>, the Kubernetes Operator does _not_ automatically create a log forwarding configuration Secret.
 Instead, the administrator is expected to create a custom Secret themselves, and specify that Secret in xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-configurationname[`couchbaseclusters.spec.logging.server.configurationName`].
 
 The rest of this section covers some relatively simple ways in which you can customize the default log forwarding configuration, such as limiting the number of forwarded logs, and enabling log redaction.
@@ -267,7 +267,7 @@ stringData:
         match couchbase.log.audit # <.>
 ----
 
-<.> `metadata.name`: The Autonomous Operator expects the default name `fluent-bit-config`.
+<.> `metadata.name`: The Kubernetes Operator expects the default name `fluent-bit-config`.
 If you use a different name, then you will need to specify that name in xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-configurationname[`couchbaseclusters.spec.logging.server.configurationName`].
 
 <.> `stringData.fluent-bit.conf`: Log forwarding configuration files are defined here in the `stringData` field of the Secret (the `data` field is also https://kubernetes.io/docs/concepts/configuration/secret/[potentially an option^]).
@@ -315,7 +315,7 @@ Therefore, specifying the https://docs.fluentbit.io/manual/concepts/key-concepts
 
 You can copy the <<custom-log-forwarding-config-secret,example>> Secret above and create it in your Kubernetes cluster for use with existing and future Couchbase cluster deployments.
 However, please review <<using-custom-log-forwarding>>, as there are a few things that you need to be aware of when creating a custom log forwarding configuration Secret.
-In particular, you should make sure that any Couchbase cluster deployment that references the Secret in xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-configurationname[`couchbaseclusters.spec.logging.server.configurationName`] _also_ has xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-manageconfiguration[`couchbaseclusters.spec.logging.server.manageConfiguration`] set to `false`, otherwise the Autonomous Operator will overwrite the custom Secret with the _default_ log forwarding configuration.
+In particular, you should make sure that any Couchbase cluster deployment that references the Secret in xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-configurationname[`couchbaseclusters.spec.logging.server.configurationName`] _also_ has xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-server-manageconfiguration[`couchbaseclusters.spec.logging.server.manageConfiguration`] set to `false`, otherwise the Kubernetes Operator will overwrite the custom Secret with the _default_ log forwarding configuration.
 
 [[updating-existing-custom-log-forwarding-configuration]]
 === Updating an Existing Custom Log Forwarding Configuration
@@ -397,7 +397,7 @@ LUA scripting has an overhead and it is recommended to use at least one extra Fl
 
 <.> `redaction.salt`: You can optionally define a custom salt for the hashing of tagged data.
 The salt is specified in the configuration Secret as a separate file/value (in the example, the salt value is `salty`).
-If a salt is not specified, the Autonomous Operator will default to using the cluster name as the salt.
+If a salt is not specified, the Kubernetes Operator will default to using the cluster name as the salt.
 
 After <<updating-existing-custom-log-forwarding-configuration,updating>> the log forwarding configuration with the <<custom-log-forwarding-config-secret-with-redaction,example>> above, you'll notice output similar to the following, showing the redacted strings as hashes:
 

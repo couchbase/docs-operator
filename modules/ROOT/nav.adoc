@@ -1,7 +1,6 @@
 .Introduction
 * xref:overview.adoc[Introduction]
 * xref:whats-new.adoc[What's New?]
-* xref:compatibility.adoc[Compatibility Matrix]
 .Getting Started
 * xref:best-practices.adoc[Guidelines and Best Practices]
 * xref:prerequisite-and-setup.adoc[Prerequisites and System Requirements]

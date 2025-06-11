@@ -2,10 +2,10 @@
 
 [abstract]
 Couchbase memory allocation is configured in the `CouchbaseCluster` resource.
-It's important to understand how memory allocation works in Couchbase Server, and how it applies to deployments using the Autonomous Operator.
+It's important to understand how memory allocation works in Couchbase Server, and how it applies to deployments using the Kubernetes Operator.
 
 Kubernetes presents some unique challenges when it comes to allocating memory for Couchbase Server.
-This page discusses the various Couchbase memory allocation settings presented by the Autonomous Operator, what they actually mean, and how they should be used optimally in your deployment. 
+This page discusses the various Couchbase memory allocation settings presented by the Kubernetes Operator, what they actually mean, and how they should be used optimally in your deployment. 
 
 == Memory Quota Basics
 
@@ -13,7 +13,7 @@ In Couchbase Server, memory is allocated _per node_, with each service having it
 Once you specify the memory quota for a particular Couchbase service, an amount of memory equal to the quota will be reserved on each Couchbase cluster node where an instance of that service exists.
 Note that instances of the same service cannot have different memory allocations within a cluster.
 
-For deployments using the Autonomous Operator, memory quotas are configured in the `CouchbaseCluster` resource.
+For deployments using the Kubernetes Operator, memory quotas are configured in the `CouchbaseCluster` resource.
 Consider the following cluster of three nodes, with each node running all services:
 
 [#image-cluster-homogeneous-service-distribution]
@@ -26,7 +26,7 @@ You'll notice that the Query service is not pictured in <<image-cluster-homogene
 This is because the Query service is not memory constrained, and will compete for memory against all the other services.
 ====
 
-When deploying the cluster in <<image-cluster-homogeneous-service-distribution>> using the Autonomous Operator, the `CouchbaseCluster` configuration would include the following:
+When deploying the cluster in <<image-cluster-homogeneous-service-distribution>> using the Kubernetes Operator, the `CouchbaseCluster` configuration would include the following:
 
 .Cluster with homogeneous service distribution
 [#cluster-homogeneous-service-distribution]
@@ -55,7 +55,7 @@ spec:
 
 [NOTE]
 ====
-The memory quotas from the configuration above are the defaults that the Autonomous Operator will use if none are specified.
+The memory quotas from the configuration above are the defaults that the Kubernetes Operator will use if none are specified.
 The defaults are the lowest allowed and almost certainly will need modification for your specific workload.
 ====
 
@@ -102,7 +102,7 @@ Consider the following cluster of four nodes:
 .Cluster with heterogeneous service distribution
 image::memory-allocation-Heterogeneous.png[]
 
-When deploying the cluster in <<image-cluster-heterogeneous-service-distribution>> using the Autonomous Operator, the `CouchbaseCluster` configuration would include the following:
+When deploying the cluster in <<image-cluster-heterogeneous-service-distribution>> using the Kubernetes Operator, the `CouchbaseCluster` configuration would include the following:
 
 .Cluster with heterogeneous service distribution
 [#cluster-heterogeneous-service-distribution]
@@ -156,7 +156,7 @@ When setting memory quotas for your cluster, you'll need to consider the memory 
 If a Couchbase Server Pod has a total memory quota that is greater than 90% of the Kubernetes node's overall memory, Couchbase Server will produce an error.
 However, since the application's memory requirements can vary by workload, it's generally recommended that Couchbase Server Pods reserve 25% more memory on top of their total memory quota (especially if the Pod is running the Data service).
 
-When a Couchbase cluster is deployed by the Autonomous Operator, each server Pod is scheduled onto its own dedicated Kubernetes node (recommended), or onto a shared Kubernetes node with other Pods.
+When a Couchbase cluster is deployed by the Kubernetes Operator, each server Pod is scheduled onto its own dedicated Kubernetes node (recommended), or onto a shared Kubernetes node with other Pods.
 Depending on whether your Kubernetes nodes are dedicated or shared, there are slightly different considerations for when you go about setting memory quotas for Couchbase Pods.
 
 For shared nodes, you'll be using pod resource requests with the xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-resources[`couchbaseclusters.spec.servers.resources`] attribute for each server in the `CouchbaseCluster` configuration.
@@ -187,7 +187,7 @@ Modification of memory allocation will cause an upgrade of the affected pods.
 [IMPORTANT]
 ====
 It is dangerous to change both a memory quota and the resource request at the same time.
-Changing both parameters, the resource request and a quota to take advantage of the new request, at the same time could potentially lead to the Couchbase Autonomous Operator performing a swap/rebalance of all nodes in the cluster.
+Changing both parameters, the resource request and a quota to take advantage of the new request, at the same time could potentially lead to the Couchbase Kubernetes Operator performing a swap/rebalance of all nodes in the cluster.
 This is due to the order in which these changes may be applied.
 If the quota modification gets applied before the new resource request, the memory will not be available for the pod, precipitating operator to create a new pod.
 To prevent this, change the resource request first, then apply the quota modification.

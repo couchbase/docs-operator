@@ -1,23 +1,23 @@
 = Couchbase Resource Label Selection
 
 [abstract]
-The Autonomous Operator manages a Couchbase deployment by aggregating many different types of Kubernetes custom resources.
-By labeling resources, the Autonomous Operator knows which resources to select and aggregate into a logical configuration.
+The Kubernetes Operator manages a Couchbase deployment by aggregating many different types of Kubernetes custom resources.
+By labeling resources, the Kubernetes Operator knows which resources to select and aggregate into a logical configuration.
 
 == Overview
 
 The `CouchbaseCluster` resource does not contain a single, monolithic configuration for an entire Couchbase cluster.
-Instead, configurations for things like buckets, replications, users, etc. are defined as separate resources, which the Autonomous Operator then selects and aggregates into a logical configuration.
+Instead, configurations for things like buckets, replications, users, etc. are defined as separate resources, which the Kubernetes Operator then selects and aggregates into a logical configuration.
 (One of the main reasons for this design is to allow for xref:concept-rbac.adoc[custom resource RBAC].)
 
-All of the Couchbase resources outside of the main `CouchbaseCluster` type are collected by the Autonomous Operator using a list operation in the namespace of the Couchbase cluster.
+All of the Couchbase resources outside of the main `CouchbaseCluster` type are collected by the Kubernetes Operator using a list operation in the namespace of the Couchbase cluster.
 The list operation is optionally supplied with a user-defined _label selector_.
 Any resource that has the same set of _labels_ that match the label selector of a `CouchbaseCluster` resource will be aggregated.
 
 == Default Selection Behavior
 
 Let's take the `CouchbaseBucket` resource for example.
-By default, when bucket management is enabled in the `CouchbaseCluster`, but no label selector is defined, the Autonomous Operator will select and aggregate any "label-less" bucket resources for management on the cluster.
+By default, when bucket management is enabled in the `CouchbaseCluster`, but no label selector is defined, the Kubernetes Operator will select and aggregate any "label-less" bucket resources for management on the cluster.
 Refer to diagram below:
 
 [#image-buckets-single-cluster-no-label]
@@ -25,7 +25,7 @@ Refer to diagram below:
 image::selection-default.png[]
 
 This default arrangement is well suited for when a single `CouchbaseCluster` resource is deployed in a single namespace.
-However, when _multiple_ `CouchbaseCluster` resources are deployed in the same namespace, this arrangement results in the Autonomous Operator selecting and aggregating all `CouchbaseBucket` resources to all `CouchbaseCluster` resources -- meaning that each cluster would be managing the same buckets.
+However, when _multiple_ `CouchbaseCluster` resources are deployed in the same namespace, this arrangement results in the Kubernetes Operator selecting and aggregating all `CouchbaseBucket` resources to all `CouchbaseCluster` resources -- meaning that each cluster would be managing the same buckets.
 Refer to diagram below:
 
 [#image-buckets-multi-cluster-no-label]
@@ -34,7 +34,7 @@ image::selection-default-shared.png[]
 
 While you might desire the sharing of resources for the purposes of reducing configuration overhead, it can lead to surprising outcomes if you are not aware of the underlying selection algorithm.
 For this reason, it is recommended that you specify explicit labels for resources, along with their corresponding label selectors for `CouchbaseCluster` resources.
-This ensures that the Autonomous Operator will only select and aggregate the appropriate resource for each cluster.
+This ensures that the Kubernetes Operator will only select and aggregate the appropriate resource for each cluster.
 
 == Using Resource Labels
 
@@ -68,7 +68,7 @@ metadata:
     cluster: my-cluster
 ----
 
-The reason for defining the label selector first is that without a label selector defined, the Autonomous Operator will immediately aggregate any unlabeled resources to the `CouchbaseCluster` once it's deployed.
+The reason for defining the label selector first is that without a label selector defined, the Kubernetes Operator will immediately aggregate any unlabeled resources to the `CouchbaseCluster` once it's deployed.
 As discussed in the previous section, this can have deleterious effects if you have more than one `CouchbaseCluster` resource already deployed in the same namespace.
 However, by deploying the `CouchbaseCluster` resource with the bucket label selector `cluster: my-cluster` in this example, you can ensure that the cluster will only select `CouchbaseBucket` resources that have the matching `cluster: my-cluster` label.
 

@@ -1,11 +1,11 @@
-= Autonomous Operator Log Attributes
+= Kubernetes Operator Log Attributes
 
 [abstract]
-Autonomous Operator logs contain some fixed attributes that can be reliably used in your logging infrastructure.
+Kubernetes Operator logs contain some fixed attributes that can be reliably used in your logging infrastructure.
 
 == Introduction
 
-The Autonomous Operator emits logs on the pod console.
+The Kubernetes Operator emits logs on the pod console.
 Logs are structured as JSON for simple machine parsing (though, they are schemaless).
 Logs look similar to the following:
 
@@ -18,7 +18,7 @@ Logs look similar to the following:
 {"level":"info","ts":1580377226.7565176,"logger":"cluster","msg":"Creating XDCR remote cluster","cluster":"default/cb-example","remote":"remote"}
 ----
 
-The Autonomous Operator uses the https://pkg.go.dev/go.uber.org/zap[zap^] library to generate logging information.
+The Kubernetes Operator uses the https://pkg.go.dev/go.uber.org/zap[zap^] library to generate logging information.
 Each entry is organized as a JSON object with key/value pairs of information.
 
 Some attributes are fixed and can be reliably used in your logging infrastructure and are documented in the following sections.
@@ -28,7 +28,7 @@ Some attributes are fixed and can be reliably used in your logging infrastructur
 `level`::
 This is the log level at which the message was emitted at.
 Valid values are `info`, `error`, `debug`, and `-N` (where N is an integer value based on debug level).
-Levels that are emitted depend on the level that is specified in the Autonomous Operator xref:reference-operator-configuration.adoc[deployment settings].
+Levels that are emitted depend on the level that is specified in the Kubernetes Operator xref:reference-operator-configuration.adoc[deployment settings].
 
 `ts`::
 This is the message time stamp.

@@ -1,5 +1,5 @@
 = How-to Guide: Couchbase User RBAC 
-:description: A how-to guide on configuring Couchbase user authentication and authorization using the Autonomous Operator.
+:description: A how-to guide on configuring Couchbase user authentication and authorization using the Kubernetes Operator.
 :page-toclevels: 2
 
 [abstract]
@@ -7,17 +7,17 @@
 
 == Overview
 
-This guide will describe how to create authenticated users and bind them to specific roles to provide multiple levels of authorization using the Autonomous Operator. 
+This guide will describe how to create authenticated users and bind them to specific roles to provide multiple levels of authorization using the Kubernetes Operator. 
 Users can be authenticated either by Couchbase's built-in authentication system or by an external authentication system such as OpenLDAP. 
 
-The Autonomous Operator refers to Couchbase Authentication as the `local` domain, and LDAP Authentication as the `external` domain.
+The Kubernetes Operator refers to Couchbase Authentication as the `local` domain, and LDAP Authentication as the `external` domain.
 This guide will focus on using the `local` domain for authentication.
 
 == Prerequisites
 
 * If you are new to role-based access control in Couchbase, refer to the xref:server:learn:security/roles.adoc[Roles Page]
 
-* If you are new to Couchbase Autonomous Operator (CAO), refer to the xref:overview.adoc[Autonomous Operator Introduction]
+* If you are new to Couchbase Kubernetes Operator (CAO), refer to the xref:overview.adoc[Kubernetes Operator Introduction]
 
 * Couchbase Scopes and Collections was added in Version 7.0.
 Refer to the xref:concept-scopes-and-collections.adoc[Couchbase Scopes and Collections] page to learn more about these.

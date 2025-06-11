@@ -1,16 +1,16 @@
 = How-to Guide: Data Topology Synchronization
-:description: A how-to guide on data topology synchronization with Couchbase Autonomous Operator.
+:description: A how-to guide on data topology synchronization with Couchbase Kubernetes Operator.
 
 [abstract]
 {description}
 
 == Overview
 
-In the following guide, we'll show you how to discover the configuration of a Couchbase cluster in the form of Kubernetes resources, and how the Autonomous Operator manages those resources.
+In the following guide, we'll show you how to discover the configuration of a Couchbase cluster in the form of Kubernetes resources, and how the Kubernetes Operator manages those resources.
 
 == Prerequisites
 
-* If you are new to Couchbase Autonomous Operator (CAO), refer to the xref:overview.adoc[Autonomous Operator Introduction]
+* If you are new to Couchbase Kubernetes Operator (CAO), refer to the xref:overview.adoc[Kubernetes Operator Introduction]
 
 * Couchbase Scopes and Collections was added in Version 7.0.
 Refer to the xref:concept-scopes-and-collections.adoc[Couchbase Scopes and Collections] page to learn more about these.

@@ -3,9 +3,9 @@
 include::partial$constants.adoc[]
 
 [abstract]
-The Autonomous Operator supports several popular Kubernetes environments and cloud-native utilities.
+The Kubernetes Operator supports several popular Kubernetes environments and cloud-native utilities.
 
-To install the Couchbase Autonomous Operator, all you need is a Kubernetes or OpenShift cluster running one of the <<kubernetes-platform-compatibility,compatible versions listed below>>.
+To install the Couchbase Kubernetes Operator, all you need is a Kubernetes or OpenShift cluster running one of the <<kubernetes-platform-compatibility,compatible versions listed below>>.
 
 NOTE: For all supported software versions listed on this page, maintenance/patch releases (x.x**.X**) inherit the same support level, unless noted otherwise.
 
@@ -146,7 +146,7 @@ This release supports the following managed Kubernetes services and utilities:
 == Persistent Volume Compatibility
 
 Persistent volumes are mandatory for production deployments.
-Review the Autonomous Operator xref:best-practices.adoc#persistent-volumes-best-practices[best practices] for more information about cluster supportability requirements.
+Review the Kubernetes Operator xref:best-practices.adoc#persistent-volumes-best-practices[best practices] for more information about cluster supportability requirements.
 
 == Hardware Requirements
 
@@ -170,7 +170,7 @@ You can read more about pod scheduling in the xref:best-practices.adoc#pod-sched
 
 === Architecture requirements
 
-The Autonomous Operator supports both ARM and AMD64 Kubernetes clusters.
+The Kubernetes Operator supports both ARM and AMD64 Kubernetes clusters.
 The architecture of each node must be uniform across the cluster as the use of mixed architecture nodes is not supported.
 
 NOTE: The official Couchbase docker repository contains multi-arch images which do not require explicit references to architecture tags when being pulled and deployed.

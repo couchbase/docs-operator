@@ -325,7 +325,7 @@ The hostname is calculated as per the xref:howto-client-sdks.adoc#ip-based-addre
 == Scopes and collections support
 
 With Couchbase Server version 7 and greater, scope and collections support is now present for XDCR.
-The Couchbase Autonomous Operator fully supports the various options available to the Couchbase Server version it is running with, full details can be found in the xref:server:manage:manage-xdcr/replicate-using-scopes-and-collections.html[official documentation].
+The Couchbase Kubernetes Operator fully supports the various options available to the Couchbase Server version it is running with, full details can be found in the xref:server:manage:manage-xdcr/replicate-using-scopes-and-collections.html[official documentation].
 
 [NOTE]
 ====

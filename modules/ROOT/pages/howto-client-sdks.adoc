@@ -23,7 +23,7 @@ Various Couchbase clients behave differently from one another in the way they pe
 This inconsistent behavior is avoided by specifying a network selection flag in the connection string that is used by the client to connect to the Couchbase cluster.
 This is known as _explicit network selection_.
 
-The connection string examples throughout the Autonomous Operator documentation use explicit network selection to help avoid undesirable client behavior.
+The connection string examples throughout the Kubernetes Operator documentation use explicit network selection to help avoid undesirable client behavior.
 Connection strings for internally-networked clients use `network=default`, while externally-networked clients use `network=external`.
 
 One important caveat is that explicit network selection is not supported by older Couchbase clients.

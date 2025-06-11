@@ -1,7 +1,7 @@
 = Dynamic Admission Controller Deployment Settings
 
 [abstract]
-Command line options for the Autonomous Operator Dynamic Admission Controller.
+Command line options for the Kubernetes Operator Dynamic Admission Controller.
 
 == Dynamic Admission Controller Deployment
 

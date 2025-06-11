@@ -135,7 +135,7 @@ The https://cloud.google.com/sdk/[Google Cloud SDK^] can allow you to authentica
 
 === Authorization
 
-By default, Google GKE does not provide the necessary privileges required to deploy the Autonomous Operator.
+By default, Google GKE does not provide the necessary privileges required to deploy the Kubernetes Operator.
 The required privileges can be granted to a specific user with the following command:
 
 [source,console]

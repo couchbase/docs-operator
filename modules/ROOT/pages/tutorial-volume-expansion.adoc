@@ -2,14 +2,14 @@
 include::partial$constants.adoc[]
 
 [abstract]
-Learn how to use the Autonomous Operator to perform online persistent volume expansion for Couchbase Server deployments in Kubernetes.
+Learn how to use the Kubernetes Operator to perform online persistent volume expansion for Couchbase Server deployments in Kubernetes.
 
 include::partial$tutorial.adoc[]
 
 == Introduction
 
-In this tutorial you'll learn how to use the Autonomous Operator to expand persistent volumes that are already in use by Couchbase clusters without needing to perform an upgrade on the underlying storage subsystem.
-The Autonomous Operator performs storage upgrades by working in conjunction with https://kubernetes.io/docs/concepts/storage/persistent-volumes/#expanding-persistent-volumes-claims[Kubernetes Persistent Volume Expansion^] to claim additional storage for running pods without any downtime.
+In this tutorial you'll learn how to use the Kubernetes Operator to expand persistent volumes that are already in use by Couchbase clusters without needing to perform an upgrade on the underlying storage subsystem.
+The Kubernetes Operator performs storage upgrades by working in conjunction with https://kubernetes.io/docs/concepts/storage/persistent-volumes/#expanding-persistent-volumes-claims[Kubernetes Persistent Volume Expansion^] to claim additional storage for running pods without any downtime.
 
 [[before-you-begin]]
 == Before You Begin
@@ -26,7 +26,7 @@ Refer to xref:howto-persistent-volumes.adoc#online-volume-expansion[Online Volum
 ** This tutorial references the `azurefile` storage class which is provided by the Azure Kubernetes Service (AKS).
 You'll need to use the name of your particular storage class if installing in a non-AKS Kubernetes environment.
 
-* You'll need https://helm.sh/docs/intro/install/[Helm version 3.1] or higher for installing the necessary dependencies (e.g. the Autonomous Operator, the Couchbase cluster, etc.)
+* You'll need https://helm.sh/docs/intro/install/[Helm version 3.1] or higher for installing the necessary dependencies (e.g. the Kubernetes Operator, the Couchbase cluster, etc.)
 
 ** Once you have Helm installed, you'll need to add the Couchbase chart repository:
 +
@@ -95,7 +95,7 @@ EOF
 
 <.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-enableonlinevolumeexpansion[`couchbaseclusters.spec.enableOnlineVolumeExpansion`]: Setting this field to `true` enables online expansion of persistent volumes.
 
-<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-volumemounts[`couchbaseclusters.spec.servers.volumeMounts`]: With this configuration we're telling the Autonomous Operator to provision persistent volume claims for the `data` mount path according to the `data-expanding` claim template.
+<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-volumemounts[`couchbaseclusters.spec.servers.volumeMounts`]: With this configuration we're telling the Kubernetes Operator to provision persistent volume claims for the `data` mount path according to the `data-expanding` claim template.
 
 <.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-volumeclaimtemplates[`couchbaseclusters.spec.volumeClaimTemplates`]: This configuration defines the `data-expanding` claim template.
 +
@@ -116,8 +116,8 @@ $ helm install -f pvc_resize_values.yaml expand couchbase/couchbase-operator
 
 [NOTE]
 ====
-The Couchbase chart deploys the Autonomous Operator by default.
-If you already have the Autonomous Operator deployed in the current namespace, then you'll need to specify additional overrides during chart installation so that only the Couchbase cluster is deployed:
+The Couchbase chart deploys the Kubernetes Operator by default.
+If you already have the Kubernetes Operator deployed in the current namespace, then you'll need to specify additional overrides during chart installation so that only the Couchbase cluster is deployed:
 
 [source,console]
 ----
@@ -198,7 +198,7 @@ Normal  ExpandVolumeSucceeded  6s           Successfully expanded volume scale-c
 
 Running the commands in this section will uninstall all of the resources that were created during the course of this tutorial.
 
-Uninstall both the Autonomous Operator and Couchbase cluster by deleting the Helm release:
+Uninstall both the Kubernetes Operator and Couchbase cluster by deleting the Helm release:
 
 [source,console]
 ----
