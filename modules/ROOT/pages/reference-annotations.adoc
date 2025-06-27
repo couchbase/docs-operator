@@ -62,6 +62,10 @@ Accepts either `true` or `false`.
 Used to enable improved host network support. This annotation is used to enable improved host network support for Couchbase Server pods.
 When enabled on a cluster the operator will skip SAN validation and will add the underlying Kubernetes hostname a pod is running on to the alternate addresses list. 
 
+==== `cao.couchbase.com/networking.initPodsWithNodeHostname`
+Used to set the hostname of the pod to the name of the node it is running on. The annotation `cao.couchbase.com/networking.improvedHostNetwork` must also be set to `true` in order for the annotation to take effect.
+When set to true, the pods will be initialised with the node name as the hostname of the pod without an alternate address.
+
 == Cloud Native Gateway
 === OTLP Endpoint
 ==== `cao.couchbase.com/networking.cloudNativeGateway.otlp.endpoint`
