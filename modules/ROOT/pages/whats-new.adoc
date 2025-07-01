@@ -1,11 +1,11 @@
 = What's New?
 include::partial$constants.adoc[]
 
-Autonomous Operator {operator-version-minor} introduces a preview of our new Cluster Migration functionality well as a number of other improvements and minor fixes.
+Autonomous Operator {operator-version-minor} introduces our new Cluster Migration functionality well as a number of other improvements and minor fixes.
 
 == Cluster Migration
 
-Released as a preview here, with a full GA planned for Autonomous Operator 2.8.1, Cluster Migration allows you to transfer a currently-unmanaged Couchbase Server cluster over to being managed by the Operator, with zero downtime.
+Cluster Migration allows you to transfer a currently-unmanaged Couchbase Server cluster over to being managed by the Operator, with zero downtime.
 
 See xref:concept-migration.adoc[Couchbase Cluster Migration] for more details.
 
