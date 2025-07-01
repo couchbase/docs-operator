@@ -1,7 +1,7 @@
 = Release Notes for Couchbase Autonomous Operator {operator-version-minor}
 include::partial$constants.adoc[]
 
-Autonomous Operator {operator-version-minor} introduces a preview of our new Cluster Migration functionality well as a number of other improvements and minor fixes.
+Autonomous Operator {operator-version-minor} introduces our new Cluster Migration functionality well as a number of other improvements and minor fixes.
 
 Take a look at the xref:whats-new.adoc[What's New] page for a list of new features and improvements that are available in this release.
 
