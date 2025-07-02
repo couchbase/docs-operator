@@ -173,7 +173,9 @@ To migrate an existing cluster a Couchbase Cluster spec describing the state of 
 
 == Limitations
 === Backup Service
-Currently, the Operator does not support running nodes with the Backup Service. This means that if the source cluster has nodes with the Backup Service then these nodes will need to be removed or replaced with nodes that aren't running the Backup Service. Backup is still supported by the Operator
+Currently, the Operator does not support running nodes with the Backup Service. 
+This means that if the source cluster has nodes with the Backup Service then these nodes will need to be removed or replaced with nodes that aren't running the Backup Service. 
+Backup is still supported by the Operator
 
 === Buckets
 Buckets that are not defined as kubernetes objects will be deleted if the cluster spec enables operator managed buckets. 
