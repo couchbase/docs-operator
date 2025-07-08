@@ -1,7 +1,7 @@
 = Release Notes for Couchbase Kubernetes Operator {operator-version-minor}
 include::partial$constants.adoc[]
 
-Kubernetes Operator {operator-version-minor} introduces a preview of our new Cluster Migration functionality well as a number of other improvements and minor fixes.
+Autonomous Operator {operator-version-minor} introduces our new Cluster Migration functionality well as a number of other improvements and minor fixes.
 
 Take a look at the xref:whats-new.adoc[What's New] page for a list of new features and improvements that are available in this release.
 
@@ -27,6 +27,8 @@ Refer to the xref:2.4@operator::howto-operator-upgrade.adoc[Operator 2.4 upgrade
 There are no additional upgrade steps when upgrading from these versions, and you may follow the xref:howto-operator-upgrade.adoc[standard upgrade process].
 
 For further information read the xref:concept-upgrade.adoc[Couchbase Upgrade] concepts page.
+
+include::partial$couchbase-operator-release-notes-2.8.1.adoc[]
 
 [#release-v280]
 == Release 2.8.0
@@ -93,80 +95,7 @@ The annotations related to History Retention, that were added in Operator 2.4.1,
 The History Retention annotations should be considered deprecated, and it should be noted that if used, they will take precedence over the equivalent values in the resources.
 Care should be taken to make sure that the annotations are removed as soon as the resources have been updated with the new attributes.
 
-[#fixed-issues-v280]
-=== Fixed Issues
-
-[#table-fixed-issues-v280,cols="25,66"]
-|===
-| Issue | Description
-
-a| https://jira.issues.couchbase.com/browse/K8S-3558[K8S-3558^]
-a| *Summary:* Operator commences an In-place Upgrade when the cluster is under-resourced.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3579[K8S-3579^]
-a| *Summary:* Operator tries to change invalid bucket configurations in a loop.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3591[K8S-3591^]
-a| *Summary:* Operator crashes if Incremental Backup is missing schedule.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3596[K8S-3596^]
-a| *Summary:* Crash in Operator due to invalid memory access.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3605[K8S-3605^]
-a| *Summary:* Upgrade Swap Rebalance is retried with different parameters on Operator Pod deletion.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3609[K8S-3609^]
-a| *Summary:*  Hibernation fails to bring back any Pod with error extracting image version.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3621[K8S-3621^]
-a| *Summary:* Shadowed Secret did not get updated.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3632[K8S-3632^]
-a| *Summary:* Unable to set -1 for Collection-level `maxTTL`.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3639[K8S-3639^]
-a| *Summary:* Operator loses track of pending Pods when an Eviction of the Operator Pod occurs.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3641[K8S-3641^]
-a| *Summary:*  Crash in `handleVolumeExpansion` if `enableOnlineVolumeExpansion` is True but no Volume Mounts configured.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3655[K8S-3655^]
-a| *Summary:*  Clear Upgrade condition if the Operator isn't performing an upgrade.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3659[K8S-3659^]
-a| *Summary:*  When scaling down, Cluster does not maintain balance across Server Groups.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3696[K8S-3696^]
-a| *Summary:*  DAC prevents configuration of multiple XDCR Replications of same Buckets to different remote Clusters.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3772[K8S-3772^]
-a| *Summary:* Self-Certification: Artifacts PVC should use `--storage-class` parameter when creating the Certification Pod.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3788[K8S-3788^]
-a| *Summary:* Operator container crashes when there is a managed Scope/Collection Group added for the Ephemeral Bucket.
-
-|===
-
-[#known-issues-v280]
-=== Known Issues
-
-[#table-known-issues-v280,cols="25,66"]
-|===
-| Issue | Description
-
-a| https://jira.issues.couchbase.com/browse/K8S-3617[K8S-3617^]
-a| *Summary:* It is not currently possible to set xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-cluster-indexer-redistributeindexes[`couchbaseclusters.spec.cluster.indexer.redistributeIndexes`] from True to False during a reconciliation.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3908[K8S-3908^]
-a| *Summary:* Metric `couchbase_operator_memory_under_management_bytes` is incorrectly showing 0.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3909[K8S-3909^]
-a| *Summary:* Metric `couchbase_operator_cpu_under_management` is incorrectly showing 0.
-
-a| https://jira.issues.couchbase.com/browse/K8S-3910[K8S-3910^]
-a| *Summary:* Operator tries to migrate storage backend of buckets even before couchbase cluster is in 7.6.0+.
-
-|===
+include::partial$couchbase-operator-release-notes-2.8.0.adoc[]
 
 == Feedback
 
