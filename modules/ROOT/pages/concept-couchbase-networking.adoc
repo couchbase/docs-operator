@@ -221,7 +221,7 @@ However, if you are running Sync Gateway on the same Kubernetes cluster as Couch
 | ⚠️ Yes
 |===
 
-In <<table-sgw-exposed-features-limitations>> above, the *Relationship to Cluster* column indicates the location of the Sync Gateway cluster in relation to the Couchbase cluster that is being managed by the Autonomous Operator. *_Local_* refers to instances where Sync Gateway is deployed in the same Kubernetes cluster where Couchbase Server is running (see <<intra-kubernetes-networking>> and <<inter-kubernetes-networking-with-forwarded-dns>>).
+In <<table-sgw-exposed-features-limitations>> above, the *Relationship to Cluster* column indicates the location of the Sync Gateway cluster in relation to the Couchbase cluster that is being managed by the Kubernetes Operator. *_Local_* refers to instances where Sync Gateway is deployed in the same Kubernetes cluster where Couchbase Server is running (see <<intra-kubernetes-networking>> and <<inter-kubernetes-networking-with-forwarded-dns>>).
 *_Remote_* refers to instances where Sync Gateway is deployed outside of the Kubernetes cluster where Couchbase Server is running (see <<public-networking-with-external-dns>>).
 
 * Sync Gateway 2.8.2 and higher do not experience any connection issues related to exposed features as these versions have full support for DNS SRV lookup _and_ support explicit network selection.

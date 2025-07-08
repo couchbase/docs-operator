@@ -10,14 +10,14 @@ Sync Gateway is a synchronization server that is responsible for secure data syn
 It is an integral component of the xref:sync-gateway::index.adoc[Couchbase Mobile] platform.
 
 This tutorial defines best practices for deploying Sync Gateway on Kubernetes.
-It covers basic connectivity between Sync Gateway and a Couchbase Cluster deployed by the Autonomous Operator.
+It covers basic connectivity between Sync Gateway and a Couchbase Cluster deployed by the Kubernetes Operator.
 
 == Prerequisites
 
 * A Couchbase Server cluster deployed and running.
 While it is _recommended_ that Couchbase Server is deployed on Kubernetes, it is _not required_.
 It is possible to deploy Sync Gateway on Kubernetes and connect it to a Couchbase Server cluster that is not on Kubernetes.
-However, this guide and all of its instructions assume that Couchbase Server is deployed on Kubernetes using the Autonomous Operator.
+However, this guide and all of its instructions assume that Couchbase Server is deployed on Kubernetes using the Kubernetes Operator.
 
 [#configuring-sync-gateway]
 == Configuring Sync Gateway
@@ -94,7 +94,7 @@ _Requires Sync Gateway 2.8.2 or higher; otherwise omit this parameter._
 --
 +
 NOTE: The `server` property can technically accept connection endpoints as defined in the Sync Gateway xref:sync-gateway::configuration-properties.adoc#databases-this_db-server[documentation].
-However, many of these connection endpoints are not recommended (some not even supported) when connecting to Couchbase Server deployments that are managed by the Autonomous Operator.
+However, many of these connection endpoints are not recommended (some not even supported) when connecting to Couchbase Server deployments that are managed by the Kubernetes Operator.
 In particular, there are xref:concept-couchbase-networking.adoc#sync-gateway-exposed-features-limitations[limitations when using exposed features] that affect which connection methods can be used with certain versions of Sync Gateway. 
 
 <.> `databases.cb-example.bucket` defines the `metadata.name` to connect to and use to store mobile data.
@@ -182,8 +182,8 @@ If not using client certificate authentication, secure the system further by usi
 In doing so, the scope of operations that can be performed in the event that the Sync Gateway configuration is compromised is limited.
 The RBAC user corresponding to Sync Gateway can be manually configured as specified in the Sync Gateway xref:sync-gateway::get-started-prepare.adoc#configure-server[Getting Started Guide].
 
-Alternatively, you can take advantage of the xref:concept-user-rbac.adoc[Couchbase user RBAC management] capability introduced in Autonomous Operator 2.0.
-With this method, the Autonomous Operator takes care of creating the relevant Sync Gateway user and binds it to a specified role.
+Alternatively, you can take advantage of the xref:concept-user-rbac.adoc[Couchbase user RBAC management] capability introduced in Kubernetes Operator 2.0.
+With this method, the Kubernetes Operator takes care of creating the relevant Sync Gateway user and binds it to a specified role.
 The following subsections assume that you will be using this feature.
  
 ==== Enabling RBAC Management
@@ -198,7 +198,7 @@ security:
     managed: true
 ----
 
-NOTE: Enabling RBAC management by the Autonomous Operator will remove any RBAC users that were manually created on the cluster.
+NOTE: Enabling RBAC management by the Kubernetes Operator will remove any RBAC users that were manually created on the cluster.
 Therefore, you will need to specify the relevant users and role bindings for those RBAC users if you want to continue using those identities after enabling RBAC management.
 
 ==== Creating a Sync Gateway RBAC User
@@ -230,7 +230,7 @@ This creates a sync gateway user with the specified password.
 ==== Role Binding of Sync Gateway User
 
 Next, define the `sync-gateway` user and bind it to a group that allows it the "application access" role as defined by Couchbase Server.
-The Autonomous Operator will create the required user and group on any Couchbase cluster that selects that user.
+The Kubernetes Operator will create the required user and group on any Couchbase cluster that selects that user.
 
 [source,yaml]
 ----
@@ -271,7 +271,7 @@ This is the recommended method of deployment as defined in the xref:concept-labe
 
 <.> The `CouchbaseUser` uses the `local` authentication domain, meaning that a password will be locally installed on the Couchbase cluster for authentication.
 
-<.> The `CouchbaseUser` references the secret we previously created so that the Autonomous Operator can associate the `sync-gateway` user with its password.
+<.> The `CouchbaseUser` references the secret we previously created so that the Kubernetes Operator can associate the `sync-gateway` user with its password.
 
 <.> The `CouchbaseGroup` that the `sync-gateway` user will be a member of needs the `mobile_sync_gateway` role.
 
@@ -325,7 +325,7 @@ $ kubectl apply -f sync-gateway.yaml
 [#deploying-sync-gateway]
 == Deploying Sync Gateway
 
-Sync Gateway is a simple stateless application, and therefore does not require any application-specific controller like the Autonomous Operator.
+Sync Gateway is a simple stateless application, and therefore does not require any application-specific controller like the Kubernetes Operator.
 The following is a typical `Deployment` resource configuration for Sync Gateway:
 
 [source,yaml,subs="attributes,verbatim"]
@@ -435,13 +435,13 @@ You can now move on to xref:tutorial-sync-gateway-clients.adoc[connecting Couchb
 
 == Templates
 
-Template files are provided in the Autonomous Operator binary distribution available at https://www.couchbase.com/downloads[couchbase.com/downloads^].
+Template files are provided in the Kubernetes Operator binary distribution available at https://www.couchbase.com/downloads[couchbase.com/downloads^].
 These template files are provided as *evaluation examples* -- they should be modified to suit production deployments.
 
 * `sync-gateway.yaml`: Sample Deployment Controller for Sync Gateway using RBAC for server connectivity.
 This template creates a sync gateway RBAC user per procedures outlined in the previous section <<configure-an-rbac-user-for-sync-gateway>>.
 
-* `couchbase-custer.yaml`: Sample `CouchbaseCluster` custom resource deployment to be used with the Autonomous Operator.
+* `couchbase-custer.yaml`: Sample `CouchbaseCluster` custom resource deployment to be used with the Kubernetes Operator.
 +
 NOTE: The `couchbase-custer.yaml` template has RBAC management set to `false` by default.
 So before you deploy the Sync Gateway cluster using the `sync-gateway.yaml` template, you must enable RBAC management as specified in the previous section <<configure-an-rbac-user-for-sync-gateway>>. 

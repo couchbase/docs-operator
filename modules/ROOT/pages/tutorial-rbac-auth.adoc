@@ -2,16 +2,16 @@
 = Couchbase User Authentication
 
 [abstract]
-A tutorial for configuring Couchbase user authentication and authorization using the Autonomous Operator.
+A tutorial for configuring Couchbase user authentication and authorization using the Kubernetes Operator.
 
 include::partial$tutorial.adoc[]
 
 == Overview
 
-This tutorial describes how to use the Autonomous Operator to create authenticated users and bind them to specific roles to provide different levels of authorization.
+This tutorial describes how to use the Kubernetes Operator to create authenticated users and bind them to specific roles to provide different levels of authorization.
 
 User authentication can be provided by Couchbase itself or an external LDAP service (such as OpenLDAP).
-The Autonomous Operator refers to <<couchbase-authentication>> as the `local` domain, and <<ldap-authentication>> as the `external` domain.
+The Kubernetes Operator refers to <<couchbase-authentication>> as the `local` domain, and <<ldap-authentication>> as the `external` domain.
 
 [#couchbase-authentication]
 == Couchbase Authentication

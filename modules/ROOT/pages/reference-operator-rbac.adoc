@@ -11,7 +11,7 @@ A role essentially maps a name to a set of permissions that a user or service is
 
 The key distinction is that cluster-scoped roles can be specified once and used in any name space, whereas namespace-scoped roles have to be defined in each name space they are used in.
 
-The Couchbase Autonomous Operator is currently scoped to a namespace and needs access to various resources within that namespace in order to function correctly. The resources required by the Operator are:
+The Couchbase Kubernetes Operator is currently scoped to a namespace and needs access to various resources within that namespace in order to function correctly. The resources required by the Operator are:
 
 couchbase.com/couchbaseclusters::
 couchbase.com/couchbaseclusters/finalizers::

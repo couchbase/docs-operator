@@ -122,7 +122,7 @@ Enter pass phrase for tls.key:  <passphrase>
 === Private Key Formatting (Legacy)
 
 Due to an https://issues.couchbase.com/browse/MB-24404[issue^] with Couchbase Server's private key handling, server keys may need to be PKCS#1 formatted.
-This was addressed in Autonomous Operator 2.2 (and this tutorial) with the implementation of xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-networking-tls-secretsource[`couchbaseclusters.spec.networking.tls.secretSource`].
+This was addressed in Kubernetes Operator 2.2 (and this tutorial) with the implementation of xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-networking-tls-secretsource[`couchbaseclusters.spec.networking.tls.secretSource`].
 
 However, if you are using legacy TLS configuration with xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-networking-tls-static[`couchbaseclusters.spec.networking.tls.static`], you will need to format the server keys in PKCS#1:
 

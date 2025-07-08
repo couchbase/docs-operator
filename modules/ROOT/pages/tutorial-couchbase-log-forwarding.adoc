@@ -3,7 +3,7 @@ include::partial$constants.adoc[]
 :example-prerequisites: This example assumes you've deployed the CouchbaseCluster resource described at the <<cluster-config-log-forwarding,beginning of the tutorial>>. It also assumes that you are familiar with how to <<customize-the-log-forwarding-configuration,customize a log forwarding configuration>>.
 
 [abstract]
-Learn how to configure the Autonomous Operator to forward Couchbase logs using Fluent Bit.
+Learn how to configure the Kubernetes Operator to forward Couchbase logs using Fluent Bit.
 
 include::partial$tutorial.adoc[]
 
@@ -11,9 +11,9 @@ include::partial$tutorial.adoc[]
 
 Having a containerized application's logs available on standard console output is desirable in Kubernetes environments, since it allows for https://kubernetes.io/docs/tasks/debug-application-cluster/debug-running-pod/#examine-pod-logs[simple debugging^], as well as standards-based integration with centralized log management systems running in a Kubernetes cluster.
 Unfortunately, the Couchbase Server container doesn't natively write its logs to standard console output.
-Instead, the xref:concept-couchbase-logging.adoc#default-logging[default behavior] of the Couchbase Server container (in deployments managed by the Autonomous Operator) is to write its xref:server:manage:manage-logging/manage-logging.adoc#log-file-listing[various log files] to the `default` or `logs` persistent volumes.
+Instead, the xref:concept-couchbase-logging.adoc#default-logging[default behavior] of the Couchbase Server container (in deployments managed by the Kubernetes Operator) is to write its xref:server:manage:manage-logging/manage-logging.adoc#log-file-listing[various log files] to the `default` or `logs` persistent volumes.
 
-However, as of version 2.2, the Autonomous Operator can optionally deploy and manage a third party log processor on each Couchbase pod which enables Couchbase Server logs to be xref:concept-couchbase-logging.adoc#log-forwarding[forwarded] to the log processor's standard console output as well as other destinations.
+However, as of version 2.2, the Kubernetes Operator can optionally deploy and manage a third party log processor on each Couchbase pod which enables Couchbase Server logs to be xref:concept-couchbase-logging.adoc#log-forwarding[forwarded] to the log processor's standard console output as well as other destinations.
 This guide will walk you through an example of how to configure log forwarding for a Couchbase deployment using the Couchbase-supplied log processor image based on https://fluentbit.io/[Fluent Bit^].
 
 Examples are provided for forwarding logs to Loki and Elasticsearch, as well as how to target Azure blob storage and Amazon S3 storage for Couchbase Server xref:howto-manage-couchbase-logging.adoc#configuring-audit-logging[audit logs].
@@ -22,8 +22,8 @@ An example for configuring log redaction is also shown to demonstrate how the lo
 [[before-you-begin]]
 == Before You Begin
 
-This tutorial assumes that you have already xref:install-kubernetes.adoc[installed] the Autonomous Operator.
-The Autonomous Operator needs to be running in the same namespace where you deploy the Couchbase cluster in the <<configure-the-couchbase-cluster>> section below.
+This tutorial assumes that you have already xref:install-kubernetes.adoc[installed] the Kubernetes Operator.
+The Kubernetes Operator needs to be running in the same namespace where you deploy the Couchbase cluster in the <<configure-the-couchbase-cluster>> section below.
 
 [[configure-the-couchbase-cluster]]
 == Configure the Couchbase Cluster
@@ -100,7 +100,7 @@ spec:
 This field normally defaults to `false`.
 +
 This is technically the only field that needs to be modified in order to enable log forwarding.
-The Autonomous Operator will default to pulling the Couchbase-supplied https://hub.docker.com/r/couchbase/fluent-bit[log processor image^] from the Docker public registry.
+The Kubernetes Operator will default to pulling the Couchbase-supplied https://hub.docker.com/r/couchbase/fluent-bit[log processor image^] from the Docker public registry.
 
 <.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-logging-audit-enabled[`couchbaseclusters.spec.logging.audit.enabled`]: Setting this field to `true` enables xref:howto-manage-couchbase-logging.adoc#configuring-audit-logging[audit logging] on the Couchbase cluster.
 This field normally defaults to `false`.
@@ -125,7 +125,7 @@ Run the following command to deploy it into Kubernetes:
 $ kubectl apply -f couchbase-cluster-log-forwarding.yaml
 ----
 
-Note that the Autonomous Operator must already be deployed and running in the current namespace in order for the above command to succeed (refer to the <<before-you-begin,prerequisites>>).
+Note that the Kubernetes Operator must already be deployed and running in the current namespace in order for the above command to succeed (refer to the <<before-you-begin,prerequisites>>).
 
 Next, verify that the cluster has been deployed successfully.
 
@@ -173,7 +173,7 @@ Now that we've successfully implemented the default configuration for processing
 The _log forwarding configuration_ determines how the `logging` sidecar container processes and forwards Couchbase logs.
 Since this configuration can contain sensitive information, it is stored in a Kubernetes Secret.
 
-When we created the Couchbase cluster in the <<configure-the-couchbase-cluster,previous section>>, the Autonomous Operator automatically created a _default_ log forwarding configuration Secret with the name `fluent-bit-config`.
+When we created the Couchbase cluster in the <<configure-the-couchbase-cluster,previous section>>, the Kubernetes Operator automatically created a _default_ log forwarding configuration Secret with the name `fluent-bit-config`.
 We'll be modifying this Secret in order to implement our own custom configuration.
 
 === Allow Custom Configurations
@@ -269,7 +269,7 @@ $ kubectl get secret "fluent-bit-config" -o go-template='{{range $k,$v := .data}
 === Next Steps
 
 Now that you've successfully implemented some basic log forwarding customizations, we recommend that you try out some of the other examples in this tutorial.
-These examples should help you get an even better idea of the capabilities of both Fluent Bit and the Autonomous Operator when it comes to processing and forwarding Couchbase logs.
+These examples should help you get an even better idea of the capabilities of both Fluent Bit and the Kubernetes Operator when it comes to processing and forwarding Couchbase logs.
 
 == Example: Loki Stack
 

@@ -2,13 +2,13 @@
 include::partial$constants.adoc[]
 
 [abstract]
-Learn how to configure auto-scaling for Data Service nodes using the Autonomous Operator.
+Learn how to configure auto-scaling for Data Service nodes using the Kubernetes Operator.
 
 include::partial$tutorial.adoc[]
 
 == Introduction
 
-In this tutorial you'll learn how to use the Autonomous Operator to automatically scale the Couchbase Data Service in order to maintain a target memory utilization threshold for an xref:server:learn:buckets-memory-and-storage/buckets.adoc[Ephemeral bucket].
+In this tutorial you'll learn how to use the Kubernetes Operator to automatically scale the Couchbase Data Service in order to maintain a target memory utilization threshold for an xref:server:learn:buckets-memory-and-storage/buckets.adoc[Ephemeral bucket].
 You'll also learn more about how the Kubernetes https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/[Horizontal Pod Autoscaler^] (HPA) initiates a request to scale the Data Service in order to maintain desired thresholds.
 
 [[before-you-begin]]
@@ -19,7 +19,7 @@ Before you begin this tutorial, you'll need to set up a few things first:
 * You'll need a Kubernetes cluster with at least seven available worker nodes.
 ** Worker nodes should have 4 vCPU and 16 GiB memory in order to exhibit the expected auto-scaling behavior that you'll be initiating later on in this tutorial.
 
-* You'll need https://helm.sh/docs/intro/install/[Helm version 3.1] or higher for installing the necessary dependencies (e.g. the Autonomous Operator, the Couchbase cluster, etc.)
+* You'll need https://helm.sh/docs/intro/install/[Helm version 3.1] or higher for installing the necessary dependencies (e.g. the Kubernetes Operator, the Couchbase cluster, etc.)
 
 ** Once you have Helm installed, you'll need to add the Couchbase chart repository:
 +
@@ -115,8 +115,8 @@ $ helm upgrade --install -f autoscale_values.yaml scale couchbase/couchbase-oper
 
 [NOTE]
 ====
-The Couchbase chart deploys the Autonomous Operator by default.
-If you already have the Autonomous Operator deployed in the current namespace, then you'll need to specify additional overrides during chart installation so that only the Couchbase cluster is deployed:
+The Couchbase chart deploys the Kubernetes Operator by default.
+If you already have the Kubernetes Operator deployed in the current namespace, then you'll need to specify additional overrides during chart installation so that only the Couchbase cluster is deployed:
 
 [source,console]
 ----
@@ -146,7 +146,7 @@ Events:
   Normal  EventAutoscalerCreated  22m         Autoscaler for config `default` added
 ----
 
-The Autonomous Operator automatically creates a xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resource for each server class configuration that has xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-autoscaleenabled[`couchbaseclusters.spec.servers.autoscaleEnabled`] set to `true`.
+The Kubernetes Operator automatically creates a xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resource for each server class configuration that has xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-autoscaleenabled[`couchbaseclusters.spec.servers.autoscaleEnabled`] set to `true`.
 The Operator also keeps the size of the xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resource in sync with the size of its associated server class configuration.
 
 Run the following command to verify that the xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resource exists and matches the size of its associated server configuration:
@@ -162,10 +162,10 @@ default.scale-couchbase-cluster    2      default <.> <.>
 
 In the console output, you'll see:
 
-<.> `NAME`: The Autonomous Operator creates xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resources with the name format `_<server-class>_._<cluster-name>_`.
-Considering that we enabled auto-scaling for the `default` server class configuration, and the name of our cluster is `scale-couchbase-cluster`, we can determine that the name of the xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resource created by the Autonomous Operator will be `default.scale-couchbase-cluster`.
+<.> `NAME`: The Kubernetes Operator creates xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resources with the name format `_<server-class>_._<cluster-name>_`.
+Considering that we enabled auto-scaling for the `default` server class configuration, and the name of our cluster is `scale-couchbase-cluster`, we can determine that the name of the xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resource created by the Kubernetes Operator will be `default.scale-couchbase-cluster`.
 
-<.> `SIZE`: This is the current number of Couchbase nodes that the Autonomous Operator is maintaining for the `default` server class.
+<.> `SIZE`: This is the current number of Couchbase nodes that the Kubernetes Operator is maintaining for the `default` server class.
 Considering that we set `servers.default.size` to `2` in our cluster configuration, and because the cluster doesn't yet have the ability to automatically scale, we can expect that the `SIZE` listed here will be `2`.
 Once we create an HPA for the `default` server class, and the number of `default` nodes begins to scale, the `SIZE` will update to reflect the number of nodes currently being maintained.
 
@@ -243,10 +243,10 @@ spec:
 EOF
 ----
 
-<.> `scaleTargetRef.kind`: This field must be set to xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`], which is the `kind` of custom resource that gets automatically created by the Autonomous Operator when you enable auto-scaling for a particular server class.
+<.> `scaleTargetRef.kind`: This field must be set to xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`], which is the `kind` of custom resource that gets automatically created by the Kubernetes Operator when you enable auto-scaling for a particular server class.
 
 <.> `scaleTargetRef.name`: This field needs to reference the `name` of the xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resource.
-Since the Autonomous Operator creates xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resources with the name format `_<server-class>_._<cluster-name>_`, the name we'll need to specify is `default.scale-couchbase-cluster`.
+Since the Kubernetes Operator creates xref:resource/couchbaseautoscaler.adoc[`CouchbaseAutoscaler`] custom resources with the name format `_<server-class>_._<cluster-name>_`, the name we'll need to specify is `default.scale-couchbase-cluster`.
 +
 --
 [TIP]
@@ -404,7 +404,7 @@ Delete the HPA:
 $ kubectl delete hpa data-hpa
 ----
 
-Uninstall both the Autonomous Operator and Couchbase cluster by deleting the Helm release:
+Uninstall both the Kubernetes Operator and Couchbase cluster by deleting the Helm release:
 
 [source,console]
 ----

@@ -5,11 +5,11 @@ include::partial$constants.adoc[]
 
 == Prerequisites
 
-Before you attempt to deploy a Couchbase Server cluster with the Couchbase Autonomous Operator, ensure that you have done the following:
+Before you attempt to deploy a Couchbase Server cluster with the Couchbase Kubernetes Operator, ensure that you have done the following:
 
 * You have reviewed the xref:prerequisite-and-setup.adoc[prerequisites]
-* You have downloaded the https://www.couchbase.com/downloads[Autonomous Operator package^]
-* You have xref:install-kubernetes.adoc[deployed the admission controller and the Autonomous Operator], and both are up and running
+* You have downloaded the https://www.couchbase.com/downloads[Kubernetes Operator package^]
+* You have xref:install-kubernetes.adoc[deployed the admission controller and the Kubernetes Operator], and both are up and running
 +
 The package contains YAML configuration files that will help you set up a Couchbase cluster.
 +

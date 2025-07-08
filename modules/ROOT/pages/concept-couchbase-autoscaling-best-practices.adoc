@@ -2,11 +2,11 @@
 :HorizontalPodAutoscaler: pass:q[https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.25/#horizontalpodautoscaler-v2-autoscaling[`HorizontalPodAutoscaler`^]]
 
 [abstract]
-Recommended best practices, derived from tested performance metrics, for configuring Couchbase cluster auto-scaling using the Couchbase Autonomous Operator.
+Recommended best practices, derived from tested performance metrics, for configuring Couchbase cluster auto-scaling using the Couchbase Kubernetes Operator.
 
 == How to Use This Page
 
-This page provides guidance on how to configure the Autonomous Operator's xref:concept-couchbase-autoscaling.adoc[auto-scaling feature] to effectively scale Couchbase clusters.
+This page provides guidance on how to configure the Kubernetes Operator's xref:concept-couchbase-autoscaling.adoc[auto-scaling feature] to effectively scale Couchbase clusters.
 Specifically, it discusses relevant _metrics_ for scaling individual Couchbase Services, and provides recommended settings based on internal benchmark testing performed by Couchbase.
 
 Auto-scaling is a generic feature and it is possible to use other metrics and options outside those listed in these best practices.
@@ -145,7 +145,7 @@ However, when using auto-scaling in production, it is recommended that you set `
 This ensures a minimum level of protection against single-node failures.
 +
 CAUTION: You can technically set `minReplicas` to `0` by enabling the `HPAScaleToZero` https://kubernetes.io/docs/reference/command-line-tools-reference/feature-gates/[feature gate^].
-You should never do this, as the Autonomous Operator prevents server class configurations from having sizes less than 1.
+You should never do this, as the Kubernetes Operator prevents server class configurations from having sizes less than 1.
 
 * Depending on the cloud provider, provisioning of persistent volumes may take significantly longer than pods.
 Therefore, the chances of exceeding a metric threshold while trying to reach its desired value is higher when using persistent volumes.

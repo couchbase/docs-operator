@@ -1,4 +1,4 @@
-= Release Notes for Couchbase Autonomous Operator {operator-version-minor}
+= Release Notes for Couchbase Kubernetes Operator {operator-version-minor}
 include::partial$constants.adoc[]
 
 Autonomous Operator {operator-version-minor} introduces our new Cluster Migration functionality well as a number of other improvements and minor fixes.
@@ -12,9 +12,9 @@ For installation instructions, refer to:
 * xref:install-kubernetes.adoc[]
 * xref:install-openshift.adoc[]
 
-== Upgrading to Autonomous Operator {operator-version-minor}
+== Upgrading to Kubernetes Operator {operator-version-minor}
 
-The necessary steps needed to upgrade to this release depend on which version of the Autonomous Operator you are upgrading from.
+The necessary steps needed to upgrade to this release depend on which version of the Kubernetes Operator you are upgrading from.
 
 === Upgrading from 1.x, 2.0, or 2.1
 
@@ -33,7 +33,7 @@ include::partial$couchbase-operator-release-notes-2.8.1.adoc[]
 [#release-v280]
 == Release 2.8.0
 
-Couchbase Autonomous Operator 2.8.0 was released in March 2025.
+Couchbase Kubernetes Operator 2.8.0 was released in March 2025.
 
 [#changes-in-behavior-v280]
 === Changes in Behaviour

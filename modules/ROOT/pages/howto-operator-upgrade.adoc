@@ -2,7 +2,7 @@
 :page-aliases: upgrading-the-operator
 :tabs:
 
-Upgrading the Couchbase Autonomous Operator is a five-step process:
+Upgrading the Couchbase Kubernetes Operator is a five-step process:
 
 - <<download-operator, Step 1: Download the New Operator Package>>
 - <<uninstall-operator, Step 2: Uninstall the Old DAC and Operator>>

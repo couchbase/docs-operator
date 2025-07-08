@@ -2,7 +2,7 @@
 include::partial$constants.adoc[]
 
 [abstract]
-You can set up the Autonomous Operator to use the Couchbase Server's native support for metrics collection, for Couchbase Server versions newer than Version 7.0 +
+You can set up the Kubernetes Operator to use the Couchbase Server's native support for metrics collection, for Couchbase Server versions newer than Version 7.0 +
 Couchbase native support for metric collection exposes a Prometheus compatible endpoint on all Pods without the need for third party tools.
 
 IMPORTANT: Couchbase native support is available for Couchbase Server versions 7.0 or higher and is the recommended way for collecting metrics with Prometheus.
@@ -153,15 +153,15 @@ Use of Prometheus exporter is deprecated and will be removed in a future release
 It is highly recommended that you use the native Couchbase Server Metrics endpoint.
 ====
 
-The Autonomous Operator provides Prometheus integration for collecting and exposing Couchbase Server metrics via the https://github.com/couchbase/couchbase-exporter[Couchbase Prometheus Exporter^].
+The Kubernetes Operator provides Prometheus integration for collecting and exposing Couchbase Server metrics via the https://github.com/couchbase/couchbase-exporter[Couchbase Prometheus Exporter^].
 
 The Couchbase Exporter is a https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/#how-pods-manage-multiple-containers["sidecar" container^] that is injected into each Couchbase Server pod.
 
 Prometheus metrics collection is enabled in the `CouchbaseCluster` resource.
 The configuration allows you to specify a Couchbase-provided container image that contains the Prometheus Exporter.
-The Autonomous Operator injects the image as a https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/#how-pods-manage-multiple-containers["sidecar" container^] in each Couchbase Server pod.
+The Kubernetes Operator injects the image as a https://kubernetes.io/docs/concepts/workloads/pods/pod-overview/#how-pods-manage-multiple-containers["sidecar" container^] in each Couchbase Server pod.
 
-NOTE: The Couchbase-supplied Prometheus Exporter container image is only supported on Kubernetes platforms in conjunction with the Couchbase Autonomous Operator.
+NOTE: The Couchbase-supplied Prometheus Exporter container image is only supported on Kubernetes platforms in conjunction with the Couchbase Kubernetes Operator.
 
 == Couchbase Exporter Configuration
 
@@ -182,7 +182,7 @@ spec:
 
 <.> Setting xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-monitoring-prometheus-enabled[`couchbaseclusters.spec.monitoring.prometheus.enabled`] to `true` enables injection of the sidecar into Couchbase Server pods.
 
-<.> If the xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-monitoring-prometheus-image[`couchbaseclusters.spec.monitoring.prometheus.image`] field is left unspecified, then the dynamic admission controller will automatically populate it with the most recent container image that was available when the installed version of the Autonomous Operator was released.
+<.> If the xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-monitoring-prometheus-image[`couchbaseclusters.spec.monitoring.prometheus.image`] field is left unspecified, then the dynamic admission controller will automatically populate it with the most recent container image that was available when the installed version of the Kubernetes Operator was released.
 The default image for open source Kubernetes comes from https://hub.docker.com/r/couchbase/exporter[Docker Hub^], and the default image for OpenShift comes from https://access.redhat.com/containers/#/vendor/couchbase[Red Hat Container Catalog^].
 +
 If pulling directly from the the Red Hat Container Catalog, then the path will be something similar to `registry.connect.redhat.com/couchbase/exporter:{prometheus-version}` (you can refer to the catalog for the most recent images).
@@ -237,12 +237,12 @@ For instructions on how to create a custom metrics configuration and build it in
 
 Once configured, active metrics can be collected from each Couchbase Server pod on port 9091.
 
-The Autonomous Operator does not create or manage resources for third-party software.
+The Kubernetes Operator does not create or manage resources for third-party software.
 Prometheus scrape targets must be manually created by the user.
 
 === Couchbase Cluster Auto-scaling
 
-The Autonomous Operator supports xref:concept-couchbase-autoscaling.adoc[auto-scaling Couchbase clusters].
+The Kubernetes Operator supports xref:concept-couchbase-autoscaling.adoc[auto-scaling Couchbase clusters].
 In order to properly take advantage of this feature, users must xref:concept-couchbase-autoscaling.adoc#couchbase-metrics[expose Couchbase metrics through the Kubernetes custom metrics API].
 
 Discovery of available metrics can be performed through Prometheus https://github.com/couchbase/couchbase-exporter#queries[queries^].

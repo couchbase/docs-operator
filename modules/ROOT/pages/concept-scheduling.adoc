@@ -26,7 +26,7 @@ In a Kubernetes cluster dedicated to a single Couchbase cluster deployment, enab
 Anti-affinity does not prevent distinct Couchbase clusters from being scheduled on the same Kubernetes nodes.
 Neither does it prevent Couchbase clusters from being scheduled alongside other applications that may interfere with them.
 
-The Autonomous Operator offers two parameters that can be used in concert to guarantee workload isolation.
+The Kubernetes Operator offers two parameters that can be used in concert to guarantee workload isolation.
 
 === Taints and Tolerations
 

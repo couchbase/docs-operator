@@ -77,7 +77,7 @@ image:NetworkDocsRouted-Overlay.png["Overlay network architecture"]
 
 Istio is currently the only supported service mesh.
 
-Use of service meshes should, for the most part, be transparent to the Autonomous Operator and Couchbase cluster, however there are a few things to be aware of:
+Use of service meshes should, for the most part, be transparent to the Kubernetes Operator and Couchbase cluster, however there are a few things to be aware of:
 
 * Dynamic Admission Controller Considerations
 
@@ -87,11 +87,11 @@ Use of service meshes should, for the most part, be transparent to the Autonomou
 
 * Couchbase Cluster Considerations
 
-** The service mesh must be enabled in the namespace before you install the Autonomous Operator and provision any Couchbase clusters.
-** You cannot enable/disable a service mesh in a namespace where an Autonomous Operator deployment is already running.
+** The service mesh must be enabled in the namespace before you install the Kubernetes Operator and provision any Couchbase clusters.
+** You cannot enable/disable a service mesh in a namespace where an Kubernetes Operator deployment is already running.
    This is especially true of migration to strict mTLS as Couchbase cluster nodes will not be able to communicate with one another during the upgrade.
    While an upgrade to permissive mTLS may work, it has not been tested, therefore is unsupported.
-** You should not configure the Autonomous Operator to use TLS if the service mesh is already providing an mTLS transport.
+** You should not configure the Kubernetes Operator to use TLS if the service mesh is already providing an mTLS transport.
 ** IP-based networking should not be used with strict mTLS.
 ** In order to establish connections between a client and server when strict mTLS is enabled, both the client and server need to be running with an Envoy proxy, and be part of the same Istio control plane.
   For this reason, clients and XDCR connections originating from outside of the Kubernetes cluster must connect to a Couchbase cluster with either no or permissive mTLS.
@@ -137,7 +137,7 @@ Each network plugin may have its own way of configuring the network policy or us
 For the purposes of this documentation we only reference the default Kubernetes configuration to allow it to be reused or translated to the specific implementation required.
 
 For more secure deployments, the typical approach is to have a https://kubernetes.io/docs/concepts/services-networking/network-policies/#default-deny-all-ingress-and-all-egress-traffic[deny-all traffic that is not approved^] within a namespace.
-If this is the case then the following rules need to be implemented to allow Couchbase Server and Couchbase Autonomous Operator to correctly function.
+If this is the case then the following rules need to be implemented to allow Couchbase Server and Couchbase Kubernetes Operator to correctly function.
 
 .Network Policy Rules
 * DNS resolution must be possible, typically by enabling port 53 traffic although this can be constrained to the DNS deployment namespace and/or pods as required.
@@ -152,7 +152,7 @@ If this is the case then the following rules need to be implemented to allow Cou
 * SDKs require traffic to be allowed from their location to the Couchbase Server pods, primarily they use ports 8091/18091 and 11210/11207 for bootstrapping.
 ** This will be specific to the SDK used but each SDK has a https://docs.couchbase.com/go-sdk/current/howtos/managing-connections.html[managing connections] page.
 
-The recommendation would be deploy Couchbase Server and Couchbase Autonomous Operator within a dedicated namespace and allow internal traffic within it.
+The recommendation would be deploy Couchbase Server and Couchbase Kubernetes Operator within a dedicated namespace and allow internal traffic within it.
 The limited external ingress and egress required can then be added as well.
 It may be good to start with this approach and then lock it down as required or to aid with debugging any issues found.
 

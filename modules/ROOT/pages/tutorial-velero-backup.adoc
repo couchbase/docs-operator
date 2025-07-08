@@ -25,7 +25,7 @@ This tutorial was tested using https://velero.io/[Velero^] version 1.2.0, using 
 It is important to correctly configure https://velero.io/[Velero^] so that it has the ability to perform volume snapshots.
 A list of providers are provided in the https://velero.io/docs/v1.2.0/supported-providers/[Velero support matrix^].
 
-== Installing Couchbase Autonomous Operator
+== Installing Couchbase Kubernetes Operator
 
 For this tutorial we will install the dynamic admission controller (DAC) in the default namespace:
 

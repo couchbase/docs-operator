@@ -190,7 +190,7 @@ Determining a full proof way to completely obfuscate the passphrase is beyond th
 
 === Securing Local Scripts
 
-When script passphrase registration is configured, the Autonomous Operator employs additional security measures to ensure that script creation and execution cannot be compromised by any external parties.
+When script passphrase registration is configured, the Kubernetes Operator employs additional security measures to ensure that script creation and execution cannot be compromised by any external parties.
 Therefore, the user only needs to provide a passphrase secret while the Operator internally creates the passphrase script and mounts it into each of the Couchbase Server Pods.
 The Operator also mounts another private key into Couchbase Server in order to securely transfer the passphrase to Couchbase for on-demand use rather than statically mounting the passphrase in the Server Pod alongside the encrypted key. The overall design is as follows:
 

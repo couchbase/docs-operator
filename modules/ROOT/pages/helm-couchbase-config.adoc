@@ -2,7 +2,7 @@
 include::partial$constants.adoc[]
 
 [abstract]
-The official Couchbase Helm Chart for the Autonomous Operator comes with a default configuration that can be customized to fit your deployment needs.
+The official Couchbase Helm Chart for the Kubernetes Operator comes with a default configuration that can be customized to fit your deployment needs.
 
 This page describes the parameters of the official Couchbase Helm Chart.
 In particular, this page describes the contents of the chart's https://github.com/couchbase-partners/helm-charts/blob/master/charts/couchbase-operator/values.yaml[values.yaml^], which contains the chart's default values.
@@ -62,7 +62,7 @@ The Couchbase Chart is capable of installing the Operator, Admission Controller,
 [#install]
 === `couchbaseOperator`
 
-This field specifies whether or not the Couchbase Autonomous Operator will be installed.
+This field specifies whether or not the Couchbase Kubernetes Operator will be installed.
 
 [cols="1",options="header"]
 |===
@@ -513,7 +513,7 @@ The search domains to use when looking up hostnames
 _Value rules:_ The `coredns.searches` value is an optional list of strings.
 
 
-== Autonomous Operator
+== Kubernetes Operator
 
 The Helm chart deploys the Operator as a Kubernetes https://kubernetes.io/docs/concepts/workloads/controllers/deployment/[Deployment].
 

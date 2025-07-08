@@ -2,7 +2,7 @@
 :stem:
 
 [abstract]
-Certifying your platform for use with Couchbase Autonomous Operator.
+Certifying your platform for use with Couchbase Kubernetes Operator.
 
 == Why Self-Certify?
 
@@ -66,7 +66,7 @@ Additionally, to test platform behavior, the self-certification image will need 
 
 == What is the Self-Certification Lifecycle Process?
 
-Couchbase Operator Self-Certification Lifecycle is a self-service offering with an easy, step-by-step process to validate the compatibility of Kubernetes platforms and other platform-specific components such as storage and networking with Autonomous Operator.
+Couchbase Operator Self-Certification Lifecycle is a self-service offering with an easy, step-by-step process to validate the compatibility of Kubernetes platforms and other platform-specific components such as storage and networking with Kubernetes Operator.
 
 The certification workflows consist of the following steps:
 
@@ -74,7 +74,7 @@ The certification workflows consist of the following steps:
 
 . Configure the Kubernetes platform and other platform-specific components such as storage and networking correctly.
 
-. Run the Operator Self-Certification Tool (shipped with Couchbase Autonomous Operator 2.3 and above).
+. Run the Operator Self-Certification Tool (shipped with Couchbase Kubernetes Operator 2.3 and above).
 
 . Submit the results to Couchbase for approval. 
 
