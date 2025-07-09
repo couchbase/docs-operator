@@ -77,12 +77,14 @@ $ curl -X POST \
   http://localhost:4985/_sgcollect_info \
   -H 'Accept: application/json' \
   -H 'Content-Type: application/json' \
+  -H 'Authorization: Basic c3luY19nYXRld2F5OnBhc3N3b3Jk' \
   -d '{
   "output_dir": "/home/sync_gateway/logs",
   "upload": false
 }’
 ----
 
+NOTE: When you set `admin_interface_authentication` to `true` in your Sync Gateway configuration, include authentication headers in your requests.
 
 
 ==== Monitor the status of the log collection
