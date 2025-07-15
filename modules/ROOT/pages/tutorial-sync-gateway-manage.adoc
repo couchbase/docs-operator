@@ -96,6 +96,7 @@ $ curl -X GET \
   https://localhost:4985/_sgcollect_info \
   -H 'Accept: application/json' \
   -H 'Content-Type: application/json'
+  -H 'Authorization: Basic c3luY19nYXRld2F5OnBhc3N3b3Jk' \
 ----
 
 ==== Copy Log Files
@@ -121,7 +122,7 @@ To collect logs on a specific pod, run `sgcollect_info` using the `kubectl` http
 The following command runs `sgcollect_info` on the specified pod and outputs the results to an *out.zip* file.
 [source,console]
 ----
-$ kubectl exec <pod_id> -- /opt/couchbase-sync-gateway/tools/sgcollect_info /tmp/out.zip
+$ kubectl exec "$pod" -- curl -X POST https://localhost:4985/_sgcollect_info -H 'Accept: application/json' -H 'Authorization: Basic c3luY19nYXRld2F5OnBhc3N3b3Jk' -d `{"output_dir": "/home/sync_gateway/logs"}`
 ----
 
 ==== Coping log output from pod
@@ -140,15 +141,29 @@ The following script runs `sgcollect_info` on all the pods and to copy the zippe
 //This script is available as `collect_logs_sgw_pods.sh `
 [source,sh]
 ----
-#! /bin/sh
-OUTFOLDER=${1:-/tmp}
-for pod in `kubectl get pods -o=name | grep sync-gateway | sed "s/^.\{4\}//"`
-do
-    LOGFILE=$OUTFOLDER/$pod'_sgcollect_info_out.zip'
-    echo "Running sgcollect_info to generate $LOGFILE"
-    kubectl exec $pod -- /opt/couchbase-sync-gateway/tools/sgcollect_info $LOGFILE
-    echo "copying $pod:$LOGFILE to current folder"
-    kubectl cp $pod:$LOGFILE .
+#!/bin/bash
+
+for pod in $(kubectl get pods -o=name | grep sync-gateway | sed "s/^.\{4\}//"); do
+    echo "Running /_sgcollect_info on $pod"
+    REMOTE_OUTFOLDER="/home/sync_gateway/logs/sgcollects_$pod"
+    kubectl exec "$pod" -- mkdir -p "$REMOTE_OUTFOLDER"
+    kubectl exec "$pod" -- curl -X POST https://localhost:4985/_sgcollect_info -H 'Accept: application/json' -H 'Authorization: Basic c3luY19nYXRld2F5OnBhc3N3b3Jk' -d "{\"output_dir\": \"$REMOTE_OUTFOLDER\"}"
+    echo "Waiting for /_sgcollect_info to finish on $pod"
+    # wait for 60 minutes of output
+    for attempt in {1..120}; do
+        RESPONSE=$(kubectl exec "$pod" -- curl -X GET https://localhost:4985/_sgcollect_info -H 'Content-Type: application/json' -H 'Authorization: Basic c3luY19nYXRld2F5OnBhc3N3b3Jk')
+        STATUS=$(echo "$RESPONSE" | jq -r '.status')
+        echo "Current status is $STATUS"
+        if [[ "$STATUS" != "running" ]]; then
+            break
+        else
+            echo "Attempt $attempt: status is '$STATUS' — waiting..."
+            INTERVAL=30
+            sleep "$INTERVAL"
+        fi
+    done
+    echo "copying $pod:$REMOTE_OUTFOLDER to current folder"
+    kubectl cp "$pod":"$REMOTE_OUTFOLDER" .
 done
 ----
 
