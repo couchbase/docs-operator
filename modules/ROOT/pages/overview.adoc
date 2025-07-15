@@ -1,6 +1,6 @@
 = Introduction
 
-The integration of Couchbase Server with cloud-native technologies, facilitated by the Couchbase Kubernetes Operator (Autonomous Operator) provides a truly cloud-native database solution.
+The integration of Couchbase Server with cloud-native technologies, facilitated by the Couchbase Kubernetes (Autonomous) Operator provides a truly cloud-native database solution.
 This integration empowers organizations to build and run scalable stateful applications in modern, dynamic environments such as public, private, and hybrid clouds.
 Containers, service meshes, microservices, immutable infrastructure, and declarative APIs exemplify this approach.
 
