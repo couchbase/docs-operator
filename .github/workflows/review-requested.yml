@@ -5,6 +5,7 @@ on:
 
 jobs:
   vale:
+    if: github.event.requested_reviewer.login == 'tech-comm-team-couchbase'
     uses: couchbaselabs/docs-runner/.github/workflows/vale-review.yml@main
     with:
       path: .
