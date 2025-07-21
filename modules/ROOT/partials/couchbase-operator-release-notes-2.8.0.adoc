@@ -13,7 +13,7 @@ Couchbase Autonomous Operator tries to change invalid bucket configurations in a
 
 *https://jira.issues.couchbase.com/browse/K8S-3591[K8S-3591^]*::
 
-Operator crashes if Incremental Backup is missing schedule.
+Couchbase Autonomous Operator crashes if Incremental Backup is missing schedule.
 
 *https://jira.issues.couchbase.com/browse/K8S-3596[K8S-3596^]*::
 
