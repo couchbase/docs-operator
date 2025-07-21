@@ -5,7 +5,7 @@
 
 *https://jira.issues.couchbase.com/browse/K8S-3558[K8S-3558^]*::
 
-Operator commences an In-place Upgrade when the cluster is under-resourced.
+Couchbase Autonomous Operator commences an In-place Upgrade when the cluster is under-resourced.
 
 *https://jira.issues.couchbase.com/browse/K8S-3579[K8S-3579^]*::
 
