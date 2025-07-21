@@ -75,7 +75,7 @@ Operator container crashes when there is a managed Scope/Collection Group added 
 
 *https://jira.issues.couchbase.com/browse/K8S-3617[K8S-3617^]*::
 
-It is not currently possible to set xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-cluster-indexer-redistributeindexes[`couchbaseclusters.spec.cluster.indexer.redistributeIndexes`] from True to False during a reconciliation.
+It's not currently possible to set xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-cluster-indexer-redistributeindexes[`couchbaseclusters.spec.cluster.indexer.redistributeIndexes`] from True to False during a reconciliation.
 
 *https://jira.issues.couchbase.com/browse/K8S-3908[K8S-3908^]*::
 
