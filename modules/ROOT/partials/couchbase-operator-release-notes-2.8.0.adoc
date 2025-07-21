@@ -2,54 +2,66 @@
 [#fixed-issues-v280]
 === Fixed Issues
 
-[#table-fixed-issues-v280,cols="25,66"]
-|===
-| Issue | Description
 
-a| https://jira.issues.couchbase.com/browse/K8S-3558[K8S-3558^]
-a| *Summary:* Operator commences an In-place Upgrade when the cluster is under-resourced.
+*https://jira.issues.couchbase.com/browse/K8S-3558[K8S-3558^]*::
 
-a| https://jira.issues.couchbase.com/browse/K8S-3579[K8S-3579^]
-a| *Summary:* Operator tries to change invalid bucket configurations in a loop.
+Couchbase Autonomous Operator commences an In-place Upgrade when the cluster is under-resourced.
 
-a| https://jira.issues.couchbase.com/browse/K8S-3591[K8S-3591^]
-a| *Summary:* Operator crashes if Incremental Backup is missing schedule.
+*https://jira.issues.couchbase.com/browse/K8S-3579[K8S-3579^]*::
 
-a| https://jira.issues.couchbase.com/browse/K8S-3596[K8S-3596^]
-a| *Summary:* Crash in Operator due to invalid memory access.
+Couchbase Autonomous Operator tries to change invalid bucket configurations in a loop.
 
-a| https://jira.issues.couchbase.com/browse/K8S-3605[K8S-3605^]
-a| *Summary:* Upgrade Swap Rebalance is retried with different parameters on Operator Pod deletion.
+*https://jira.issues.couchbase.com/browse/K8S-3591[K8S-3591^]*::
 
-a| https://jira.issues.couchbase.com/browse/K8S-3609[K8S-3609^]
-a| *Summary:*  Hibernation fails to bring back any Pod with error extracting image version.
+Couchbase Autonomous Operator crashes if Incremental Backup is missing schedule.
 
-a| https://jira.issues.couchbase.com/browse/K8S-3621[K8S-3621^]
-a| *Summary:* Shadowed Secret did not get updated.
+*https://jira.issues.couchbase.com/browse/K8S-3596[K8S-3596^]*::
 
-a| https://jira.issues.couchbase.com/browse/K8S-3632[K8S-3632^]
-a| *Summary:* Unable to set -1 for Collection-level `maxTTL`.
+Crash in Operator due to invalid memory access.
 
-a| https://jira.issues.couchbase.com/browse/K8S-3639[K8S-3639^]
-a| *Summary:* Operator loses track of pending Pods when an Eviction of the Operator Pod occurs.
+*https://jira.issues.couchbase.com/browse/K8S-3605[K8S-3605^]*::
 
-a| https://jira.issues.couchbase.com/browse/K8S-3641[K8S-3641^]
-a| *Summary:*  Crash in `handleVolumeExpansion` if `enableOnlineVolumeExpansion` is True but no Volume Mounts configured.
+Upgrade Swap Rebalance is retried with different parameters on Operator Pod deletion.
 
-a| https://jira.issues.couchbase.com/browse/K8S-3655[K8S-3655^]
-a| *Summary:*  Clear Upgrade condition if the Operator isn't performing an upgrade.
+*https://jira.issues.couchbase.com/browse/K8S-3609[K8S-3609^]*::
 
-a| https://jira.issues.couchbase.com/browse/K8S-3659[K8S-3659^]
-a| *Summary:*  When scaling down, Cluster does not maintain balance across Server Groups.
+ Hibernation fails to bring back any Pod with error extracting image version.
 
-a| https://jira.issues.couchbase.com/browse/K8S-3696[K8S-3696^]
-a| *Summary:*  DAC prevents configuration of multiple XDCR Replications of same Buckets to different remote Clusters.
+*https://jira.issues.couchbase.com/browse/K8S-3621[K8S-3621^]*::
 
-a| https://jira.issues.couchbase.com/browse/K8S-3772[K8S-3772^]
-a| *Summary:* Self-Certification: Artifacts PVC should use `--storage-class` parameter when creating the Certification Pod.
+Shadowed Secret did not get updated.
 
-a| https://jira.issues.couchbase.com/browse/K8S-3788[K8S-3788^]
-a| *Summary:* Operator container crashes when there is a managed Scope/Collection Group added for the Ephemeral Bucket.
+*https://jira.issues.couchbase.com/browse/K8S-3632[K8S-3632^]*::
+
+Unable to set -1 for Collection-level `maxTTL`.
+
+*https://jira.issues.couchbase.com/browse/K8S-3639[K8S-3639^]*::
+
+Operator loses track of pending Pods when an Eviction of the Operator Pod occurs.
+
+*https://jira.issues.couchbase.com/browse/K8S-3641[K8S-3641^]*::
+
+ Crash in `handleVolumeExpansion` if `enableOnlineVolumeExpansion` is True but no Volume Mounts configured.
+
+*https://jira.issues.couchbase.com/browse/K8S-3655[K8S-3655^]*::
+
+ Clear Upgrade condition if the Operator is not performing an upgrade.
+
+*https://jira.issues.couchbase.com/browse/K8S-3659[K8S-3659^]*::
+
+ When scaling down, Cluster does not maintain balance across Server Groups.
+
+*https://jira.issues.couchbase.com/browse/K8S-3696[K8S-3696^]*::
+
+ DAC prevents configuration of multiple XDCR Replications of same Buckets to different remote Clusters.
+
+*https://jira.issues.couchbase.com/browse/K8S-3772[K8S-3772^]*::
+
+Self-Certification: Artifacts PVC should use `--storage-class` parameter when creating the Certification Pod.
+
+*https://jira.issues.couchbase.com/browse/K8S-3788[K8S-3788^]*::
+
+Operator container crashes when there is a managed Scope/Collection Group added for the Ephemeral Bucket.
 
 |===
 
@@ -61,16 +73,20 @@ a| *Summary:* Operator container crashes when there is a managed Scope/Collectio
 |===
 | Issue | Description
 
-a| https://jira.issues.couchbase.com/browse/K8S-3617[K8S-3617^]
-a| *Summary:* It is not currently possible to set xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-cluster-indexer-redistributeindexes[`couchbaseclusters.spec.cluster.indexer.redistributeIndexes`] from True to False during a reconciliation.
+*https://jira.issues.couchbase.com/browse/K8S-3617[K8S-3617^]*::
 
-a| https://jira.issues.couchbase.com/browse/K8S-3908[K8S-3908^]
-a| *Summary:* Metric `couchbase_operator_memory_under_management_bytes` is incorrectly showing 0.
+It's not possible to set xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-cluster-indexer-redistributeindexes[`couchbaseclusters.spec.cluster.indexer.redistributeIndexes`] from True to False during a reconciliation.
 
-a| https://jira.issues.couchbase.com/browse/K8S-3909[K8S-3909^]
-a| *Summary:* Metric `couchbase_operator_cpu_under_management` is incorrectly showing 0.
+*https://jira.issues.couchbase.com/browse/K8S-3908[K8S-3908^]*::
 
-a| https://jira.issues.couchbase.com/browse/K8S-3910[K8S-3910^]
-a| *Summary:* Operator tries to migrate storage backend of buckets even before couchbase cluster is in 7.6.0+.
+Metric `couchbase_operator_memory_under_management_bytes` is incorrectly showing 0.
+
+*https://jira.issues.couchbase.com/browse/K8S-3909[K8S-3909^]*::
+
+Metric `couchbase_operator_cpu_under_management` is incorrectly showing 0.
+
+*https://jira.issues.couchbase.com/browse/K8S-3910[K8S-3910^]*::
+
+Operator tries to migrate storage backend of buckets even before Couchbase cluster is in 7.6.0+.
 
 |===
