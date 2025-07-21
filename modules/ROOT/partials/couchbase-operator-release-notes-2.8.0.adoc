@@ -45,7 +45,7 @@ Operator loses track of pending Pods when an Eviction of the Operator Pod occurs
 
 *https://jira.issues.couchbase.com/browse/K8S-3655[K8S-3655^]*::
 
- Clear Upgrade condition if the Operator isn't performing an upgrade.
+ Clear Upgrade condition if the Operator is not performing an upgrade.
 
 *https://jira.issues.couchbase.com/browse/K8S-3659[K8S-3659^]*::
 
