@@ -87,6 +87,6 @@ Metric `couchbase_operator_cpu_under_management` is incorrectly showing 0.
 
 *https://jira.issues.couchbase.com/browse/K8S-3910[K8S-3910^]*::
 
-Operator tries to migrate storage backend of buckets even before couchbase cluster is in 7.6.0+.
+Operator tries to migrate storage backend of buckets even before Couchbase cluster is in 7.6.0+.
 
 |===
