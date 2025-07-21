@@ -9,7 +9,7 @@ Couchbase Autonomous Operator commences an In-place Upgrade when the cluster is 
 
 *https://jira.issues.couchbase.com/browse/K8S-3579[K8S-3579^]*::
 
-Operator tries to change invalid bucket configurations in a loop.
+Couchbase Autonomous Operator tries to change invalid bucket configurations in a loop.
 
 *https://jira.issues.couchbase.com/browse/K8S-3591[K8S-3591^]*::
 
