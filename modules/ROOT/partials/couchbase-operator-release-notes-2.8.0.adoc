@@ -63,15 +63,9 @@ Self-Certification: Artifacts PVC should use `--storage-class` parameter when cr
 
 Operator container crashes when there is a managed Scope/Collection Group added for the Ephemeral Bucket.
 
-|===
-
 
 [#known-issues-v280]
 === Known Issues
-
-[#table-known-issues-v280,cols="25,66"]
-|===
-| Issue | Description
 
 *https://jira.issues.couchbase.com/browse/K8S-3617[K8S-3617^]*::
 
@@ -88,5 +82,3 @@ Metric `couchbase_operator_cpu_under_management` is incorrectly showing 0.
 *https://jira.issues.couchbase.com/browse/K8S-3910[K8S-3910^]*::
 
 Operator tries to migrate storage backend of buckets even before Couchbase cluster is in 7.6.0+.
-
-|===
