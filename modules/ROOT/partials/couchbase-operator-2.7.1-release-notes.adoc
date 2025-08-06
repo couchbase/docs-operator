@@ -1,0 +1,39 @@
+[#release-271]
+== Release 2.7.1 (August 2025)
+
+Couchbase Operator 2.7.1 was released in August 2025.
+This maintenance release contains fixes to issues.
+
+[#fixed-issues-v271]
+== Fixed Issues
+
+
+[#table-fixed-issues-v271,cols="25,66"]
+
+|===
+|Issue | Description
+
+
+
+| https://jira.issues.couchbase.com/browse/K8S-4038/[K8S-4038]
+
+a| In prior versions of Couchbase Operator, it was possible to set invalid values for the Indexer’s Replica Count.
+
+| https://jira.issues.couchbase.com/browse/K8S-4043/[K8S-4043]
+
+a| Fixed a bug in the comparison of the existing and desired state of Local Persistent Volumes that can cause swap rebalances of pods with no reported diff.
+
+| https://jira.issues.couchbase.com/browse/K8S-4045/[K8S-4045]
+
+a| In prior versions of Couchbase Operator, it was possible for pods to be scheduled unevenly across server groups.
+
+| https://jira.issues.couchbase.com/browse/K8S-4047/[K8S-4047]
+
+a| In previous versions of Couchbase Operator, a user was unable to configure multiple replications per bucket.  This limitation has been removed.
+
+| https://jira.issues.couchbase.com/browse/K8S-4144/[K8S-4144]
+
+a| In prior versions of Couchbase Operator, the metrics port annotation (`prometheus.io/port`) was set to 8091, even if TLS was enabled.  It will not correctly set to 18091.
+|===
+
+

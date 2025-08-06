@@ -36,6 +36,7 @@ For large, production databases, ensure an adequate maintenance window is schedu
 For further information read the xref:concept-upgrade.adoc[Couchbase Upgrade] concepts page.
 ====
 
+include::partial$couchbase-operator-2.7.1-release-notes.adoc[]
 [#release-v270-addendum]
 == Addendum to Release 2.7.0
 
