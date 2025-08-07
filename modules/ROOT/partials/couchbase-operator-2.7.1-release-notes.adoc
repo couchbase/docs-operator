@@ -1,6 +1,9 @@
 [#release-271]
 == Release 2.7.1
 
+Couchbase Operator 2.7.1 was released in August 2025.
+This maintenance release contains fixes to issues.
+
 [#fixed-issues-v271]
 === Fixed Issues
 
