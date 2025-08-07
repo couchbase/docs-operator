@@ -1,0 +1,40 @@
+[#release-271]
+== Release 2.7.1
+
+[#fixed-issues-v271]
+=== Fixed Issues
+
+
+[#table-fixed-issues-v271,cols="25,66"]
+
+|===
+|Issue | Description
+
+
+
+| https://jira.issues.couchbase.com/browse/K8S-3968/[K8S-3968]
+
+a| *Summary:* There is a scenario where a Pod deletion takes too long to shut down, allowing Operator to see it as still active within the Couchbase Cluster, but not existing in the Kubernetes Resource database (`etcd`).  This results in Operator classifying the Pod as an “Unknown” Pod, and summarily ejecting it from the Couchbase Cluster, which can result in a loss of Couchbase logs present on the Persistent Volumes of the Pod.
+
+| https://jira.issues.couchbase.com/browse/K8S-4038/[K8S-4038]
+
+a| *Summary:* In prior versions of Couchbase Operator, it was possible to set invalid values for the Indexer’s Replica Count.
+
+| https://jira.issues.couchbase.com/browse/K8S-4043/[K8S-4043]
+
+a| *Summary:* Fixed a bug in the comparison of the existing and desired state of Local Persistent Volumes that can cause swap rebalances of pods with no reported diff.
+
+| https://jira.issues.couchbase.com/browse/K8S-4045/[K8S-4045]
+
+a| *Summary:* In prior versions of Couchbase Operator, it was possible for pods to be scheduled unevenly across server groups.
+
+| https://jira.issues.couchbase.com/browse/K8S-4047/[K8S-4047]
+
+a| *Summary:* In previous versions of Couchbase Operator, a user was unable to configure multiple replications per bucket.  This limitation has been removed.
+
+| https://jira.issues.couchbase.com/browse/K8S-4144/[K8S-4144]
+
+a| *Summary:* In prior versions of Couchbase Operator, the metrics port annotation (`prometheus.io/port`) was set to 8091, even if TLS was enabled.  It will not correctly set to 18091.
+|===
+
+
