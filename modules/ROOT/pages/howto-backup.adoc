@@ -748,7 +748,8 @@ Backup and restore job affinity can be set, per `CouchbaseCluster`, with the xre
 
 === Retrying Failed Backups
 
-If a backup fails, it will be retried xref:resource/couchbasebackup.adoc#couchbasebackups-spec-backofflimit[`couchbasebackups.spec.backoffLimit`] times. The time between retries starts at 10 seconds and doubles each time up to a maximum of 6 minutes.
+If a backup fails, it will be retried xref:resource/couchbasebackup.adoc#couchbasebackups-spec-backofflimit[`couchbasebackups.spec.backoffLimit`] times.
+The time between retries starts at 10 seconds and doubles each time up to a maximum of 6 minutes.
 The table below shows the number of retries and an approximate total time the backup will retry for.
 
 [cols="1,1"]
