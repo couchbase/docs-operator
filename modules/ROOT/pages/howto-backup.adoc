@@ -746,6 +746,32 @@ The affinity and anti-affinity mechanisms are described in xref:concept-scheduli
 
 Backup and restore job affinity can be set, per `CouchbaseCluster`, with the xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-backup-nodeselector[`couchbaseclusters.spec.backup.nodeSelector`] attribute, and toleration of anti-affinity rules can be set with the xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-backup-tolerations[`couchbaseclusters.spec.backup.tolerations`] attribute.
 
+=== Retrying Failed Backups
+
+If a backup fails, it will be retried xref:resource/couchbasebackup.adoc#couchbasebackups-spec-backofflimit[`couchbasebackups.spec.backoffLimit`] times. The time between retries starts at 10 seconds and doubles each time up to a maximum of 6 minutes.
+The table below shows the number of retries and an approximate total time the backup will retry for.
+
+[cols="1,1"]
+|===
+| Retries| Total Time
+| 1| 10s
+| 2| 30s
+| 3| 1m
+| 4| 2m
+| 5| 5m
+| 6| 10m
+| 7| 16m
+| 8| 22m
+| 9| 28m
+| 10| 34m
+| 11| 40m
+| 12| 46m
+| 13| 52m
+| 14| 58m
+| 15| 64m
+| 16| 70m
+|===
+
 == Backup and Restore to a Cloud Store
 
 If you are running a Couchbase cluster version 6.6.x or higher and using the backup image `operator-backup:1.3.2` or higher, the ability to backup and restore to and from AWS, Azure, and GCP is available.
