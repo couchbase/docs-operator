@@ -2,6 +2,8 @@
 :page-toclevels: 2
 :description: A direct gRPC interface to key Couchbase services, abstracting topology details behind a service endpoint.
 
+include::partial$constants.adoc[]
+
 [abstract]
 {description}
 
