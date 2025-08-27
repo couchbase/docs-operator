@@ -40,7 +40,7 @@ When deploying a Couchbase Cluster in Kubernetes, you will define a `CouchbaseCl
 Starting with release 2.6.1, the object definition allows you to add a `cloudNativeGateway` object to add the Cloud Native Gateway to your cluster and create a `Service` object.
 For example:
 
-[source,yaml]
+[source,yaml,subs="+attributes"]
 ----
 networking:
    cloudNativeGateway:
