@@ -44,7 +44,7 @@ For example:
 ----
 networking:
    cloudNativeGateway:
-     image: couchbase/cloud-native-gateway:1.0.0
+     image: couchbase/cloud-native-gateway:{cng-version}
      tls:
        serverSecretName: secret-for-cng
 ----
