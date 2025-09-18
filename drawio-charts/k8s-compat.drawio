@@ -148,7 +148,7 @@
         <mxCell id="MtefxCMHaC7_8jTTpc8Y-3" value="Operator 2.5 added support for k8s 1.26 through 1.29 via 2.5.1" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
           <mxGeometry x="140" y="545" width="360" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="BI4la-AkOCn7qzx_Z1y2-1" value="&lt;b&gt;1.32&lt;/b&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;(4.19)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+        <mxCell id="BI4la-AkOCn7qzx_Z1y2-1" value="&lt;b&gt;1.32&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
           <mxGeometry x="1324" y="230" width="80" height="40" as="geometry" />
         </mxCell>
       </root>
