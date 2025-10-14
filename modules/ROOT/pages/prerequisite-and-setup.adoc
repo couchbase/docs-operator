@@ -146,6 +146,7 @@ This release supports the following managed Kubernetes services and utilities:
 == Persistent Volume Compatibility
 
 Persistent volumes are mandatory for production deployments.
+The Couchbase Operator is designed to work with any CSI-compliant storage driver and compatibility with different CSI implementations can be validated using the xref:concept-platform-certification.adoc[Operator Self-Certification Lifecycle] tooling.
 Review the Kubernetes Operator xref:best-practices.adoc#persistent-volumes-best-practices[best practices] for more information about cluster supportability requirements.
 
 == Hardware Requirements
