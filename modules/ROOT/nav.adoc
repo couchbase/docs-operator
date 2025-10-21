@@ -37,6 +37,8 @@
   *** xref:concept-data-save-restore.adoc[Data Topology Save, Restore and Synchronization]
   *** xref:howto-guide-save-restore.adoc[How-to Guide: Data Topology Save and Restore]
   *** xref:howto-guide-data-topology-sync.adoc[How-to Guide: Data Topology Synchronization]
+** Data Encryption
+  *** xref:concept-encryption-at-rest.adoc[Encryption at Rest]
  ** Hibernation
   *** xref:concept-hibernation.adoc[Couchbase Cluster Hibernation]
  ** Logging
@@ -89,6 +91,7 @@
   *** xref:howto-manage-couchbase-logging.adoc[Manage Couchbase Logging]
   *** xref:howto-couchbase-log-forwarding.adoc[Configure Log Forwarding]
   *** xref:howto-non-root-install.adoc[Configure Non-Root Installs]
+  *** xref:howto-encryption-at-rest.adoc[Configure Encryption at Rest]
  ** Connect
   *** xref:howto-ui.adoc[Access the Couchbase User Interface]
   *** xref:howto-client-sdks.adoc[Configure Client SDKs]
@@ -132,6 +135,8 @@ include::partial$autogen-reference.adoc[]
  ** xref:tutorial-autoscale-query.adoc[Autoscaling Couchbase Query Service]
 * Backup
  ** xref:tutorial-velero-backup.adoc[Backup with VMware Velero]
+* Encryption at Rest
+ ** xref:tutorial-encryption-at-rest.adoc[Encryption at Rest]
 * Logging
  ** xref:tutorial-couchbase-log-forwarding.adoc[]
 * Monitoring
