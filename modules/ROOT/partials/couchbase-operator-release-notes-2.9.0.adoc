@@ -1,0 +1,47 @@
+[#release-290]
+== Release 2.9.0 (November 2025)
+
+Couchbase Operator 2.9.0 was released in November 2025.
+This maintenance release contains fixes to issues.
+
+[#fixed-issues-v290]
+== Fixed Issues
+
+
+*https://jira.issues.couchbase.com/browse/K8S-3258/[K8S-3258]*::
+
+Added a new `logging.configNameReleasePrefix` boolean to the helm chart. This defaults to false, but setting it to true will prefix the fluent-bit config with the release name. Setting this to true for existing clusters will trigger recreation of all pods so should only really be used for new clusters.
+
+*https://jira.issues.couchbase.com/browse/K8S-4091/[K8S-4091]*::
+
+Updated the `spec.networking.addressFamily` field to accept `IPv4Only`, `IPv4Priority`, `IPv6Only` and `IPv6Priority`. The current `IPv4/IPv6` values will have the `Ipv4/6Only` functionality. I.e. customers that have set the fields will not see any change.
++
+These should be considered deprecated and will be removed in a future release.  +
+The priority/only choice determines whether `addressFamilyOnly` is true or false.
+
+*https://jira.issues.couchbase.com/browse/K8S-4097/[K8S-4097]*::
+
+Manual Intervention Required is a new state that the couchbase cluster will enter in the unlikely scenario that the operator is unable to reconcile the cluster due to reasons outside of its control/capabilities, and which therefore require manual intervention by a user to resolve.
++
+If the cluster enters this condition, it will:
++
+* Set the cluster_manual_intervention metric by 1
+* Add (where possible) the `ManualInterventionRequired` condition to the cluster, with a message detailing the reason for entering the MIR state.
+* Raise a `ManualInterventionRequired` Kubernetes event, with the event message set to the reason for entering manual intervention
+* Most importantly, reconciliation will be skipped until the manual intervention required state has been resolved, i.e. the issue that put the cluster into that condition has been fixed.
+
+*https://jira.issues.couchbase.com/browse/K8S-4144/[K8S-4144]*::
+
+In prior versions of Couchbase Operator, the metrics port annotation (`prometheus.io/port`) was set to 8091, even if TLS was enabled.  It will now correctly set to 18091.
+
+*https://jira.issues.couchbase.com/browse/K8S-4161/[K8S-4161]*::
+
+The latest update includes the addition of the analytics numReplicas setting in the Couchbase Operator. This enhancement allows users to configure the number of replicas for analytics service, offering improved flexibility and reliability. The update is part of the ongoing improvements to enhance functionality and user experience.
+
+*https://jira.issues.couchbase.com/browse/K8S-4270/[K8S-4270]*::
+
+Potentially where we use `kubectl apply` for CRDS, we add a note that this error is possible in 2.9+, and to add `--server-side` to the `kubectl apply` command.
+
+
+
+
