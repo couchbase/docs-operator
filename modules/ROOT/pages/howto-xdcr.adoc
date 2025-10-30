@@ -236,6 +236,20 @@ When using Istio or another service mesh, remember that strict mode mTLS cannot 
 This means XDCR will be unable to replicate when using IP based addressing with strict mode mTLS.
 ====
 
+When you use NodePorts on a remote Couchbase cluster for XDCR connections, you risk interruptions if Kubernetes deletes and recreates the Service.
+Kubernetes does not guarantee that a new Service reuses the same NodePort.
+If the port number changes, XDCR connections that rely on the old IP:NodePort become invalid.
+
+The exact outcome depends on the Kubernetes CNI (Container Networking Interface) implementation.
+In some cases, Kubernetes removes the old port before it creates the new one, which causes a brief loss of connectivity.
+In other cases, Kubernetes creates the new NodePort first, which reduces or avoids downtime.
+
+- Single-node Couchbase cluster: When the node's NodePort changes, XDCR cannot reconnect automatically.
+In this case, you must manually update the replication configuration at couchbaseclusters.spec.xdcr.remoteClusters.hostname with the new IP:NodePort of the Couchbase node.
+
+- Multi-node Couchbase cluster: When a node's NodePort changes, XDCR reconnects to another node that still exposes a valid NodePort.
+However, if XDCR tries to reconnect through the updated node, you may still need to update couchbaseclusters.spec.xdcr.remoteClusters.hostname with the new port.
+
 === Remote Cluster
 
 The remote cluster needs to set some networking options:
