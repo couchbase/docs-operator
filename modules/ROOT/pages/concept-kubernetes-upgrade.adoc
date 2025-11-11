@@ -81,3 +81,44 @@ You should monitor this via the xref:howto-manage-operator-logging.adoc[Operator
 * The Operator will initiate a rebalance to redistribute data across the cluster and restore redundancy constraints.
 
 Only when the rebalance is successfully complete can you safely drain and upgrade another Kubernetes node containing a Couchbase pod belonging to the same Couchbase cluster.
+
+== Graceful Pod Rescheduling During Node Maintenance
+
+When performing maintenance operations such as node drains or pod evictions in Kubernetes, Couchbase Server pods may be terminated abruptly without graceful shutdown.This can cause transient write failures as the cluster SDK continues routing operations to the terminated node until auto-failover completes and the cluster map updates.
+
+To prevent application-level interruptions during planned maintenance, the Couchbase Autonomous Operator provides mechanisms for graceful pod rescheduling.
+
+=== Manual Pod Rescheduling
+
+If you know in advance that a worker node will be drained, you can manually trigger graceful pod rescheduling by cordoning the node, and applying the  `cao.couchbase.com/reschedule` annotation.
+
+When this annotation is applied to a Couchbase Server pod, the Operator:
+
+. Gracefully removes the pod from the cluster (via failover or rebalance)
+. Waits for the operation to complete
+. Deletes and reschedules the pod on a suitable node
+
+To trigger manual rescheduling:
+
+[source,bash]
+----
+kubectl annotate pod <pod-name> cao.couchbase.com/reschedule=true
+----
+
+For more details, see xref:reference-annotations.adoc#pod-rescheduling[Pod Rescheduling].
+
+=== Automated Pod Rescheduling with Eviction Webhook
+
+For automated handling of node drains and pod evictions, Couchbase provides an open-source Eviction Reschedule Hook.
+This webhook monitors eviction events and automatically applies the `cao.couchbase.com/reschedule` annotation, allowing the Operator to handle graceful rescheduling without manual intervention.
+Note that this is intended to protect evicting pods from drained nodes, triggered by the `kubectl drain` command. This is not intended to be used with manual eviction requests.
+
+The webhook provides:
+
+* Automatic detection of pod eviction events
+* Graceful pod removal before Kubernetes terminates the pod
+* Zero-downtime node drains for planned maintenance
+
+For detailed setup instructions and architecture, see the link:https://www.couchbase.com/blog/node-drains-webhook-pod-removal/[Rethinking Node Drains: A Webhook Based Approach to Graceful Pod Removal^] blog post.
+
+NOTE: The automated webhook approach is recommended for production environments where node maintenance is frequent or unpredictable.
