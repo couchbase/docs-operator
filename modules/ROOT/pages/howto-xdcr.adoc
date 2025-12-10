@@ -101,12 +101,12 @@ spec:
 <.> The correct hostname to use is the remote cluster's console service to provide stable naming and service discovery.
 The hostname is calculated as per the xref:howto-client-sdks.adoc#dns-based-addressing[SDK configuration how-to].
 
-<.> As we're not using client certificate authentication we specify a secret containing a username and password on the remote system.
+<.> As we're not using client certificate authentication, specify a secret containing a username and password on the remote system.
 
 <.> **TLS only:** For TLS connections you need to specify the remote cluster CA certificate in order to verify the remote cluster is trusted.
 xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-xdcr-remoteclusters-tls-secret[`couchbaseclusters.spec.xdcr.remoteClusters.tls.secret`] documents the secret format.
 
-<.> Replications are selected that match the labels we specify, in this instance the ones that go from this cluster to the remote cluster.
+<.> Replications are selected that match the labels specified, in this instance the ones that go from this cluster to the remote cluster.
 
 <.> **Inter-Kubernetes networking with forwarded DNS only:** the xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-pod[`couchbaseclusters.spec.servers.pod.spec.dnsPolicy`] field tells Kubernetes to provide no default DNS configuration.
 
@@ -217,16 +217,16 @@ spec:
 <.> The correct hostname to use is the remote cluster's console service to provide stable naming and service discovery.
 The hostname is calculated as per the xref:howto-client-sdks.adoc#dns-based-addressing-with-external-dns[SDK configuration how-to].
 
-<.> As we're not using client certificate authentication we specify a secret containing a username and password on the remote system.
+<.> As we're not using client certificate authentication, specify a secret containing a username and password on the remote system.
 
 <.> For TLS connections you need to specify the remote cluster CA certificate in order to verify the remote cluster is trusted.
 xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-xdcr-remoteclusters-tls-secret[`couchbaseclusters.spec.xdcr.remoteClusters.tls.secret`] documents the secret format.
 
-<.> Replications are selected that match the labels we specify, in this instance the ones that go from this cluster to the remote cluster.
+<.> Replications are selected that match the labels specified, in this instance the ones that go from this cluster to the remote cluster.
 
 == IP Based Addressing
 
-In this discouraged scenario, there is no shared DNS between 2 Kubernetes clusters - we must use IP based addressing.
+In this discouraged scenario, there is no shared DNS between 2 Kubernetes clusters - it must use IP based addressing.
 Pods are exposed by using Kubernetes `NodePort` type services.
 As there is no DNS, TLS is not supported, so security must be maintained between the 2 clusters using a VPN.
 
@@ -332,9 +332,9 @@ spec:
 <.> The correct hostname to use.
 The hostname is calculated as per the xref:howto-client-sdks.adoc#ip-based-addressing[SDK configuration how-to].
 
-<.> As we're not using client certificate authentication we specify a secret containing a username and password on the remote system.
+<.> As we're not using client certificate authentication, specify a secret containing a username and password on the remote system.
 
-<.> Finally we select replications that match the labels we specify, in this instance the ones that go from this cluster to the remote cluster.
+<.> Finally, select replications that match the labels specified, in this instance the ones that go from this cluster to the remote cluster.
 
 == Scopes and collections support
 
@@ -410,7 +410,7 @@ Eventual consistency rules apply so if the bucket is still being created then we
 
 <.> This is an example of replicating only a specific collection `collection1` in scope `scope1`.
 
-<.> The target keyspace must be of identical size so as we're replicating from a collection we must also specify a target collection.
+<.> The target keyspace must be of identical size; as replicating from a collection requires also specifying a target collection.
 
 <.> Deny rules can be used to prevent replication of specific keyspaces.
 This is useful if for example you have a scope with a large number of collections and you want to replicate all but a small number.
