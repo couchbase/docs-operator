@@ -26,11 +26,11 @@ This release supports the deployment of the following Couchbase software:
 | Software | Version
 
 | Couchbase Server Enterprise Edition
-| 7.0 - 7.6^*^
+| 8.0^*^
 |===
 
-*: Couchbase Server 7.6 is supported with Operator 2.6;
-however, new features in 7.6 are only supported on Operator 2.7.x and 2.8.x
+*: Couchbase Server 8.0 is supported with Operator 2.8;
+however, new features in 8.0 are only supported on Operator 2.9.x
 
 The following diagram depicts Couchbase Server compatibility with the Operator for this, and previous releases, and can be used to calculate upgrade paths:
 
@@ -40,23 +40,7 @@ image:compatibility-server.png[]
 [[couchbase-backup-and-restore-compatibility]]
 === Couchbase Backup and Restore Compatibility
 
-This release supports the following container images for xref:concept-backup.adoc[managed backup and restore] of Couchbase clusters:
-
-[#table-operator-compatibility-couchbase-backup,cols="1,1,1",options="header"]
-|===
-| Container Image
-| Backup Utility
-| Backup From and Restore To
-
-a| https://hub.docker.com/r/couchbase/operator-backup[`operator-backup:1.3.6`^]
-a| https://docs.couchbase.com/server/7.2.3/manage/manage-backup-and-restore/manage-backup-and-restore.html[`cbbackupmgr 7.2.3`^]
-| Couchbase Server 7.0--7.6
-|===
-
-The following diagram depicts Operator Backup image compatibility with all supported Couchbase Server versions, you should consider this when upgrading Couchbase Server:
-
-.Operator Backup Compatibility
-image:compatibility-backup.png[]
+Previous versions of the Couchbase Kubernetes Operator relied on operator-backup
 
 [[couchbase-fluent-bit-compatibility]]
 === Couchbase Fluent Bit Compatibility
