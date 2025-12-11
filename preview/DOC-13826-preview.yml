@@ -1,0 +1,6 @@
+sources:
+  docs-server:
+    branches: [release/8.0]
+
+  docs-operator:
+    branches: [DOC-13826-release-notes-cao-2-9-0, release/2.9]
