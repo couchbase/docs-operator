@@ -1,7 +1,3 @@
 sources:
   docs-operator:
-    branches: DOC-13826-release-notes-cao-2-9-0
-  docs-server:
-    url: https://github.com/couchbase/docs-server.git
-    branches: release/8.0
-    startPaths: docs/    
+    branches: DOC-13826-release-notes-cao-2-9-0   

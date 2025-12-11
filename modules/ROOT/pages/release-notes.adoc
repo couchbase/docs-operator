@@ -60,7 +60,7 @@ You can now set query service’s CompletedStreamSize via the CouchbaseCluster r
 
 *https://jira.issues.couchbase.com/browse/K8S-3650/[K8S-3650]*::
 
-
+When using Couchbase Server 8.0,  You can no longer create Memcached buckets.
 
 *https://jira.issues.couchbase.com/browse/K8S-3715/[K8S-3715]*::
 
@@ -76,8 +76,7 @@ You can now specify `overheadMemory` for autoResourceAllocation to specify a sta
 
 *https://jira.issues.couchbase.com/browse/K8S-3951/[K8S-3951]*::
 
-In 2.8.1, we added `cao.couchbase.com/autoCompaction.magmaFragmentationPercentage`.
-This ticket requires the value to be added to the CRD’s, and marked as deprecated (Or remove from the documentation) as an annotation.
+`cao.couchbase.com/autoCompaction.magmaFragmentationPercentage` has been replaced with an entry in the Couchbase Cluster Resource Definition
 
 *https://jira.issues.couchbase.com/browse/K8S-4013/[K8S-4013]*::
 
@@ -160,7 +159,7 @@ In prior versions of Couchbase Operator, the metrics port annotation (`prometheu
 
 *https://jira.issues.couchbase.com/browse/K8S-4158/[K8S-4158]*::
 
-You can now specify to do an EvictionPolicy change while the bucket is online via swap rebalance.
+You can now specify to perform an EvictionPolicy change while the bucket is online via swap rebalance.
 
 *https://jira.issues.couchbase.com/browse/K8S-4161/[K8S-4161]*::
 
@@ -170,10 +169,6 @@ This feature is only supported for couchbase server versions 7.6+.
 *https://jira.issues.couchbase.com/browse/K8S-4209/[K8S-4209]*::
 
 Full backups can now be resumed.
-
-*https://jira.issues.couchbase.com/browse/K8S-4270/[K8S-4270]*::
-
-Potentially where we use `kubectl apply` for CRDS, we add a note that this error is possible in 2.9+, and to add `--server-side` to the `kubectl apply` command.
 
 *https://jira.issues.couchbase.com/browse/K8S-4273/[K8S-4273]*::
 
@@ -190,6 +185,7 @@ Fixed an issue where log message tags were inconsistent.
 *https://jira.issues.couchbase.com/browse/K8S-4349/[K8S-4349]*::
 
 [KnownIssue] The CouchbaseCluster CRD has grown to a size that does not allow client side apply to be used.
+Use `--server-side` when using `kubectl apply`
 
 
 
