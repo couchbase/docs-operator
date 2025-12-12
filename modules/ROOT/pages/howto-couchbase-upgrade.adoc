@@ -5,50 +5,195 @@ include::partial$constants.adoc[]
 [abstract]
 How-to upgrade Couchbase Server to a newer version.
 
+The Couchbase Server version can be upgraded by changing the `spec.image` in the cluster manifest to a new version. While an upgrade is taking place, up until all pods are running the new version, it can also be rolled back to the previous version. In the cluster manifest, `spec.upgrade` provides a number of upgrade controls for more granular management of the upgrade process. Before upgrading, it’s important to understand the upgrade xref:concept-upgrade.adoc[concepts] and how to use the controls.
+
+[Note]
+====
+During an upgrade or rollback where there are two versions of Couchbase Server running in the cluster, the Operator will consider the cluster in “Mixed Mode”. During which time, sidecar pod modifications and bucket storage backend migrations are disabled.
+====
+
+== Upgrading a Cluster
+
 Given the existing configuration:
 
-[source,yaml,subs="attributes,verbatim"]
+[source,yaml]
 ----
 apiVersion: couchbase.com/v2
 kind: CouchbaseCluster
 spec:
-  image: couchbase/server:{couchbase-version-upgrade-from} # <.>
+  image: couchbase/server:7.6.8 # <.>
 ----
 
-<.> xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-image[`couchbaseclusters.spec.image`] can be modified to any valid Couchbase Server image, in this example we want to upgrade the version only.
+<.> The image can be modified to any valid Couchbase Server image.
 
-[source,yaml,subs="attributes,verbatim"]
-----
-apiVersion: couchbase.com/v2
-kind: CouchbaseCluster
-spec:
-  image: couchbase/server:{couchbase-version} # <.>
-----
-
-<.> The modification will trigger the Operator to detect that existing pod specifications do not match the new pod specifications.
-This will perform a xref:concept-upgrade.adoc#upgrading-couchbase-server[rolling upgrade] of Couchbase Server.
-
-== In Place Upgrade
-Given the existing configuration:
-
-[source,yaml,subs="attributes,verbatim"]
+[source,yaml]
 ----
 apiVersion: couchbase.com/v2
 kind: CouchbaseCluster
 spec:
-  image: couchbase/server:{couchbase-version-upgrade-from}
-  upgradeProcess: InPlaceUpgrade # <.>
+  image: couchbase/server:8.0.0 # <.>
 ----
 
-<.> This field will inform the operator that we want to perform an in-place upgrade of the existing pods.
+<.> The modification will trigger the Operator to compare existing pod specifications, which use the old image, to new pod specifications, which will use the new image. Since they don't match, by default the Operator will begin a SwapRebalance upgrade process using the RollingUpgrade strategy. This creates new pods and rebalances them into the cluster before ejecting the old pods.
 
-[source,yaml,subs="attributes,verbatim"]
+=== In Place Upgrade
+Assuming spec.image is equal to a version below couchbase/server:8.0.0, update the manifest to:
+
+[source,yaml]
 ----
 apiVersion: couchbase.com/v2
 kind: CouchbaseCluster
 spec:
-  image: couchbase/server:{couchbase-version} # <.>
-  upgradeProcess: InPlaceUpgrade
+  image: couchbase/server:8.0.0 # <.>
+  upgrade:
+    upgradeProcess: InPlaceUpgrade # <.>
 ----
 
-<.> The Operator will detect that existing pod specifications do not match the new pod specifications and trigger an in-place upgrade.
+<.> The version we want to upgrade to.
+<.> Inform the Operator we want to perform in-place upgrades of the existing pods. This re-creates pods in-place using the same name and the same persistent volume.
+
+=== Rolling Upgrade Controls
+
+Assuming spec.image is equal to a version below couchbase/server:8.0.0, update the manifest to:
+
+[source,yaml]
+----
+apiVersion: couchbase.com/v2
+kind: CouchbaseCluster
+spec:
+  image: couchbase/server:8.0.0 <.>
+  upgrade:
+    upgradeProcess: SwapRebalance
+    upgradeStrategy: RollingUpgrade
+    rollingUpgrade: <.>
+      maxUpgradable: 3 <.>
+      maxUpgradablePercent: 10 <.>
+----
+
+<.> The version we want to upgrade to.
+<.> couchbasecluster.spec.upgrade.rollingUpgrade has two options. Either or both can be configured and the Operator will upgrade the lower number of pods per cycle.
+<.> Configure Operator to only upgrade 3 pods at a time.
+<.> Configure Operator to upgrade at most 10% of pods at a time relative to the total cluster size, rounded down.
+If the above couchbasecluster.spec.upgrade.rollingUpgrade was used on a cluster with 10 pods, only 1 would be upgraded at a time, as the percentage value of the total is lower than the fixed number and therefore takes precedence. If however we had a cluster with 60 pods, the Operator would upgrade 3 at a time as the fixed number is now lower than the percentage.
+
+=== Granular Controls
+
+Assuming spec.image is equal to a version below couchbase/server:8.0.0, update the manifest to:
+
+[source,yaml]
+----
+apiVersion: couchbase.com/v2
+kind: CouchbaseCluster
+spec:
+  image: couchbase/server:8.0.0 <.>
+  upgrade:
+    upgradeProcess: SwapRebalance
+    upgradeStrategy: RollingUpgrade
+    rollingUpgrade:
+      maxUpgradable: 1
+      maxUpgradablePercent: 20
+    stabilizationPeriod: 5m <.>
+    previousVersionPodCount: 4 <.>
+    upgradeOrderType: Nodes <.>
+    upgradeOrder: <.>
+      - cb-instance-3
+      - cb-instance-1
+      - cb-instance-2
+----
+
+<.> The version we want to upgrade to.
+<.> The Operator will wait for this period of time between each upgrade cycle. In this instance, every time an upgrade cycle occurs, there will be a 5 minute wait until the next one. During this period, normal Operator functions, other than those that are disabled during upgrades will continue to run.
+<.> The Operator will leave 4 pods on the previous version and not upgrade them. This might be useful if you want an extended stabilization period for a set number of nodes. Couchbase Server and Operator will not consider an upgrade complete until all pods are running on the new/same version. Features only available on the upgraded version will not be available until this is the case.
+<.> Determine the order that the Operator will upgrade pods, either by pod (Couchbase node) name, server group, server class or by the Couchbase services running on a pod. You might want to upgrade pods in a specific availability zone first before others, or perhaps your pods running the data service should be upgraded before those with the index service.
+<.> Depending on the upgradeOrderType, this field is a non-exhaustive list of the order Operator should upgrade pods by that type. In this case, the Operator will upgrade pods by Node name, meaning cb-instance-3 will be upgraded first, followed by cb-instance-1 and finally cb-instance-2. Any remaining pods that aren’t selected by the list will be upgraded in alphabetical order.
+
+=== Order Upgrades by Server Group
+
+Assuming spec.image is equal to a version below couchbase/server:8.0.0, update the manifest to:
+
+[source,yaml]
+----
+apiVersion: couchbase.com/v2
+kind: CouchbaseCluster
+spec:
+  serverGroups:
+    - zone-1
+    - zone-2
+    - zone-3
+  image: couchbase/server:8.0.0 <.>
+  upgrade:
+    upgradeOrderType: ServerGroups <.>
+    upgradeOrder <.>
+      - zone-3
+----
+
+<.> The version we want to upgrade to.
+<.> The order type we want the Operator to use.
+<.> Upgrade pods running in server group zone-3 first. Pods running on server groups not in this list, zone-1 and zone-2, will be upgraded in the order given in the couchbasecluster.spec.serverGroups list.
+
+=== Order Upgrades by Server Class
+
+Assuming spec.image is equal to a version below couchbase/server:8.0.0, update the manifest to:
+
+[source,yaml]
+----
+apiVersion: couchbase.com/v2
+kind: CouchbaseCluster
+spec:
+  servers:
+  - name: data_only
+    services:
+    - data
+    size: 2
+  - name: idx_query
+    services:
+    - index
+    - query
+    size: 6
+  image: couchbase/server:8.0.0 <.>
+  upgrade:
+    upgradeOrderType: ServerClasses <.>
+    upgradeOrder: <.>
+      - idx_query
+      - data_only
+----
+
+<.> The version we want to upgrade to.
+<.> The order type we want the Operator to use.
+<.> Upgrade pods running in server class idx_query first, followed by pods running in data_only. The maximum number of pods that will be upgraded on each cycle will be limited by either the `spec.upgrade.rollingUpgrade.maxUpgradable` field or the number of pods in the server class being upgraded, whichever is smaller. The Operator will not upgrade more than one server class at a time. If the number of pods running a server class is less than the `spec.upgrade.rollingUpgrade.maxUpgradable` amount, the Operator will not upgrade pods from the next server class in the list.
+
+=== Order Upgrades by Service
+
+Assuming spec.image is equal to a version below couchbase/server:8.0.0, update the manifest to:
+
+[source,yaml]
+----
+apiVersion: couchbase.com/v2
+kind: CouchbaseCluster
+spec:
+  servers:
+  - name: data_only
+    services:
+    - data
+    size: 2
+  - name: idx_query
+    services:
+    - index
+    - query
+    size: 2
+  - name: query_only
+    services:
+    - query
+    size: 2
+  image: couchbase/server:8.0.0 <.>
+  upgrade:
+    upgradeOrderType: Services <.>
+    upgradeOrder: <.>
+      - index
+      - data
+      - query
+----
+
+<.> The version we want to upgrade to.
+<.> The order type we want the Operator to use.
+<.> The sequence by which the Operator should upgrade services. Pods running multiple services will be ordered by the first one of those services in the sequence list. Using this manifest, pods running the index service (those in the idx_query server class) will be upgraded first, followed by the pods running the data service, and finally the pods running the query service. If the number of pods running a service is less than the `spec.upgrade.rollingUpgrade.maxUpgradable` amount, the Operator will not upgrade pods from the next service in the list. If the upgrade order sequence does not include all services, pods running services not in the list will be upgraded using the default order: data, query, index, search, analytics, eventing.
