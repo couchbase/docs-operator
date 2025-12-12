@@ -166,6 +166,10 @@ You can now specify to perform an EvictionPolicy change while the bucket is onli
 Operator 2.9.0 now allows you to set `spec.cluster.analytics.numReplicas`.
 This feature is only supported for couchbase server versions 7.6+.
 
+*https://jira.issues.couchbase.com/browse/K8S-4203/[K8S-4203]*::
+
+Fixed an issue where if many clusters are under management by Operator, the metrics scrape would be too large.
+
 *https://jira.issues.couchbase.com/browse/K8S-4209/[K8S-4209]*::
 
 Full backups can now be resumed.
@@ -177,10 +181,6 @@ Fixed an issue where Operator would fail to remove pods from the cluster.
 *https://jira.issues.couchbase.com/browse/K8S-4279/[K8S-4279]*::
 
 Fixed an issue where log message tags were inconsistent.
-
-*https://jira.issues.couchbase.com/browse/K8S-4286/[K8S-4286]*::
-
-
 
 *https://jira.issues.couchbase.com/browse/K8S-4349/[K8S-4349]*::
 
