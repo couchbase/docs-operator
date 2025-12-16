@@ -24,7 +24,7 @@ The following is a `spec.upgrade` example in the CouchbaseCluster manifest for a
 upgrade:
   upgradeProcess: SwapRebalance # <.>
   upgradeStrategy: RollingUpgrade # <.>
-  rollingUpgrade: # <.>
+  rollingUpgrade:
     maxUpgradable: 1
     maxUpgradablePercent: 100%
   stabilizationPeriod: 10s # <.>
