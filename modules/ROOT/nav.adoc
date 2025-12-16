@@ -140,6 +140,7 @@ include::partial$autogen-reference.adoc[]
 * Logging
  ** xref:tutorial-couchbase-log-forwarding.adoc[]
 * Monitoring
+ ** xref:tutorial-mirwatchdog.adoc[Monitor for Manual Intervention Scenarios]
  ** xref:tutorial-prometheus.adoc[Quick Start with Prometheus Monitoring]
 * Networking
  ** xref:tutorial-remote-dns.adoc[Inter-Kubernetes Networking with Forwarded DNS]
