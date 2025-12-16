@@ -57,16 +57,16 @@ Because this strategy uses the least network and compute resources, it minimizes
 ** `ImmediateUpgrade` increases risk and resource utilization during the upgrade but completes the operation faster.
 Because the strategy upgrades all pods at the same time, it can cause an adverse impact on client performance.
 
-<.> `StabilizationPeriod` lets you control how long the Operator waits between upgrade cycles and gives you time to check cluster health and service availability.
+<.> `stabilizationPeriod` lets you control how long the Operator waits between upgrade cycles and gives you time to check cluster health and service availability.
 
-<.> `PreviousVersionPodCount` instructs the Operator to keep a fixed number of pods running the previous cluster version.
+<.> `previousVersionPodCount` instructs the Operator to keep a fixed number of pods running the previous cluster version.
 This setting supports rollbacks or an extended `StabilizationPeriod` for the final pods during a cluster upgrade.
 Couchbase Server considers the upgrade process complete only when all pods run the new cluster version.
 During this time, the Operator marks the cluster as Mixed Mode, which may restrict some features.
 
-<.> `UpgradeOrderType` defines the sequence the Operator uses to upgrade pods to the new cluster version.
-It determines how the Operator interprets `UpgradeOrder` and must be set to Nodes, ServerGroups, ServerClasses, or Services.
-The Operator follows the sequence specified in `UpgradeOrder` and applies the default ordering to any items not listed.
+<.> `upgradeOrderType` defines the sequence the Operator uses to upgrade pods to the new cluster version.
+It determines how the Operator interprets `upgradeOrder` and must be set to Nodes, ServerGroups, ServerClasses, or Services.
+The Operator follows the sequence specified in `upgradeOrder` and applies the default ordering to any items not listed.
 
 NOTE: `InPlaceUpgrade` can interrupt service and increase the risk of data loss.
 Use this process only when the cluster has at least two nodes running the Data Service.
