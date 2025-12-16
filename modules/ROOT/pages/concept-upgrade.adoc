@@ -46,7 +46,7 @@ The Operator rebalances data from the existing pods to the new pods and then del
 
 ** During an `InPlaceUpgrade`, the Operator selects one or more candidate pods and fails them over.
 The Operator detaches the volumes from those pods, replaces them with pods running the new cluster version, and rebinds the existing volumes to the new pods.
-This process completes faster than a `rollingUpgrade`, and the Operator retains the pod names and network settings for the updated pods.
+This process completes faster than a `SwapRebalance`, and the Operator retains the pod names and network settings for the updated pods.
 
 <.> `upgradeStrategy` determines how `SwapRebalance` creates new pods by using either `RollingUpgrade` or `ImmediateUpgrade`.
 To use `InPlaceUpgrade`, set the strategy to `rollingUpgrade`.
@@ -129,7 +129,7 @@ Keep the time spent in this mode to a minimum.
 === Upgrading Pods
 
 Kubernetes pods are immutable.
-When you modify the CouchbaseCluster manifest in a way that requires pod replacement, the Operator creates new pods by using the same process that of the upgrade to replace pods running the previous version.
+When you modify the CouchbaseCluster manifest in a way that requires pod replacement, the Operator creates new pods by using the same process as upgrading or rolling back pods to replace pods running the previous version.
 Upgrading Couchbase Server is only a subset of modifying any other pod specification parameter.
 
 The Operator builds pod specifications from the manifest and compares them with the existing pods in the cluster.
