@@ -1,26 +1,40 @@
-= What's New?
-include::partial$constants.adoc[]
+[#whats-new-290]
+== What's New in 2.9.0 (December 2025)
 
-Autonomous Operator {operator-version-minor} introduces our new Cluster Migration functionality well as a number of other improvements and minor fixes.
+Couchbase Operator 2.9.0 was released in December 2025.
+New features and improvements are described below.
 
-== Cluster Migration
+== New Features
 
-Cluster Migration allows you to transfer a currently-unmanaged Couchbase Server cluster over to being managed by the Operator, with zero downtime.
 
-See xref:concept-migration.adoc[Couchbase Cluster Migration] for more details.
 
-== Admission Controller Improvements
 
-The Dynamic Admission Controller (DAC) will now warn if any cluster settings don't match our xref:best-practices.adoc#production-deployments[Best Practices for Production Deployments].
 
-The DAC will now prevent changes to the `CouchbaseCluster` spec while a hibernation is taking place.
-If hibernation is enabled while a cluster is migrating, upgrading, scaling, or rebalancing, that process will conclude before the cluster enters hibernation. The DAC will warn when this is the case, and it will be visible in the operator logs.
 
-To prevent any invalid resources failing to reconcile (i.e. if the DAC is not deployed in the current environment), the DAC Validation is now run at the beginning of the reconciliation loop.
-Any invalid resources will be skipped for reconciliation, marked as `NotValid`, and logged.
 
-== Miscellaneous Improvements
+[#dlist-whats-new-290-]
+=== Operator
 
-* Pod Disruption Budgets can now be set per-Server Class by enabling xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-perserviceclasspdb[`couchbaseclusters.spec.perServiceClassPDB`].
-* Sample Buckets can now be loaded via the xref:resource/couchbasebucket.adoc[`CouchbaseBucket`] resource, by using the xref:reference-annotations.adoc#cao-couchbase-comsamplebucket[`cao.couchbase.com/sampleBucket`] annotation.
-* Query-related RBAC roles (`query_use_sequential_scans`, `query_use_sequences`, and `query_manage_sequences`) have now been added to  xref:resource/couchbasegroup.adoc#couchbasegroups-spec-roles-name[`couchbasegroups.spec.roles.name`].
+*https://jira.issues.couchbase.com/browse/K8S-3917/[K8S-3917]*::
+
+You can now specify `overheadMemory` for autoResourceAllocation to specify a static amount of overhead.
+
+*https://jira.issues.couchbase.com/browse/K8S-4013/[K8S-4013]*::
+
+It is now possible to disable DNS resolution verification when creating pods, prior to activating them within the cluster.
+
+*https://jira.issues.couchbase.com/browse/K8S-4028/[K8S-4028]*::
+
+Added an upgrade stanza to the CouchbaseCluster resource to give users more control during upgrades.
+
+*https://jira.issues.couchbase.com/browse/K8S-4097/[K8S-4097]*::
+
+The MirWatchdog is an out-of-band check that allows for additional alerting to be in place in the unlikely scenario that an Operator is unable to reconcile a cluster due to reasons outside of its controls/capabilities and which therefore require manual intervention by a user to resolve. Scenarios include but are not limited to, tls expiration, couchbase authentication errors and loss of quorum.
+By default this is disabled, but can be enabled and configured using the `mirWatchdog` field in the couchbase cluster CRD. If the cluster enters this condition, it will:
++
+* Set the cluster_manual_intervention gauge metric to 1
+* Add (where possible) the `ManualInterventionRequired` condition to the cluster, with a message detailing the reason for entering the MIR state.
+* Raise a `ManualInterventionRequired` Kubernetes event, with the event message set to the reason for entering manual intervention
+* Optionally, reconciliation will be skipped until the manual intervention required state has been resolved, i.e. the issue that put the cluster into that condition has been fixed.
+
+

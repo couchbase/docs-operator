@@ -184,9 +184,29 @@ Fixed an issue where log message tags were inconsistent.
 
 *https://jira.issues.couchbase.com/browse/K8S-4349/[K8S-4349]*::
 
-[KnownIssue] The CouchbaseCluster CRD has grown to a size that does not allow client side apply to be used.
+The CouchbaseCluster CRD has grown to a size that does not allow client side apply to be used.
 Use `--server-side` when using `kubectl apply`
 
+*https://jira.issues.couchbase.com/browse/K8S-4404/[K8S-4404]*::
+
+Fixed an issue where upgrades with SHA256 image digest definitions would be unsuccessful.
 
 
 
+
+[#known-issues-290]
+== Known Issues 2.9.0 (December 2025)
+
+For Couchbase Autonomous Operator 2.9.0 was released in December 2025,
+these are the known issues that aren’t yet resolved.
+
+
+
+
+[#dlist-known-issues-290-]
+=== Operator
+
+*https://jira.issues.couchbase.com/browse/K8S-4349/[K8S-4349]*::
+
+The CouchbaseCluster CRD has grown to a size that does not allow client side apply to be used.
+Use `--server-side` when using `kubectl apply`
