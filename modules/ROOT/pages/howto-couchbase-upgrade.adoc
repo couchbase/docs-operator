@@ -70,13 +70,13 @@ Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.0
 apiVersion: couchbase.com/v2
 kind: CouchbaseCluster
 spec:
-  image: couchbase/server:8.0.0 <.>
+  image: couchbase/server:8.0.0 # <.>
   upgrade:
     upgradeProcess: SwapRebalance
     upgradeStrategy: RollingUpgrade
-    rollingUpgrade: <.>
-      maxUpgradable: 3 <.>
-      maxUpgradablePercent: 10 <.>
+    rollingUpgrade: # <.>
+      maxUpgradable: 3 # <.>
+      maxUpgradablePercent: 10 # <.>
 ----
 
 <.> The version to which you want to upgrade.
@@ -98,17 +98,17 @@ Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.0
 apiVersion: couchbase.com/v2
 kind: CouchbaseCluster
 spec:
-  image: couchbase/server:8.0.0 <.>
+  image: couchbase/server:8.0.0 # <.>
   upgrade:
     upgradeProcess: SwapRebalance
     upgradeStrategy: RollingUpgrade
     rollingUpgrade:
       maxUpgradable: 1
       maxUpgradablePercent: 20
-    stabilizationPeriod: 5m <.>
-    previousVersionPodCount: 4 <.>
-    upgradeOrderType: Nodes <.>
-    upgradeOrder: <.>
+    stabilizationPeriod: 5m # <.>
+    previousVersionPodCount: 4 # <.>
+    upgradeOrderType: Nodes # <.>
+    upgradeOrder: # <.>
       - cb-instance-3
       - cb-instance-1
       - cb-instance-2
@@ -142,10 +142,10 @@ spec:
     - zone-1
     - zone-2
     - zone-3
-  image: couchbase/server:8.0.0 <.>
+  image: couchbase/server:8.0.0 # <.>
   upgrade:
-    upgradeOrderType: ServerGroups <.>
-    upgradeOrder <.>
+    upgradeOrderType: ServerGroups # <.>
+    upgradeOrder # <.>
       - zone-3
 ----
 
@@ -173,10 +173,10 @@ spec:
     - index
     - query
     size: 6
-  image: couchbase/server:8.0.0 <.>
+  image: couchbase/server:8.0.0 # <.>
   upgrade:
-    upgradeOrderType: ServerClasses <.>
-    upgradeOrder: <.>
+    upgradeOrderType: ServerClasses # <.>
+    upgradeOrder: # <.>
       - idx_query
       - data_only
 ----
@@ -211,10 +211,10 @@ spec:
     services:
     - query
     size: 2
-  image: couchbase/server:8.0.0 <.>
+  image: couchbase/server:8.0.0 # <.>
   upgrade:
-    upgradeOrderType: Services <.>
-    upgradeOrder: <.>
+    upgradeOrderType: Services # <.>
+    upgradeOrder: # <.>
       - index
       - data
       - query
