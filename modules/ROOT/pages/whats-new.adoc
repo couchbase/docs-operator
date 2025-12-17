@@ -4,6 +4,8 @@
 Couchbase Operator 2.9.0 was released in December 2025.
 New features and improvements are described below.
 
+For information about fixed and known issues, see the xref:release-notes.adoc[Release Notes].
+
 == New Features
 
 
