@@ -1,63 +1,82 @@
 = Monitor for Manual Intervention Scenarios
 
 [abstract]
-Use the Manual Intervention Required Watchdog to monitor and alert for cluster scenarios that the Operator is unable to automatically resolve.
+Use the Manual Intervention Required Watchdog to monitor cluster scenarios and alert you when the Operator cannot automatically resolve them.
 
 include::partial$tutorial.adoc[]
 
 == Overview
 
-While the Operator is designed to be able to automatically resolve most issues, Manual Intervention Required (MIR) is a new state that, when enabled, a Couchbase Cluster will enter in the unlikely scenario that the Operator is unable to reconcile due to reasons outside of it's control/capabilities, and which therefore require manual intervention by a user. These additional checks are ran by the "Manual Intervention Required Watchdog".
+The Operator automatically resolves most issues.
+However, enabling Manual Intervention Required (MIR) places the Couchbase cluster into a special state when the Operator cannot reconcile issues outside its control.
+In this state, the cluster requires manual intervention by a user.
+The MIR Watchdog runs the additional checks that detect and trigger this state.
 
 === Enable the Manual Intervention Required Watchdog
 
-Enable the Manual Intervention Required Watchdog on a per-cluster basis in the `couchbaseclusters` CRD.
+Enable the Manual Intervention Required Watchdog for each cluster in the `CouchbaseCluster` CRD (Custom Resource Definitions).
 
 [source,yaml]
 ----
 spec:
   mirWatchdog:
-    enabled: true <.>
-    interval: 20s <.>
-    skipReconciliation: false <.>
+    enabled: true # <.>
+    interval: 20s # <.>
+    skipReconciliation: false # <.>
 ----
 
-<.> Enable the Manual Intervention Required Watchdog. Default is false.
-<.> Set the interval for the Manual Intervention Required Watchdog to check for MIR conditions. Default is 20 seconds.
-<.> Set whether to skip reconciliation when in the MIR state. Default is false.
+<.> Enable the Manual Intervention Required Watchdog.
+The default value is `false`.
+<.> Set the interval at which the Manual Intervention Required Watchdog checks for MIR conditions.
+The default value is 20 seconds.
+<.> Specify whether the Operator skips reconciliation when the cluster is in the MIR state.
+The default value is `false`.
 
 ==== Alerting
 
-This is designed to be accompanied by additional alerting on the Kubernetes event/cluster condition/metrics, hence the reason for defaulting to false. If a cluster enters the MIR state, it will:
+The Manual Intervention Required Watchdog is designed to work with additional alerting based on Kubernetes events, cluster conditions, or metrics.
+For this reason, the default value is set to `false`.
+When a cluster enters the MIR state, the Operator performs the following actions:
 
+* Sets the `cluster_manual_intervention` gauge metric to 1.
 
-* Set the `cluster_manual_intervention` gauge metric to 1
-* Add (when possible) the ManualInterventionRequired condition to the cluster, with a message detailing the reason for entering the MIR state
-* Raise a ManualInterventionRequired Kubernetes event, with the event message set to the reason for entering manual intervention
-* Depending on the `spec.mirWatchdog.skipReconciliation` setting, reconciliation can optionally be skipped until the manual intervention required state has been resolved, i.e. the issue that put the cluster into that condition has been fixed.
+* Adds the `ManualInterventionRequired` condition to the cluster, when possible, and includes a message that explains the reason for cluster entering the MIR state.
 
+* Raises a `ManualInterventionRequired` Kubernetes event with a message that describes the reason for manual intervention.
+
+* Optionally skips reconciliation based on the `spec.mirWatchdog.skipReconciliation` setting until you resolve the issue that caused the MIR state.
 
 ==== Manual Intervention Required Scenarios
 
-For each of the checks the watchdog performs, entry and exit conditions determine whether to enter the MIR state or exit the MIR state. The currently supported checks are:
+For each check that the Manual Intervention Required Watchdog performs, the defined entry and exit conditions determine whether the cluster enters or exits the MIR state.
 
+The supported Manual Intervention Required Watchdog checks are as follows:
 
+* <<consecutive-rebalance-failures, Consecutive Rebalance Failures>>
+* <<couchbase-cluster-authentication-failure, Couchbase Cluster Authentication Failure>>
+* <<down-nodes-when-quorum-is-lost, Down Nodes when Quorum is Lost>>
+* <<tls-certificate-expiration, TLS Certificate Expiration>>
+
+[#consecutive-rebalance-failures]
 ===== Consecutive Rebalance Failures
-* Entry: All rebalance retry attempts are exhausted for 3 consecutive reconciliation loops.
-* Exit: The cluster is balanced and all nodes have been activated.
 
+* Entry: After the Operator exhausts all rebalance retry attempts in 3 consecutive reconciliation loops.
+* Exit: After the cluster becomes balanced and the Operator activates all nodes.
 
+[#couchbase-cluster-authentication-failure]
 ===== Couchbase Cluster Authentication Failure
-* Entry: The operator is unable to use the provided Couchbase Cluster credentials to authenticate with the cluster.
-* Exit: Authentication Succeeds.
 
+* Entry: The Operator fails to authenticate with the cluster by using the provided Couchbase cluster credentials.
+* Exit: The Operator succeeds to authenticate with the cluster.
 
+[#down-nodes-when-quorum-is-lost]
 ===== Down Nodes when Quorum is Lost
-* Entry: There are down nodes that cannot be recovered by the operator.
-* Exit: There are no unrecoverable down nodes.
 
+* Entry: The Operator detects down nodes that it cannot recover.
+* Exit: The Operator detects no unrecoverable down nodes.
 
+[#tls-certificate-expiration]
 ===== TLS Certificate Expiration
-* Entry: Any of the CA, Client or Server Certificate Chain expires and do not have valid alternatives the Operator can rotate them for.
-* Exit: TLS certs are no longer expired or the Operator has valid alternatives it can use to rotate any that are expired.
 
+* Entry: The Operator detects an expired CA (Certificate Authority), Client or Server Certificate chain, and finds no valid alternative certificates for rotation.
+* Exit: The Operator detects no expired TLS certificates or identifies valid alternative certificates available for rotation.

@@ -3,4 +3,4 @@ sources:
     branches: [release/8.0]
 
   docs-operator:
-    branches: [DOC-13656-Create-release-note-for-Couchbase-Operator-2.9.0, release/2.8]
+    branches: [K8S-4395-mir-docs, release/2.8]
