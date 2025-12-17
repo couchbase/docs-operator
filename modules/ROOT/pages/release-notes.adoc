@@ -195,7 +195,7 @@ Fixed an issue where upgrades with SHA256 image digest definitions would be unsu
 
 
 [#known-issues-290]
-== Known Issues 2.9.0 (December 2025)
+== Known Issues
 
 For Couchbase Autonomous Operator 2.9.0 was released in December 2025,
 these are the known issues that aren’t yet resolved.
