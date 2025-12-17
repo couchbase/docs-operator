@@ -7,10 +7,11 @@ include::partial$tutorial.adoc[]
 
 == Overview
 
-The Operator automatically resolves most issues.
-However, enabling Manual Intervention Required (MIR) places the Couchbase cluster into a special state when the Operator cannot reconcile issues outside its control.
-In this state, the cluster requires manual intervention by a user.
-The MIR Watchdog runs the additional checks that detect and trigger this state.
+The Operator automatically resolves most cluster issues without user involvement.
+However, some scenarios fall outside the Operator's control and require manual intervention.
+The Manual Intervention Required (MIR) Watchdog monitors for these scenarios and places the cluster into a special MIR state when they occur,
+alerting you to take action.
+
 
 === Enable the Manual Intervention Required Watchdog
 
@@ -35,7 +36,7 @@ The default value is `false`.
 ==== Alerting
 
 The Manual Intervention Required Watchdog is designed to work with additional alerting based on Kubernetes events, cluster conditions, or metrics.
-For this reason, the default value is set to `false`.
+
 When a cluster enters the MIR state, the Operator performs the following actions:
 
 * Sets the `cluster_manual_intervention` gauge metric to 1.
