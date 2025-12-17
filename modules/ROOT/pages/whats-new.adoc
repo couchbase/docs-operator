@@ -1,3 +1,8 @@
+= What's New?
+
+The new features and major improvements made in Couchbase Kubernetes Operator 2.9.0 are described below.
+
+
 [#whats-new-290]
 == What's New in 2.9.0 (December 2025)
 
