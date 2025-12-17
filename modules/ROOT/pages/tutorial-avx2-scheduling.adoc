@@ -501,3 +501,4 @@ AVX2:.metadata.labels."feature\.node\.kubernetes\.io/cpu-cpuid\.AVX2"
 kubectl get nodes -L cpu.feature/AVX2
 ----
 
+

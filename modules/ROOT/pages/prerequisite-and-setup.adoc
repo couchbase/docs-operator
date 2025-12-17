@@ -177,6 +177,8 @@ The architecture of each node must be uniform across the cluster as the use of m
 NOTE: The official Couchbase docker repository contains multi-arch images which do not require explicit references to architecture tags when being pulled and deployed.
 However, when pulling from a private repository, or performing intermediate processing on a machine with a different architecture than the deployed cluster, the use of explicit tags may be required to ensure the correct images are deployed.
 
+IMPORTANT: For optimal performance with Couchbase Server 8.0+, especially for vector search (FTS/GSI) workloads, ensure your nodes support AVX2 CPU instructions (x86-64-v3 microarchitecture). Refer to xref:tutorial-avx2-scheduling.adoc[AVX2-Aware Scheduling for Couchbase Server] for detailed guidance on detecting and scheduling pods on AVX2-capable nodes.
+
 == RBAC and Networking Requirements
 
 Preparing the Kubernetes cluster to run the Operator may require setting up proper RBAC and network settings in your Kubernetes cluster.
