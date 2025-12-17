@@ -1,22 +1,14 @@
-= What's New?
+= What's New in Couchbase Kubernetes Operator 2.9
 
-The new features and major improvements made in Couchbase Kubernetes Operator 2.9.0 are described below.
-
-
-[#whats-new-290]
-== What's New in 2.9.0 (December 2025)
-
-Couchbase Operator 2.9.0 was released in December 2025.
+Couchbase Kubernetes Operator 2.9.0 was released in December 2025.
 New features and improvements are described below.
 
 For information about fixed and known issues, see the xref:release-notes.adoc[Release Notes].
 
-== New Features
+[#whats-new-290]
+== New Features and Enhancements in 2.9.0
 
-
-
-
-
+This release introduces the following new features.
 
 
 [#dlist-whats-new-290-]
