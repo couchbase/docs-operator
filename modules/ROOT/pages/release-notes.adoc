@@ -1,3 +1,11 @@
+= Release Notes for Couchbase Kubernetes Operator 2.9.0
+
+== New Features
+
+These release notes are focused on bug fixes and breaking changes.
+
+For information about new features and major improvements made in Couchbase Kubernetes Operator 2.9.0, see xref:whats-new.adoc[What's New].
+
 [#release-290]
 == Release 2.9.0 (December 2025)
 
