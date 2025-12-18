@@ -10,15 +10,15 @@ include::partial$tutorial.adoc[]
 
 Starting with Couchbase Server 8.0, Vector Search (FTS and GSI) performance benefits from AVX2-capable CPUs on x86-64 nodes.
 
-=== What's an Advanced Vector Extensions 2 (AVX2)
+=== What is Advanced Vector Extensions 2 (AVX2)
 
 AVX2 is:
 
-* An SIMD instruction set available on modern Intel and AMD x86-64 CPUs
-* Required for high-performance vectorized operations
-* Part of the x86-64-v3 Microarchitecture level, along with BMI1, BMI2, and FMA
-* Not guaranteed on all cloud VM types
-* Not enforced by default in Kubernetes scheduling
+* An SIMD instruction set available on modern Intel and AMD x86-64 CPUs.
+* Required for high-performance vectorized operations.
+* Part of the x86-64-v3 Microarchitecture level, along with BMI1, BMI2, and FMA.
+* Not guaranteed on all cloud VM types.
+* Not enforced by default in Kubernetes scheduling.
 
 IMPORTANT: Kubernetes clusters must explicitly detect CPU capabilities and restrict scheduling to make sure Couchbase Server pods run on AVX2-capable nodes.
 
@@ -35,8 +35,8 @@ This tutorial approaches the problem through the following layers:
 
 Use one of the following methods to label Kubernetes nodes that support AVX2:
 
-* <<#node-labeling-via-nfd, *Node Feature Discovery (NFD)*>>: Recommended for production environments
-* <<#node-labeling-via-daemonset, *A custom DaemonSet*>>: Provides a direct, lightweight option with minimal dependencies
+* <<#node-labeling-via-nfd, *Node Feature Discovery (NFD)*>>: Recommended for production environments.
+* <<#node-labeling-via-daemonset, *A custom DaemonSet*>>: Provides a direct, lightweight option with minimal dependencies.
 
 [#node-labeling-via-nfd]
 === Method 1: Node Feature Discovery (Recommended)
@@ -111,10 +111,10 @@ This approach provides a lightweight option when NFD is unavailable or when you 
 
 The DaemonSet uses the following process to detect AVX2 support and label nodes:
 
-* Runs as a DaemonSet on every node
-* Reads `/proc/cpuinfo` from the host
-* Checks for the `avx2` flag
-* Labels the node when AVX2 support is present
+* Runs as a DaemonSet on every node.
+* Reads `/proc/cpuinfo` from the host.
+* Checks for the `avx2` flag.
+* Labels the node when AVX2 support is present.
 
 Use the following steps to label Kubernetes nodes that support AVX2 by using a custom DaemonSet:
 
@@ -234,8 +234,8 @@ kubectl get nodes -L cpu.feature/AVX2
 
 After you label nodes, configure the CouchbaseCluster resource to restrict pod scheduling to AVX2-capable nodes in one of the following ways:
 
-* <<#enforce-avx2-scheduling, *Enforce AVX2 Scheduling*>>: Recommended
-* <<#prefer-avx2-scheduling, *Prefer AVX2 Scheduling*>>: Fallback allowed
+* <<#enforce-avx2-scheduling, *Enforce AVX2 Scheduling*>>: Recommended.
+* <<#prefer-avx2-scheduling, *Prefer AVX2 Scheduling*>>: Fallback allowed.
 
 [#enforce-avx2-scheduling]
 === Enforce AVX2 Scheduling (Recommended)
@@ -333,6 +333,7 @@ Use the following steps to create a GKE node pool that guarantees AVX2 support.
 . Select a compatible machine family, such as `n2`, `c2`, `c3`, `n4`, `m2`, `m3`, and so on.
 
 . Enforce a minimum CPU platform that supports AVX2.
+For example:
 +
 --
 [source,console]
@@ -402,8 +403,8 @@ Use the following sections to provision AVX2-capable nodes and configure pod sch
 
 The following EC2 instance families support AVX2 instructions:
 
-* *Intel*: M5, C5, R5, M6i, C6i, R6i, M7i, C7i and newer generations
-* *AMD*: M5a, C5a, R5a, M6a, C6a, R6a and newer generations
+* *Intel*: M5, C5, R5, M6i, C6i, R6i, M7i, C7i and newer generations.
+* *AMD*: M5a, C5a, R5a, M6a, C6a, R6a and newer generations.
 
 Verify the selected instance type supports AVX2 by referring to the provider documentation.
 
@@ -471,9 +472,9 @@ Use the following sections to provision AVX2-capable nodes and configure pod sch
 
 The following Azure VM series support AVX2 instructions:
 
-* Dv3 and Ev3 VM series, based on Intel Haswell and Broadwell processors
-* Dv4 and Ev4 VM series, based on Intel Cascade Lake processors
-* Dv5 and Ev5 VM series, based on Intel Ice Lake processors
+* Dv3 and Ev3 VM series, based on Intel Haswell and Broadwell processors.
+* Dv4 and Ev4 VM series, based on Intel Cascade Lake processors.
+* Dv5 and Ev5 VM series, based on Intel Ice Lake processors.
 
 Verify the selected VM series supports AVX2 by referring to the Azure documentation.
 
