@@ -1,6 +1,5 @@
 = AVX2-Aware Scheduling for Couchbase Server
 :page-toclevels: 2
-:page-category: Tutorials
 
 [abstract]
 This tutorial explains how to detect the AVX2 CPU extension and x86-64-v3 Microarchitecture on Kubernetes nodes, label nodes accordingly, and configure CouchbaseCluster resources to schedule pods only on compatible nodes.
