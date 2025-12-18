@@ -148,7 +148,7 @@ include::partial$autogen-reference.adoc[]
 * Persistent Volumes
  ** xref:tutorial-volume-expansion.adoc[Persistent Volume Expansion]
 * Scheduling
- ** xref:tutorial-avx2-scheduling.adoc[AVX2-Aware Scheduling for Couchbase Server] 
+ ** xref:tutorial-avx2-scheduling.adoc[AVX2-Aware Scheduling for Couchbase Server]
 * Sync Gateway
  ** xref:tutorial-sync-gateway.adoc[Connecting Sync-Gateway to a Couchbase Cluster]
  ** xref:tutorial-sync-gateway-clients.adoc[Exposing Sync-Gateway to Couchbase Lite Clients]
