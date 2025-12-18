@@ -1,5 +1,4 @@
 = AVX2-Aware Scheduling for Couchbase Server
-
 :page-toclevels: 2
 :page-category: Tutorials
 
