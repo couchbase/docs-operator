@@ -1,5 +1,8 @@
 = AVX2-Aware Scheduling for Couchbase Server
 
+:page-toclevels: 2
+:page-category: Tutorials
+
 [abstract]
 This tutorial explains how to detect the AVX2 CPU extension and x86-64-v3 Microarchitecture on Kubernetes nodes, label nodes accordingly, and configure CouchbaseCluster resources to schedule pods only on compatible nodes.
 
@@ -115,7 +118,7 @@ The DaemonSet uses the following process to detect AVX2 support and label nodes:
 * Checks for the `avx2` flag
 * Labels the node when AVX2 support is present
 
-Use the following steps to label Kubernetes nodes that support AVX2:
+Use the following steps to label Kubernetes nodes that support AVX2 by using a custom DaemonSet:
 
 . <<#define-avx2-label, Define the AVX2 node label>>
 . <<#create-daemonset-manifest, Create the DaemonSet manifest>>
