@@ -10,7 +10,7 @@ include::partial$tutorial.adoc[]
 
 Starting with Couchbase Server 8.0, Vector Search (FTS and GSI) performance benefits from AVX2-capable CPUs on x86-64 nodes.
 
-=== What's Advanced Vector Extensions 2 (AVX2)
+=== What's an Advanced Vector Extensions 2 (AVX2)
 
 AVX2 is:
 
