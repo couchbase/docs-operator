@@ -1,0 +1,503 @@
+= AVX2-Aware Scheduling for Couchbase Server
+
+[abstract]
+This tutorial covers how to detect AVX2 CPU extension / x86-64-v3 microarchitecture on Kubernetes nodes, label nodes accordingly, and configure CouchbaseCluster resources to schedule pods only on compatible nodes.
+
+include::partial$tutorial.adoc[]
+
+== Background and Motivation
+
+Starting with **Couchbase Server 8.0**, vector search performance (FTS/GSI) benefits significantly from **AVX2-capable CPUs** on x86-64 nodes.
+
+=== What is AVX2?
+
+AVX2 (Advanced Vector Extensions 2) is:
+
+* A SIMD instruction set available on modern Intel and AMD x86-64 CPUs
+* Required for high-performance vectorized operations
+* Part of the x86-64-v3 microarchitecture level (along with BMI1, BMI2, and FMA)
+* **Not guaranteed** on all cloud VM types
+* **Not automatically enforced** by Kubernetes scheduling
+
+[IMPORTANT]
+====
+Kubernetes clusters *must explicitly detect CPU capabilities and constrain scheduling* to ensure Couchbase Server pods land on AVX2-capable nodes.
+====
+
+== Solution Overview
+
+This tutorial solves the problem in three layers:
+
+1. **Node labeling** — detect which nodes support AVX2
+2. **Scheduler constraints** — ensure pods only land on valid nodes
+3. **Cloud provisioning** — ensure node pools contain AVX2-capable CPUs
+
+Two node-labeling approaches are covered:
+
+* A **simple custom DaemonSet** (lightweight, minimal dependencies)
+* **Node Feature Discovery (NFD)** (recommended for production)
+
+== Method 1: Simple AVX2 Node Labeling via DaemonSet
+
+This is a lightweight solution when NFD is unavailable or when you prefer minimal dependencies.
+
+=== How It Works
+
+* Runs on every node as a DaemonSet
+* Reads `/proc/cpuinfo` from the host
+* Checks for the `avx2` flag
+* Labels the node if AVX2 is present
+
+=== Label Applied
+
+[source]
+----
+cpu.feature/AVX2=true
+----
+
+=== DaemonSet YAML
+
+Create a file named `avx2-node-labeler.yaml`:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: avx2-labeler-sa
+  namespace: kube-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: avx2-labeler-role
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "patch", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: avx2-labeler-binding
+subjects:
+- kind: ServiceAccount
+  name: avx2-labeler-sa
+  namespace: kube-system
+roleRef:
+  kind: ClusterRole
+  name: avx2-labeler-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: avx2-node-labeler
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: avx2-node-labeler
+  template:
+    metadata:
+      labels:
+        app: avx2-node-labeler
+    spec:
+      serviceAccountName: avx2-labeler-sa
+      containers:
+      - name: labeler
+        image: bitnami/kubectl:latest
+        command:
+        - /bin/bash
+        - -c
+        - |
+          if grep -qi "avx2" /host/proc/cpuinfo; then
+            kubectl label node "$NODE_NAME" cpu.feature/AVX2=true --overwrite
+          fi
+          sleep infinity
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        volumeMounts:
+        - name: host-proc
+          mountPath: /host/proc
+          readOnly: true
+      volumes:
+      - name: host-proc
+        hostPath:
+          path: /proc
+----
+
+=== Apply the DaemonSet
+
+[source,console]
+----
+kubectl apply -f avx2-node-labeler.yaml
+----
+
+=== Verify Labels
+
+[source,console]
+----
+kubectl get nodes -L cpu.feature/AVX2
+----
+
+== Method 2: Node Feature Discovery (NFD) — Recommended
+
+**Node Feature Discovery (NFD)** is a Kubernetes SIG project that automatically detects hardware features and labels nodes.
+
+=== NFD AVX2 Label
+
+NFD uses the following standardized label for AVX2:
+
+[source]
+----
+feature.node.kubernetes.io/cpu-cpuid.AVX2=true
+----
+
+This label is standardized and safe to rely on across all environments.
+
+=== Install NFD Using kubectl
+
+[source,console]
+----
+kubectl apply -k "https://github.com/kubernetes-sigs/node-feature-discovery/deployment/overlays/default?ref=v0.18.3"
+----
+
+Replace `v0.18.3` with the latest release tag from the https://github.com/kubernetes-sigs/node-feature-discovery/releases[NFD releases page].
+
+=== Install NFD Using Helm
+
+[source,console]
+----
+helm install nfd \
+  oci://registry.k8s.io/nfd/charts/node-feature-discovery \
+  --version 0.18.3 \
+  --namespace node-feature-discovery \
+  --create-namespace
+
+----
+
+Replace `v0.18.3` with the latest release tag from the https://github.com/kubernetes-sigs/node-feature-discovery/releases[NFD releases page].
+
+=== Verify NFD Labels
+
+[source,console]
+----
+kubectl get nodes -L feature.node.kubernetes.io/cpu-cpuid.AVX2
+----
+
+== Pod Scheduling with nodeAffinity
+
+Once nodes are labeled, configure your CouchbaseCluster to schedule pods only on AVX2-capable nodes.
+
+=== Strict AVX2 Scheduling (Recommended)
+
+Use `requiredDuringSchedulingIgnoredDuringExecution` to enforce AVX2 requirements:
+
+[source,yaml]
+----
+spec:
+  servers:
+  - name: data-nodes
+    size: 3
+    services:
+    - data
+    - index
+    - query
+    pod:
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: feature.node.kubernetes.io/cpu-cpuid.AVX2
+                  operator: In
+                  values:
+                  - "true"
+----
+
+=== Soft Preference (Fallback Allowed)
+
+Use `preferredDuringSchedulingIgnoredDuringExecution` if you want AVX2 to be preferred but not required:
+
+[source,yaml]
+----
+spec:
+  servers:
+  - name: data-nodes
+    size: 3
+    services:
+    - data
+    pod:
+      spec:
+        affinity:
+          nodeAffinity:
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                - key: feature.node.kubernetes.io/cpu-cpuid.AVX2
+                  operator: In
+                  values:
+                  - "true"
+----
+
+== Google Kubernetes Engine (GKE)
+
+GKE requires special care because node pools may use mixed CPU generations and AVX2 is not guaranteed by default.
+
+=== GKE AVX2 Guarantees
+
+[cols="1,1"]
+|===
+|Guarantee |Status
+
+|AVX2 by machine type
+|Not guaranteed
+
+|AVX2 by region
+|Not guaranteed
+
+|AVX2 by default
+|Not guaranteed
+
+|AVX2 via min CPU platform
+|Guaranteed
+|===
+
+=== Creating a GKE Node Pool with AVX2
+
+**Step 1:** Choose a modern machine family (`n2`, `c2`, `c3`, `n4`, `m2`, `m3`, ...)
+
+**Step 2:** Enforce minimum CPU platform:
+
+[source,console]
+----
+gcloud container node-pools create avx2-pool \
+  --cluster=my-cluster \
+  --region=us-central1 \
+  --machine-type=n2-standard-4 \
+  --min-cpu-platform="Intel Cascade Lake" \
+  --num-nodes=3 \
+  --node-labels=cpu=avx2
+----
+
+Pin min-cpu-platform ≥ Intel Haswell or AMD Rome
+Verify online for a comprehensive list of AVX2-capable VM series.
+
+This guarantees AVX2 at the infrastructure level.
+
+=== GKE Automatic Node Labels
+
+GKE automatically applies the following label:
+
+[source]
+----
+cloud.google.com/gke-nodepool=<POOL_NAME>
+----
+
+=== GKE nodeAffinity Pattern
+
+[source,yaml]
+----
+spec:
+  servers:
+  - name: data-nodes
+    size: 3
+    services:
+    - data
+    - index
+    - query
+    pod:
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: cloud.google.com/gke-nodepool
+                  operator: In
+                  values:
+                  - avx2-pool
+
+----
+
+== Amazon EKS
+
+=== AVX2-Capable Instance Types
+
+The following EC2 instance families support AVX2:
+
+* **Intel**: M5, C5, R5, M6i, C6i, R6i, M7i, C7i (and newer)
+* **AMD**: M5a, C5a, R5a, M6a, C6a, R6a (and newer)
+
+Verify online for a comprehensive list of AVX2-capable instance types.
+
+=== Creating an EKS Node Group
+
+[source,console]
+----
+eksctl create nodegroup \
+  --cluster my-cluster \
+  --name avx2-ng \
+  --node-type c6i.large \
+  --nodes 3 \
+  --node-labels cpu=avx2
+----
+
+=== EKS nodeAffinity Pattern
+
+[source,yaml]
+----
+spec:
+  servers:
+  - name: data-nodes
+    size: 3
+    services:
+    - data
+    - index
+    - query
+    pod:
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: cpu
+                  operator: In
+                  values:
+                  - avx2
+----
+
+You can also use the automatic instance type label:
+
+[source,yaml]
+----
+- key: node.kubernetes.io/instance-type
+  operator: In
+  values:
+  - c6i.large
+  - c6i.xlarge
+----
+
+== Azure AKS
+
+=== AVX2-Capable VM Series
+
+The following Azure VM series support AVX2:
+
+* **Dv3, Ev3** (Haswell/Broadwell)
+* **Dv4, Ev4** (Cascade Lake)
+* **Dv5, Ev5** (Ice Lake)
+
+Verify online for a comprehensive list of AVX2-capable VM series.
+
+=== Creating an AKS Node Pool
+
+[source,console]
+----
+az aks nodepool add \
+  --resource-group rg \
+  --cluster-name my-aks \
+  --name avx2pool \
+  --node-vm-size Standard_D8s_v5 \
+  --node-count 3 \
+  --labels cpu=avx2
+----
+
+=== AKS nodeAffinity Pattern
+
+[source,yaml]
+----
+spec:
+  servers:
+  - name: data-nodes
+    size: 3
+    services:
+    - data
+    - index
+    - query
+    pod:
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: cpu
+                  operator: In
+                  values:
+                  - avx2
+----
+
+== Complete CouchbaseCluster Example
+
+Here is a complete example combining all best practices:
+
+[source,yaml]
+----
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cb-example-auth
+type: Opaque
+data:
+  username: QWRtaW5pc3RyYXRvcg==
+  password: cGFzc3dvcmQ=
+---
+apiVersion: couchbase.com/v2
+kind: CouchbaseCluster
+metadata:
+  name: cb-example
+spec:
+  image: couchbase/server:8.0.0
+  security:
+    adminSecret: cb-example-auth
+  buckets:
+    managed: true
+  servers:
+  - name: data-nodes
+    size: 3
+    services:
+    - data
+    - index
+    - query
+    pod:
+      spec:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: feature.node.kubernetes.io/cpu-cpuid.AVX2
+                  operator: In
+                  values:
+                  - "true"
+                # Alternative using custom DaemonSet label:
+                # - key: cpu.feature/AVX2
+                #   operator: In
+                #   values:
+                #   - "true"
+----
+
+== Troubleshooting
+
+
+=== Verify Node Labels
+
+[source,console]
+----
+# For NFD labels
+kubectl get nodes -o custom-columns=\
+NAME:.metadata.name,\
+AVX2:.metadata.labels."feature\.node\.kubernetes\.io/cpu-cpuid\.AVX2"
+
+# For custom labels (Using the DaemonSet)
+kubectl get nodes -L cpu.feature/AVX2
+----
+
