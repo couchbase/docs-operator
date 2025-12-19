@@ -1,4 +1,4 @@
-= What's New in Couchbase Autonomous Operator 2.9
+= What's New?
 
 Couchbase Autonomous Operator 2.9.0 was released in December 2025.
 New features and improvements are described below.
@@ -6,7 +6,7 @@ New features and improvements are described below.
 For information about fixed and known issues, see the xref:release-notes.adoc[Release Notes].
 
 [#whats-new-290]
-== New Features and Enhancements in 2.9.0
+== New Features and Enhancements in CAO 2.9.0
 
 Couchbase Autonomous Operator (CAO) 2.9.0 adds support for Couchbase Server 8.0 features and
 introduces a circuit breaker called Manual Intervention Required (MIR) mode.

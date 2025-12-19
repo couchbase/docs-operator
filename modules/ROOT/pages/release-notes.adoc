@@ -1,8 +1,8 @@
 = Release Notes for Couchbase Kubernetes Operator 2.9
 
-== New Features
+This page summarizes the fixes and changes in Couchbase Kubernetes Operator 2.9, and links to the associated issues and documentation.
 
-These release notes are focused on bug fixes and breaking changes.
+== New Features
 
 For information about new features and major improvements made in Couchbase Kubernetes Operator 2.9, see xref:whats-new.adoc[What's New].
 
@@ -13,115 +13,115 @@ Couchbase Kubernetes Operator 2.9 was released in December 2025.
 This release contains fixes to issues.
 
 [#fixed-issues-v290]
-== Fixed Issues
+== Fixed Issues in 2.9
 
+The issues fixed in this release are as follows.
 
 *https://jira.issues.couchbase.com/browse/K8S-1537/[K8S-1537]*::
 
-Cluster UUID is no longer required when creating Remote Cluster Connections.
+The cluster UUID is no longer required when creating remote cluster connections.
 
 *https://jira.issues.couchbase.com/browse/K8S-2829/[K8S-2829]*::
 
-The annotation `cao.couchbase.com/additionalArgs` can now be specified on CouchbaseBackup and CouchbaseRestore resources to pass additional cbbackupmgr arguments through to the container.
+You can now specify the `cao.couchbase.com/additionalArgs` annotation on CouchbaseBackup and CouchbaseRestore resources to pass additional `cbbackupmgr` arguments to the container.
 
 *https://jira.issues.couchbase.com/browse/K8S-3016/[K8S-3016]*::
 
-It is now possible to specify Couchbase Server’s Password Policy via the CouchbaseCluster resource.
+You can now specify the Couchbase Server password policy using the CouchbaseCluster resource.
 
 *https://jira.issues.couchbase.com/browse/K8S-3121/[K8S-3121]*::
 
-You can now specify to preserve the CouchbaseBackupRestore resource upon completion of the Restore.
+You can now specify to preserve the CouchbaseBackupRestore resource after the restore completes.
 
 *https://jira.issues.couchbase.com/browse/K8S-3153/[K8S-3153]*::
 
-New TCP Tunables (tcpKeepAliveIdle, tcpKeepAliveInterval, tcpKeepAliveProbes, tcpUserTimeout) are now available by the CouchbaseCluster Resource when using Couchbase Server 8.0
+New TCP tunables (`tcpKeepAliveIdle`, `tcpKeepAliveInterval`, `tcpKeepAliveProbes`, `tcpUserTimeout`) are now available through the CouchbaseCluster resource when using Couchbase Server 8.0.
 
 *https://jira.issues.couchbase.com/browse/K8S-3258/[K8S-3258]*::
 
-Added a new `logging.configNameReleasePrefix` boolean to the helm chart.
-This defaults to false, but setting it to true will prefix the fluent-bit config with the release name.
-Setting this to true for existing clusters will trigger recreation of all pods so should only really be used for new clusters.
+Added the `logging.configNameReleasePrefix` boolean to the Helm chart.
+The default value is `false`.
+When set to `true`, the Operator prefixes the Fluent Bit configuration with the release name.
++
+Couchbase recommends enabling this setting only on new clusters because enabling it on existing clusters triggers recreation of all pods.
 
 *https://jira.issues.couchbase.com/browse/K8S-3371/[K8S-3371]*::
 
-It is now possible to specify environment variables for the CouchbaseBackup and CouchbaseBackupRestore pod to allow for cbbackumgr tuning.
+You can now specify environment variables for the CouchbaseBackup and CouchbaseBackupRestore pods to allow `cbbackupmgr` tuning.
 
 *https://jira.issues.couchbase.com/browse/K8S-3434/[K8S-3434]*::
 
-`spec.monitoring` has been deprecated and will no longer attach an exporter side car to the Couchbase Server pod.
+`spec.monitoring` is deprecated and no longer attaches an exporter sidecar to the Couchbase Server pod.
 
 *https://jira.issues.couchbase.com/browse/K8S-3535/[K8S-3535]*::
 
-If `couchbasecluster.spec.buckets.managed` is false, restoring from backup will automatically create buckets.
+If `couchbasecluster.spec.buckets.managed` is set to `false`, restoring from backup automatically creates buckets.
 
 *https://jira.issues.couchbase.com/browse/K8S-3616/[K8S-3616]*::
 
-New settings for buckets are now available on Couchbase Server 8.0
+New REST API bucket settings for the Data Service are now available in Couchbase Server 8.0.
 
 *https://jira.issues.couchbase.com/browse/K8S-3638/[K8S-3638]*::
 
-You can now specify merge schedule on a CouchbaseBackup resource.
+You can now specify a merge schedule on the CouchbaseBackup resource.
 
 *https://jira.issues.couchbase.com/browse/K8S-3646/[K8S-3646]*::
 
-You can now set query service’s CompletedStreamSize via the CouchbaseCluster resource.
+You can now set the Query Service `CompletedStreamSize` using the CouchbaseCluster resource.
 
 *https://jira.issues.couchbase.com/browse/K8S-3650/[K8S-3650]*::
 
-When using Couchbase Server 8.0,  You can no longer create Memcached buckets.
+When using Couchbase Server 8.0, you can no longer create Memcached buckets.
 
 *https://jira.issues.couchbase.com/browse/K8S-3715/[K8S-3715]*::
 
-Added RBAC roles for users to match new roles added in Couchbase Server 8.0
+Added RBAC roles for users to match new roles added in Couchbase Server 8.0.
 
 *https://jira.issues.couchbase.com/browse/K8S-3786/[K8S-3786]*::
 
-You can now specify `default` and `disk_io_optimized` for data service reader threads.
+You can now specify `default` and `disk_io_optimized` for the Data Service reader threads.
 
 *https://jira.issues.couchbase.com/browse/K8S-3917/[K8S-3917]*::
 
-You can now specify `overheadMemory` for autoResourceAllocation to specify a static amount of overhead.
+You can now set `overheadMemory` for `autoResourceAllocation` to specify a static overhead amount.
 
 *https://jira.issues.couchbase.com/browse/K8S-3951/[K8S-3951]*::
 
-`cao.couchbase.com/autoCompaction.magmaFragmentationPercentage` has been replaced with an entry in the Couchbase Cluster Resource Definition
+`cao.couchbase.com/autoCompaction.magmaFragmentationPercentage` has been replaced by a field in the CouchbaseCluster CRD.
 
 *https://jira.issues.couchbase.com/browse/K8S-4013/[K8S-4013]*::
 
-It is now possible to disable DNS resolution verification when creating pods, prior to activating them within the cluster.
+You can now disable DNS resolution verification when creating pods before activating them in the cluster.
 
 *https://jira.issues.couchbase.com/browse/K8S-4016/[K8S-4016]*::
 
-Fixed a bug that caused a panic when a member pod becomes unresponsive.
+Fixed a bug that caused a panic when a member pod became unresponsive.
 
 *https://jira.issues.couchbase.com/browse/K8S-4028/[K8S-4028]*::
 
-Added an upgrade stanza to the CouchbaseCluster resource to give users more control during upgrades.
+Added an upgrade stanza to the CouchbaseCluster resource to give users more control over upgrades.
 
 *https://jira.issues.couchbase.com/browse/K8S-4091/[K8S-4091]*::
 
-Updated the `spec.networking.addressFamily` field to accept `IPv4Only`, `IPv4Priority`, `IPv6Only` and `IPv6Priority`.
-The current `IPv4/IPv6` values will have the `Ipv4/6Only` functionality.
-I.e.
-customers that have set the fields will not see any change.
-
+Updated `spec.networking.addressFamily` to accept `IPv4Only`, `IPv4Priority`, `IPv6Only`, and `IPv6Priority`.
+The existing `IPv4` and `IPv6` values retain the `IPv4Only` and `IPv6Only` behavior, so no change is required for existing configurations.
 +
-These should be considered deprecated and will be removed in a future release.
- +
-The priority/only choice determines whether `addressFamilyOnly` is true or false.
+These values are deprecated and will be removed in a future release.
++
+The priority or only option determines whether `addressFamilyOnly` is set to `true` or `false`.
 
 *https://jira.issues.couchbase.com/browse/K8S-4097/[K8S-4097]*::
 
-The MirWatchdog is an out-of-band check that allows for additional alerting to be in place in the unlikely scenario that an Operator is unable to reconcile a cluster due to reasons outside of its controls/capabilities and which therefore require manual intervention by a user to resolve.
-Scenarios include but are not limited to, tls expiration, couchbase authentication errors and loss of quorum.
-By default this is disabled, but can be enabled and configured using the `mirWatchdog` field in the couchbase cluster CRD.
+The MirWatchdog is an out-of-band check that provides additional alerting.
+It is used when the Operator cannot reconcile a cluster due to reasons outside its control and requires manual user intervention.
+Scenarios include, but are not limited to, TLS expiration, Couchbase authentication errors, and loss of quorum.
+This feature is disabled by default but can be enabled and configured by using the `mirWatchdog` field in the CouchbaseCluster CRD.
 If the cluster enters this condition, it will:
 +
-* Set the cluster_manual_intervention gauge metric to 1
-* Add (where possible) the `ManualInterventionRequired` condition to the cluster, with a message detailing the reason for entering the MIR state.
-* Raise a `ManualInterventionRequired` Kubernetes event, with the event message set to the reason for entering manual intervention
-* Optionally, reconciliation will be skipped until the manual intervention required state has been resolved, i.e.
-the issue that put the cluster into that condition has been fixed.
+* Set the `cluster_manual_intervention` gauge metric to `1`.
+* Add the `ManualInterventionRequired` condition to the cluster, where possible, with a message describing the reason for entering the MIR state.
+* Raise a `ManualInterventionRequired` Kubernetes event, with the message describing the reason for entering manual intervention.
+* Optionally, reconciliation is skipped until the manual intervention required state is resolved, that is, until the issue that caused the condition is fixed.
 
 *https://jira.issues.couchbase.com/browse/K8S-4101/[K8S-4101]*::
 
@@ -129,24 +129,23 @@ Added support for Couchbase Server 8.0’s Encryption at Rest feature.
 
 *https://jira.issues.couchbase.com/browse/K8S-4108/[K8S-4108]*::
 
-The CouchbaseUser resource now has an enabled flag to allow the disabling/enabling of users.
+The CouchbaseUser resource now includes an `enabled` flag to allow administrators to enable or disable user accounts.
 
 *https://jira.issues.couchbase.com/browse/K8S-4109/[K8S-4109]*::
 
-The CouchbaseUser resource now has a `couchbaseuser.spec.userPassword.requireInitialChange` field to allow administrators to require a password change upon first use.
+The CouchbaseUser resource now allows the administrators to enforce password change on a user’s first login using the `couchbaseuser.spec.userPassword.requireInitialChange` field.
 
 *https://jira.issues.couchbase.com/browse/K8S-4111/[K8S-4111]*::
 
-CouchbaseBucket resources now have a `durabilityImpossibleFallback` that accepts values of `disabled` and `fallbackToActiveAck`.
+CouchbaseBucket resources now support `durabilityImpossibleFallback` with values `disabled` and `fallbackToActiveAck`.
 
 *https://jira.issues.couchbase.com/browse/K8S-4112/[K8S-4112]*::
 
-Multiple settings were added to CouchbaseBucket resources to set XDCR Conflict Logging.
+Added multiple settings to CouchbaseBucket resources to configure XDCR Conflict Logging.
 
 *https://jira.issues.couchbase.com/browse/K8S-4114/[K8S-4114]*::
 
-Added setting in CouchbaseCluster to allow auto-failover of Ephemeral Buckets with no replicas.
- Supported for CouchbaseServer 8.0+
+Added a CouchbaseCluster resource setting that enables auto‑failover of Ephemeral Buckets with no replicas in Couchbase Server 8.0 and later versions.
 
 *https://jira.issues.couchbase.com/browse/K8S-4117/[K8S-4117]*::
 
@@ -154,29 +153,30 @@ Added `data.diskUsageLimit` to the CouchbaseCluster resource to enable Disk Usag
 
 *https://jira.issues.couchbase.com/browse/K8S-4118/[K8S-4118]*::
 
-Added support for SDK Telemetry settings in Couchbase Server 8.0+
+Added support for SDK Telemetry settings in Couchbase Server 8.0 and later versions.
 
 *https://jira.issues.couchbase.com/browse/K8S-4120/[K8S-4120]*::
 
-The default storage engine and vBucketCount for CouchbaseBuckets has been changed to `magma` and `128` respectively.
+For CouchbaseBuckets, now the default storage engine is `magma` and the vBucketCount is `128`.
 
 *https://jira.issues.couchbase.com/browse/K8S-4144/[K8S-4144]*::
 
-In prior versions of Couchbase Operator, the metrics port annotation (`prometheus.io/port`) was set to 8091, even if TLS was enabled.
- It will now correctly set to 18091.
+In the earlier versions of Couchbase Operator, the metrics port annotation `prometheus.io/port` was set to `8091`, even when TLS was enabled.
+
+It now correctly sets to `18091`.
 
 *https://jira.issues.couchbase.com/browse/K8S-4158/[K8S-4158]*::
 
-You can now specify to perform an EvictionPolicy change while the bucket is online via swap rebalance.
+EvictionPolicy changes can now be applied to an online bucket during a swap rebalance.
 
 *https://jira.issues.couchbase.com/browse/K8S-4161/[K8S-4161]*::
 
-Operator 2.9.0 now allows you to set `spec.cluster.analytics.numReplicas`.
-This feature is only supported for couchbase server versions 7.6+.
+Operator 2.9.0 allows you to set `spec.cluster.analytics.numReplicas`.
+This feature is supported only on Couchbase Server 7.6 and later versions.
 
 *https://jira.issues.couchbase.com/browse/K8S-4203/[K8S-4203]*::
 
-Fixed an issue where if many clusters are under management by Operator, the metrics scrape would be too large.
+Fixed an issue where metrics scrapes became too large when the Operator managed many clusters.
 
 *https://jira.issues.couchbase.com/browse/K8S-4209/[K8S-4209]*::
 
@@ -184,7 +184,7 @@ Full backups can now be resumed.
 
 *https://jira.issues.couchbase.com/browse/K8S-4273/[K8S-4273]*::
 
-Fixed an issue where Operator would fail to remove pods from the cluster.
+Fixed an issue where the Operator failed to remove pods from the cluster.
 
 *https://jira.issues.couchbase.com/browse/K8S-4279/[K8S-4279]*::
 
@@ -192,29 +192,10 @@ Fixed an issue where log message tags were inconsistent.
 
 *https://jira.issues.couchbase.com/browse/K8S-4349/[K8S-4349]*::
 
-The CouchbaseCluster CRD has grown to a size that does not allow client side apply to be used.
-Use `--server-side` when using `kubectl apply`
+The CouchbaseCluster CRD now exceeds the size limit for client-side apply.
+Use the `--server-side` option with `kubectl apply` to apply the resource.
 
 *https://jira.issues.couchbase.com/browse/K8S-4404/[K8S-4404]*::
 
-Fixed an issue where upgrades with SHA256 image digest definitions would be unsuccessful.
+Fixed an issue that caused upgrades to fail when image definitions used SHA256 digests.
 
-
-
-
-[#known-issues-290]
-== Known Issues
-
-For Couchbase Autonomous Operator 2.9.0 was released in December 2025,
-these are the known issues that aren’t yet resolved.
-
-
-
-
-[#dlist-known-issues-290-]
-=== Operator
-
-*https://jira.issues.couchbase.com/browse/K8S-4349/[K8S-4349]*::
-
-The CouchbaseCluster CRD has grown to a size that does not allow client side apply to be used.
-Use `--server-side` when using `kubectl apply`
