@@ -3,4 +3,4 @@ sources:
     branches: [release/8.0]
 
   docs-operator:
-    branches: [K8S-4395-mir-docs, release/2.8]
+    branches: [DOC-13857-tutorial-to-detect-avx2, release/2.8]
