@@ -3,4 +3,4 @@ sources:
     branches: [release/8.0]
 
   docs-operator:
-    branches: [DOC-13857-tutorial-to-detect-avx2, release/2.8]
+    branches: [DOC-13865-new-backup-annotations-cao-2-9-0, release/2.8]
