@@ -121,11 +121,11 @@ If the cluster enters this condition, it will:
 * Set the `cluster_manual_intervention` gauge metric to `1`.
 * Add the `ManualInterventionRequired` condition to the cluster, where possible, with a message describing the reason for entering the MIR state.
 * Raise a `ManualInterventionRequired` Kubernetes event, with the message describing the reason for entering manual intervention.
-* Optionally, reconciliation is skipped until the manual intervention required state is resolved, that is, until the issue that caused the condition is fixed.
+* Optionally, skips reconciliation until the manual intervention required state is resolved, that is, until the issue that caused the condition is fixed.
 
 *https://jira.issues.couchbase.com/browse/K8S-4101/[K8S-4101]*::
 
-Added support for Couchbase Server 8.0’s Encryption at Rest feature.
+Added support for the Encryption at Rest feature of Couchbase Server 8.0.
 
 *https://jira.issues.couchbase.com/browse/K8S-4108/[K8S-4108]*::
 
@@ -162,7 +162,6 @@ For CouchbaseBuckets, now the default storage engine is `magma` and the vBucketC
 *https://jira.issues.couchbase.com/browse/K8S-4144/[K8S-4144]*::
 
 In the earlier versions of Couchbase Operator, the metrics port annotation `prometheus.io/port` was set to `8091`, even when TLS was enabled.
-
 It now correctly sets to `18091`.
 
 *https://jira.issues.couchbase.com/browse/K8S-4158/[K8S-4158]*::
