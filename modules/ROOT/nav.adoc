@@ -147,6 +147,8 @@ include::partial$autogen-reference.adoc[]
  ** xref:tutorial-kubernetes-network-policy.adoc[Kubernetes Network Policies Using Deny-All Default]
 * Persistent Volumes
  ** xref:tutorial-volume-expansion.adoc[Persistent Volume Expansion]
+* Scheduling
+ ** xref:tutorial-avx2-scheduling.adoc[AVX2-Aware Scheduling]
 * Sync Gateway
  ** xref:tutorial-sync-gateway.adoc[Connecting Sync-Gateway to a Couchbase Cluster]
  ** xref:tutorial-sync-gateway-clients.adoc[Exposing Sync-Gateway to Couchbase Lite Clients]
