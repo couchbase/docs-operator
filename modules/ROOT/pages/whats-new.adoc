@@ -69,3 +69,7 @@ This strategy is better suited for some larger clusters.
 You can specify a merge schedule on the CouchbaseBackup resource.
 * Support for specifying the `cao.couchbase.com/additionalArgs` annotation on CouchbaseBackup and CouchbaseRestore resources to pass additional `cbbackupmgr` arguments to the container.
 
+== More Information
+
+* xref:server:introduction:whats-new.adoc[What's New in Couchbase Server Version 8.0]
+* xref:server:release-notes:relnotes.adoc[Couchbase Server Release Notes Version 8.0]

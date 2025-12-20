@@ -162,7 +162,7 @@ For CouchbaseBuckets, now the default storage engine is `magma` and the vBucketC
 
 *https://jira.issues.couchbase.com/browse/K8S-4144/[K8S-4144]*::
 
-In the earlier versions of Couchbase Operator, the metrics port annotation `prometheus.io/port` was set to `8091`, even when TLS was enabled.
+In the earlier versions of Couchbase Kubernetes Operator, the metrics port annotation `prometheus.io/port` was set to `8091`, even when TLS was enabled.
 It now correctly sets to `18091`.
 
 *https://jira.issues.couchbase.com/browse/K8S-4158/[K8S-4158]*::
@@ -215,7 +215,7 @@ This does not prevent the restore from occurring.
 
 *https://jira.issues.couchbase.com/browse/K8S-4436/[K8S-4436]*::
 
-Upgrading the Couchbase Operator while the cluster is not fully upgraded causes the Operator to complete the cluster upgrade immediately.
+Upgrading the Couchbase Kubernetes Operator while the cluster is not fully upgraded causes the Operator to complete the cluster upgrade immediately.
 
 *https://jira.issues.couchbase.com/browse/K8S-4433/[K8S-4433]*::
 
@@ -243,4 +243,5 @@ Couchbase is thankful to all of the individuals that have created these third-pa
 
 == More Information
 
-* xref:server:release-notes:relnotes.adoc[Couchbase Server Release Notes]
+* xref:server:release-notes:relnotes.adoc[Couchbase Server Release Notes Version 8.0]
+* xref:server:introduction:whats-new.adoc[What's New in Couchbase Server Version 8.0]
