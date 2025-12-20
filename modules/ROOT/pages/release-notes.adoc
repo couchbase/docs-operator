@@ -194,7 +194,7 @@ Fixed an issue where log message tags were inconsistent.
 Fixed an issue that caused upgrades to fail when image definitions used SHA256 digests.
 
 [#known-issues-29]
-== Known Issues 2.9
+== Known Issues in 2.9
 
 For Couchbase Kubernetes Operator 2.9 released in December 2025, these are the known issues that aren’t yet resolved.
 
