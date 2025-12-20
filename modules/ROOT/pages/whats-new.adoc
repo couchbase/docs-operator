@@ -20,7 +20,7 @@ These are the highlights:
 * *Encryption at Rest:* Added support for a new `CouchbaseEncryptionKey` custom resource to manage encryption keys
 and to specify which keys are used for each unit, such as buckets, configuration data, and logs.
 
-* *Magma as the Default Storage Engine:* In Couchbase Server 8.0, magma with 128 vBuckets is the default storage engine for new buckets.
+* *Magma as the Default Storage Engine:* In Couchbase Server 8.0, Magma with 128 vBuckets is the default storage engine for new buckets.
 Therefore, for CouchbaseBuckets, now the default storage engine is `magma` and the vBucketCount is `128`.
 Couchbase recommends setting the vBucket count to `1024` for high-throughput workloads.
 

@@ -1,6 +1,6 @@
 = Release Notes for Couchbase Kubernetes Operator 2.9
 
-This page summarizes the fixes and changes in Couchbase Kubernetes Operator 2.9, and links to the associated issues and documentation.
+This page summarizes the fixes and known issues in Couchbase Kubernetes Operator 2.9, and links to the associated issues.
 
 == New Features
 
@@ -10,12 +10,12 @@ For information about new features and major improvements made in Couchbase Kube
 == Release 2.9 (December 2025)
 
 Couchbase Kubernetes Operator 2.9 was released in December 2025.
-This release contains fixes to issues.
+This release contains fixes to issues and known issues.
 
 [#fixed-issues-v290]
 == Fixed Issues in 2.9
 
-The issues fixed in this release are as follows.
+For Couchbase Kubernetes Operator 2.9 released in December 2025, these are the fixed issues.
 
 *https://jira.issues.couchbase.com/browse/K8S-1537/[K8S-1537]*::
 
@@ -118,10 +118,10 @@ Scenarios include, but are not limited to, TLS expiration, Couchbase authenticat
 This feature is disabled by default but can be enabled and configured by using the `mirWatchdog` field in the CouchbaseCluster CRD.
 If the cluster enters this condition, it will:
 +
-* Set the `cluster_manual_intervention` gauge metric to `1`.
-* Add the `ManualInterventionRequired` condition to the cluster, where possible, with a message describing the reason for entering the MIR state.
-* Raise a `ManualInterventionRequired` Kubernetes event, with the message describing the reason for entering manual intervention.
-* Optionally, skips reconciliation until the manual intervention required state is resolved, that is, until the issue that caused the condition is fixed.
+. Set the `cluster_manual_intervention` gauge metric to `1`.
+. Add the `ManualInterventionRequired` condition to the cluster, where possible, with a message describing the reason for entering the MIR state.
+. Raise a `ManualInterventionRequired` Kubernetes event, with the message describing the reason for entering manual intervention.
+. Optionally, skips reconciliation until the manual intervention required state is resolved, that is, until the issue that caused the condition is fixed.
 
 *https://jira.issues.couchbase.com/browse/K8S-4101/[K8S-4101]*::
 
@@ -189,12 +189,43 @@ Fixed an issue where the Operator failed to remove pods from the cluster.
 
 Fixed an issue where log message tags were inconsistent.
 
+*https://jira.issues.couchbase.com/browse/K8S-4404/[K8S-4404]*::
+
+Fixed an issue that caused upgrades to fail when image definitions used SHA256 digests.
+
+[#known-issues-29]
+== Known Issues 2.9
+
+For Couchbase Kubernetes Operator 2.9 released in December 2025, these are the known issues that aren’t yet resolved.
+
+*https://jira.issues.couchbase.com/browse/K8S-4456/[K8S-4456]*::
+
+Operator must be paused when using `cao create pod`.
+Otherwise, the Operator identifies the pod as foreign and removes it.
+
+*https://jira.issues.couchbase.com/browse/K8S-4448/[K8S-4448]*::
+
+Changing the server groups applied to a server class while the Operator is recovering a pod can block reconciliation.
+
+*https://jira.issues.couchbase.com/browse/K8S-4445/[K8S-4445]*::
+
+The CouchbaseRestore resource status may fail to update from Couchbase Backup containers.
+This does not prevent the restore from occurring.
+
+*https://jira.issues.couchbase.com/browse/K8S-4436/[K8S-4436]*::
+
+Upgrading the Couchbase Operator while the cluster is not fully upgraded causes the Operator to complete the cluster upgrade immediately.
+
+*https://jira.issues.couchbase.com/browse/K8S-4433/[K8S-4433]*::
+
+When running in mixed mode and before the upgrade to 8.0 completes, creating a Memcached bucket can cause the Operator to fail reconciliation.
+
 *https://jira.issues.couchbase.com/browse/K8S-4349/[K8S-4349]*::
 
 The CouchbaseCluster CRD now exceeds the size limit for client-side apply.
 Use the `--server-side` option with `kubectl apply` to apply the resource.
 
-*https://jira.issues.couchbase.com/browse/K8S-4404/[K8S-4404]*::
+*https://jira.issues.couchbase.com/browse/K8S-3839/[K8S-3839]*::
 
-Fixed an issue that caused upgrades to fail when image definitions used SHA256 digests.
+Removing a server group from a cluster that uses InPlaceUpgrades can cause the Operator to fail to reconcile the cluster.
 
