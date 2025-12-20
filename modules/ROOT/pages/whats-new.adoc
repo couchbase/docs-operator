@@ -1,21 +1,21 @@
 = What's New?
 :page-toclevels: 2
 
-Couchbase Kubernetes Operator 2.9.0 was released in December 2025.
+Couchbase Kubernetes Operator 2.9 was released in December 2025.
 New features and improvements are described below.
 
 For information about fixed and known issues, see the xref:release-notes.adoc[Release Notes].
 
 [#whats-new-290]
-== New Features and Enhancements in 2.9.0
+== New Features and Enhancements in 2.9
 
-Couchbase Kubernetes Operator 2.9.0 adds support for Couchbase Server 8.0 features and
+Couchbase Kubernetes Operator 2.9 adds support for Couchbase Server 8.0 features and
 introduces a circuit breaker called Manual Intervention Required (MIR) mode.
 This release also improves the upgrade process by introducing a new upgrade object that enables more resilient automated upgrades.
 
 === Support for Couchbase Server 8.0 Features
 
-Couchbase Server 8.0 introduces several key features, listed in xref:server:introduction:whats-new.adoc[What's New in Version 8.0], which are now configurable through Couchbase Kubernetes Operator 2.9.0.
+Couchbase Server 8.0 introduces several key features, listed in xref:server:introduction:whats-new.adoc[What's New in Version 8.0], which are now configurable through Couchbase Kubernetes Operator 2.9.
 These are the highlights:
 
 * *Encryption at Rest:* Added support for a new `CouchbaseEncryptionKey` custom resource to manage encryption keys
