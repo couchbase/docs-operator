@@ -1,4 +1,5 @@
 = What's New?
+:page-toclevels: 2
 
 Couchbase Kubernetes Operator 2.9.0 was released in December 2025.
 New features and improvements are described below.

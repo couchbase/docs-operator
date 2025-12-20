@@ -1,4 +1,5 @@
 = Release Notes for Couchbase Kubernetes Operator 2.9
+:page-toclevels: 2
 
 This page summarizes the fixes and known issues in Couchbase Kubernetes Operator 2.9, and links to the associated issues.
 
@@ -13,7 +14,7 @@ Couchbase Kubernetes Operator 2.9 was released in December 2025.
 This release contains fixes to issues and known issues.
 
 [#fixed-issues-v290]
-== Fixed Issues in 2.9
+=== Fixed Issues in 2.9
 
 For Couchbase Kubernetes Operator 2.9 released in December 2025, these are the fixed issues.
 
@@ -194,7 +195,7 @@ Fixed an issue where log message tags were inconsistent.
 Fixed an issue that caused upgrades to fail when image definitions used SHA256 digests.
 
 [#known-issues-29]
-== Known Issues in 2.9
+=== Known Issues in 2.9
 
 For Couchbase Kubernetes Operator 2.9 released in December 2025, these are the known issues that aren’t yet resolved.
 
@@ -229,3 +230,17 @@ Use the `--server-side` option with `kubectl apply` to apply the resource.
 
 Removing a server group from a cluster that uses InPlaceUpgrades can cause the Operator to fail to reconcile the cluster.
 
+
+== Feedback
+
+You can have a big impact on future versions of the Operator (and its documentation) by providing Couchbase with your direct feedback and observations.
+Please feel free to post your questions and comments to the https://forums.couchbase.com/c/couchbase-server/Kubernetes[Couchbase Forums].
+
+== Licenses for Third-Party Components
+
+The complete list of licenses for Couchbase products is available on the https://www.couchbase.com/legal/agreements[Legal Agreements] page.
+Couchbase is thankful to all of the individuals that have created these third-party components.
+
+== More Information
+
+* xref:server:release-notes:relnotes.adoc[Couchbase Server Release Notes]
