@@ -199,36 +199,71 @@ Fixed an issue that caused upgrades to fail when image definitions used SHA256 d
 
 For Couchbase Kubernetes Operator 2.9 released in December 2025, these are the known issues that aren’t yet resolved.
 
-*https://jira.issues.couchbase.com/browse/K8S-4456/[K8S-4456]*::
+*https://jira.issues.couchbase.com/browse/K8S-3839/[K8S-3839]*::
 
-Operator must be paused when using `cao create pod`.
-Otherwise, the Operator identifies the pod as foreign and removes it.
-
-*https://jira.issues.couchbase.com/browse/K8S-4448/[K8S-4448]*::
-
-Changing the server groups applied to a server class while the Operator is recovering a pod can block reconciliation.
-
-*https://jira.issues.couchbase.com/browse/K8S-4445/[K8S-4445]*::
-
-The CouchbaseRestore resource status may fail to update from Couchbase Backup containers.
-This does not prevent the restore from occurring.
-
-*https://jira.issues.couchbase.com/browse/K8S-4436/[K8S-4436]*::
-
-Upgrading the Couchbase Kubernetes Operator while the cluster is not fully upgraded causes the Operator to complete the cluster upgrade immediately.
-
-*https://jira.issues.couchbase.com/browse/K8S-4433/[K8S-4433]*::
-
-When running in mixed mode and before the upgrade to 8.0 completes, creating a Memcached bucket can cause the Operator to fail reconciliation.
+Removing a server group from a cluster that uses InPlaceUpgrades can cause the Operator to fail to reconcile the cluster.
 
 *https://jira.issues.couchbase.com/browse/K8S-4349/[K8S-4349]*::
 
 The CouchbaseCluster CRD now exceeds the size limit for client-side apply.
 Use the `--server-side` option with `kubectl apply` to apply the resource.
 
-*https://jira.issues.couchbase.com/browse/K8S-3839/[K8S-3839]*::
+*https://jira.issues.couchbase.com/browse/K8S-4433/[K8S-4433]*::
 
-Removing a server group from a cluster that uses InPlaceUpgrades can cause the Operator to fail to reconcile the cluster.
+When running in mixed mode and before the upgrade to 8.0 completes, creating a Memcached bucket can cause the Operator to fail reconciliation.
+
+*https://jira.issues.couchbase.com/browse/K8S-4436/[K8S-4436]*::
+
+Upgrading the Couchbase Kubernetes Operator while the cluster is not fully upgraded causes the Operator to complete the cluster upgrade immediately.
+
+*https://jira.issues.couchbase.com/browse/K8S-4445/[K8S-4445]*::
+
+The CouchbaseRestore resource status may fail to update from Couchbase Backup containers.
+This does not prevent the restore from occurring.
+
+*https://jira.issues.couchbase.com/browse/K8S-4448/[K8S-4448]*::
+
+Changing the server groups applied to a server class while the Operator is recovering a pod can block reconciliation.
+
+*https://jira.issues.couchbase.com/browse/K8S-4456/[K8S-4456]*::
+
+Operator must be paused when using `cao create pod`.
+Otherwise, the Operator identifies the pod as foreign and removes it.
+
+*https://jira.issues.couchbase.com/browse/K8S-4469/[K8S-4469]*::
+
+Editing a Couchbase bucket storage backend while enabling or disabling `BucketMigrationRoutines` on a CouchbaseCluster can trigger a race condition that leads to an unreconcilable state.
+
+*https://jira.issues.couchbase.com/browse/K8S-4471/[K8S-4471]*::
+
+When `spec.networking.addressFamily` is set to `IPv6Priority` or `IPv6Only`, the Operator creates the cluster Service as IPv4 SingleStack, which causes pod launch failures.
+Patching the Service to `PreferDualStack` (IPv4, IPv6) allows the cluster to be created.
+
+*https://jira.issues.couchbase.com/browse/K8S-4474/[K8S-4474]*::
+
+Attempting to change bucket settings during a storage backend migration causes the Operator to fail to reconcile the cluster.
+
+*https://jira.issues.couchbase.com/browse/K8S-4477/[K8S-4477]*::
+
+The admission controller allows you to set the `collectionHistoryDefault` value on Couchstore buckets.
+This setting has no effect on Couchstore buckets.
+
+*https://jira.issues.couchbase.com/browse/K8S-4486/[K8S-4486]*::
+
+You can start a Couchbase Server upgrade while a Bucket Storage Backend Migration is in progress.
+This can result in an unreconcilable state.
+
+*https://jira.issues.couchbase.com/browse/K8S-4487/[K8S-4487]*::
+
+Manual Intervention Watchdog does not clear the rebalancing condition when entering the Manual Intervention Required condition.
+
+*https://jira.issues.couchbase.com/browse/K8S-4488/[K8S-4488]*::
+
+Reconciliation can begin before the Manual Intervention Watchdog is fully disabled.
+
+*https://jira.issues.couchbase.com/browse/K8S-4490/[K8S-4490]*::
+
+During stabilization, the Operator reconciles some CouchbaseCluster settings.
 
 
 == Feedback
