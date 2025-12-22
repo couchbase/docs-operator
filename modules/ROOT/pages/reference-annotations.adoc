@@ -70,4 +70,30 @@ When set to true, the pods will be initialised with the node name as the hostnam
 == Cloud Native Gateway
 === OTLP Endpoint
 ==== `cao.couchbase.com/networking.cloudNativeGateway.otlp.endpoint`
-Used to set a custom OTLP endpoint for on Cloud Native Gateway. This annotation is applied to the cluster, and takes a string value (e.g. "https://otel:1234"). The value is passed directly to the Cloud Native Gateway container.
+
+Use this annotation to set a custom OTLP endpoint for the Cloud Native Gateway.
+Apply the annotation to the cluster with a string value such as `https://otel:1234`.
+The value is passed directly to the Cloud Native Gateway container.
+
+== Backup
+=== Additional Args
+==== `cao.couchbase.com/full.additionalArgs`
+
+Use this annotation to set additional arguments for `cbbackupmgr` in full backup jobs.
+Provide a string that includes any values supported by xref:server:backup-restore/cbbackupmgr-backup.html[`cbbackupmgr`].
+
+==== `cao.couchbase.com/incremental.additionalArgs`
+
+Use this annotation to set additional arguments for `cbbackupmgr` in incremental backup jobs.
+Provide a string that includes any values supported by xref:server:backup-restore/cbbackupmgr-backup.html[`cbbackupmgr`].
+
+==== `cao.couchbase.com/merge.additionalArgs`
+
+Use this annotation to set additional arguments for `cbbackupmgr` in merge backup jobs.
+Provide a string that includes any values supported by xref:server:backup-restore/cbbackupmgr-backup.html[`cbbackupmgr`].
+
+=== Additional Operator Backup Args
+==== `cao.couchbase.com/additionalOperatorBackupArgs`
+
+Use this annotation to set additional arguments for the backup container that are not used by `cbbackupmgr`, for example, `--force-delete-lockfile`.
+Provide a string value with the flags to set.
