@@ -1,26 +1,75 @@
 = What's New?
-include::partial$constants.adoc[]
+:page-toclevels: 2
 
-Autonomous Operator {operator-version-minor} introduces our new Cluster Migration functionality well as a number of other improvements and minor fixes.
+Couchbase Kubernetes Operator 2.9 was released in December 2025.
+New features and improvements are described below.
 
-== Cluster Migration
+For information about fixed and known issues, see the xref:release-notes.adoc[Release Notes].
 
-Cluster Migration allows you to transfer a currently-unmanaged Couchbase Server cluster over to being managed by the Operator, with zero downtime.
+[#whats-new-290]
+== New Features and Enhancements in 2.9
 
-See xref:concept-migration.adoc[Couchbase Cluster Migration] for more details.
+Couchbase Kubernetes Operator 2.9 adds support for Couchbase Server 8.0 features and
+introduces a circuit breaker called Manual Intervention Required (MIR) mode.
+This release also improves the upgrade process by introducing a new upgrade object that enables more resilient automated upgrades.
 
-== Admission Controller Improvements
+=== Support for Couchbase Server 8.0 Features
 
-The Dynamic Admission Controller (DAC) will now warn if any cluster settings don't match our xref:best-practices.adoc#production-deployments[Best Practices for Production Deployments].
+Couchbase Server 8.0 introduces several key features, listed in xref:server:introduction:whats-new.adoc[What's New in Version 8.0], which are now configurable through Couchbase Kubernetes Operator 2.9.
+These are the highlights:
 
-The DAC will now prevent changes to the `CouchbaseCluster` spec while a hibernation is taking place.
-If hibernation is enabled while a cluster is migrating, upgrading, scaling, or rebalancing, that process will conclude before the cluster enters hibernation. The DAC will warn when this is the case, and it will be visible in the operator logs.
+* *Encryption at Rest:* Added support for a new `CouchbaseEncryptionKey` custom resource to manage encryption keys
+and to specify which keys are used for each unit, such as buckets, configuration data, and logs.
 
-To prevent any invalid resources failing to reconcile (i.e. if the DAC is not deployed in the current environment), the DAC Validation is now run at the beginning of the reconciliation loop.
-Any invalid resources will be skipped for reconciliation, marked as `NotValid`, and logged.
+* *Magma as the Default Storage Engine:* In Couchbase Server 8.0, Magma with 128 vBuckets is the default storage engine for new buckets.
+Therefore, for CouchbaseBuckets, now the default storage engine is `magma` and the vBucketCount is `128`.
+Couchbase recommends setting the vBucket count to `1024` for high-throughput workloads.
 
-== Miscellaneous Improvements
+* *XDCR Conflict Logging for Active-Active Setups:* Added multiple settings to the CouchbaseBucket resource to set up XDCR Conflict Logging.
 
-* Pod Disruption Budgets can now be set per-Server Class by enabling xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-perserviceclasspdb[`couchbaseclusters.spec.perServiceClassPDB`].
-* Sample Buckets can now be loaded via the xref:resource/couchbasebucket.adoc[`CouchbaseBucket`] resource, by using the xref:reference-annotations.adoc#cao-couchbase-comsamplebucket[`cao.couchbase.com/sampleBucket`] annotation.
-* Query-related RBAC roles (`query_use_sequential_scans`, `query_use_sequences`, and `query_manage_sequences`) have now been added to  xref:resource/couchbasegroup.adoc#couchbasegroups-spec-roles-name[`couchbasegroups.spec.roles.name`].
+* Other features such as enabling and disabling user accounts, and new bucket settings such as for warmup.
+
+=== Manual Intervention Required (MIR) Mode
+
+The MirWatchdog is an out-of-band check that provides additional alerting.
+It's used when the Operator cannot reconcile a cluster due to reasons outside its control and requires manual user intervention.
+Scenarios include TLS expiration, Couchbase authentication errors, and rebalance failures.
+
+This feature is disabled by default but can be enabled and configured by using the `mirWatchdog` field in the CouchbaseCluster CRD.
+
+For more information, see xref:tutorial-mirwatchdog.adoc[Monitor for Manual Intervention Scenarios].
+
+=== Upgrade Process Improvements
+
+Autonomous upgrades now provide improved user input and control through a new `upgrade` object in the CouchbaseCluster specification,
+which contains all configurations for upgrading a cluster.
+The previous ServerClass image-based approach is now hard deprecated.
+
+This consolidation clarifies how to control and manage future upgrades.
+All existing upgrade fields `upgradeProcess`, `upgradeStrategy`, and `rollingUpgrade` are deprecated, and moved under the `upgrade` object.
+
+The new `upgrade` object has the following new fields:
+
+* `UpgradeOrderType`: The unit of upgrade that can be a Node, ServerGroup, ServerClass, or Service.
+* `UpgradeOrder`: The upgrade order of specified upgrade units.  
+* `stabilizationPeriod`: The wait time in seconds before upgrading the next unit. 
+* `previousVersionPodCount`: The number of pods to keep running on the previous version at the end of upgrade.
+
+For more information, see xref:concept-upgrade.adoc[Upgrade Couchbase Server] and xref:howto-couchbase-upgrade.adoc[Upgrade a Couchbase Deployment].
+
+=== Other Improvements
+
+The following are additional important improvements:
+
+* Support for changing the bucket eviction policy online without requiring a bucket restart.
+* The ability to disable DNS resolution verification when creating pods before activating them in the cluster.
+* Support for specifying `overheadMemory` for `autoResourceAllocation` to define a static overhead amount.
+* Operator-backup now supports Periodic Merge in addition to Full Only and Full Incremental.
+This strategy is better suited for some larger clusters.
+You can specify a merge schedule on the CouchbaseBackup resource.
+* Support for specifying the `cao.couchbase.com/additionalArgs` annotation on CouchbaseBackup and CouchbaseRestore resources to pass additional `cbbackupmgr` arguments to the container.
+
+== More Information
+
+* xref:server:introduction:whats-new.adoc[What's New in Couchbase Server Version 8.0]
+* xref:server:release-notes:relnotes.adoc[Couchbase Server Release Notes Version 8.0]
