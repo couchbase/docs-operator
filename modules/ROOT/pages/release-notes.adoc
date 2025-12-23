@@ -248,6 +248,10 @@ Attempting to change bucket settings during a storage backend migration causes t
 The admission controller allows you to set the `collectionHistoryDefault` value on Couchstore buckets.
 This setting has no effect on Couchstore buckets.
 
+*https://jira.issues.couchbase.com/browse/K8S-4482/[K8S-4482]*::
+
+Attempting to change the `evictionPolicy` setting during a storage backend migration while `OnlineEvictionPolicyChange` is `true` can lead to an unreconcilable state.
+
 *https://jira.issues.couchbase.com/browse/K8S-4486/[K8S-4486]*::
 
 You can start a Couchbase Server upgrade while a Bucket Storage Backend Migration is in progress.
@@ -286,6 +290,45 @@ It's possible to rotate admin credentials to a password that does not meet the c
 Setting reader and writer threads to `balanced` during an upgrade from Couchbase Server 7.6 to 8.0 can cause memcached to crash.
 Removing the reader and writer thread settings from the CRD resolves the issue.
 
+*https://jira.issues.couchbase.com/browse/K8S-4507/[K8S-4507]*::
+
+Enabling shard affinity in mixed mode, before the cluster fully supports the setting, can cause the Operator to fail reconciliation.
+
+*https://jira.issues.couchbase.com/browse/K8S-4508/[K8S-4508]*::
+
+The Operator may not clear the unreconcilable condition after the resource is fixed.
+
+*https://jira.issues.couchbase.com/browse/K8S-4509/[K8S-4509]*::
+
+Holding a cluster in mixed mode between 7.2.x and 7.6.x can prevent the Operator from reconciling some cluster settings.
+
+*https://jira.issues.couchbase.com/browse/K8S-4510/[K8S-4510]*::
+
+Remaining in mixed mode on older Couchbase Server versions can cause the Operator to log errors due to incorrect version checks.
+
+*https://jira.issues.couchbase.com/browse/K8S-4511/[K8S-4511]*::
+
+You cannot currently specify Arbiter nodes in the services order during an upgrade.
+
+*https://jira.issues.couchbase.com/browse/K8S-4512/[K8S-4512]*::
+
+The Operator can update Index Storage settings twice accidentally.
+
+*https://jira.issues.couchbase.com/browse/K8S-4514/[K8S-4514]*::
+
+The Operator can update the Fluent Bit configuration accidentally.
+
+*https://jira.issues.couchbase.com/browse/K8S-4515/[K8S-4515]*::
+
+While processing a bucket migration, the Operator does not send the correct online change flag for modifications to Couchbase Server when changing the Eviction Policy.
+
+*https://jira.issues.couchbase.com/browse/K8S-4520/[K8S-4520]*::
+
+The admission controller allows encryption at rest to be enabled in mixed mode.
+
+*https://jira.issues.couchbase.com/browse/K8S-4521/[K8S-4521]*::
+
+The admission controller allows use of the Couchbase User `spec.user` field for users that reference clusters not running version 8.0.0.
 
 == Feedback
 
