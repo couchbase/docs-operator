@@ -252,6 +252,10 @@ This setting has no effect on Couchstore buckets.
 
 Attempting to change the `evictionPolicy` setting during a storage backend migration while `OnlineEvictionPolicyChange` is `true` can lead to an unreconcilable state.
 
+*https://jira.issues.couchbase.com/browse/K8S-4485/[K8S-4485]*::
+
+Manually editing a bucket’s storage backend with BucketMigrationRoutines disabled can prevent the Operator from reconciling the cluster.
+
 *https://jira.issues.couchbase.com/browse/K8S-4486/[K8S-4486]*::
 
 You can start a Couchbase Server upgrade while a Bucket Storage Backend Migration is in progress.
