@@ -263,7 +263,28 @@ Reconciliation can begin before the Manual Intervention Watchdog is fully disabl
 
 *https://jira.issues.couchbase.com/browse/K8S-4490/[K8S-4490]*::
 
-During stabilization, the Operator reconciles some CouchbaseCluster settings.
+During stabilization, the Operator reconciles some, but not all CouchbaseCluster settings.
+
+*https://jira.issues.couchbase.com/browse/K8S-4496/[K8S-4496]*::
+
+It is possible to set replicas lower than the minimum required for a CouchbaseCluster when using an Ephemeral bucket.
+
+*https://jira.issues.couchbase.com/browse/K8S-4497/[K8S-4497]*::
+
+The dynamic admission controller treats the default bucket storage backend as Couchstore, even on 8.0 clusters.
+
+*https://jira.issues.couchbase.com/browse/K8S-4498/[K8S-4498]*::
+
+The order of password policy updates and user password changes can affect whether the Operator can make these changes successfully.
+
+*https://jira.issues.couchbase.com/browse/K8S-4499/[K8S-4499]*::
+
+It's possible to rotate admin credentials to a password that does not meet the cluster password policy, which can prevent the Operator from reconciling the cluster.
+
+*https://jira.issues.couchbase.com/browse/K8S-4504/[K8S-4504]*::
+
+Setting reader and writer threads to `balanced` during an upgrade from Couchbase Server 7.6 to 8.0 can cause memcached to crash.
+Removing the reader and writer thread settings from the CRD resolves the issue.
 
 
 == Feedback
