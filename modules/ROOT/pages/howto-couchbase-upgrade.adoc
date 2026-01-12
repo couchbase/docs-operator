@@ -218,12 +218,13 @@ spec:
       - index
       - data
       - query
+      - arbiter
 ----
 
 <.> The version to which you want to upgrade.
 <.> The order type you want the Operator to use.
 <.> Define the sequence the Operator uses to upgrade services.
 The Operator orders pods that run multiple services by the first service listed in the sequence.
-With this manifest, the Operator upgrades pods running the Index Service first, followed by the Data Service, and then the Query Service.
+With this manifest, the Operator upgrades pods running the Index Service first, followed by the Data Service, arbiter nodes (those running node services), and then the Query Service.
 If the number of pods running a service is less than `spec.upgrade.rollingUpgrade.maxUpgradable`, the Operator does not upgrade pods from the next service in the list.
-When the sequence does not include all services, the Operator upgrades pods running unlisted services by using the default order: data, query, index, search, analytics, and eventing.
+When the sequence does not include all services, the Operator upgrades pods running unlisted services by using the default order: data, query, index, search, analytics, eventing and arbiter.
