@@ -91,7 +91,6 @@
   *** xref:howto-manage-couchbase-logging.adoc[Manage Couchbase Logging]
   *** xref:howto-couchbase-log-forwarding.adoc[Configure Log Forwarding]
   *** xref:howto-non-root-install.adoc[Configure Non-Root Installs]
-  *** xref:howto-encryption-at-rest.adoc[Configure Encryption at Rest]
  ** Connect
   *** xref:howto-ui.adoc[Access the Couchbase User Interface]
   *** xref:howto-client-sdks.adoc[Configure Client SDKs]
