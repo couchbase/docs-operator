@@ -37,10 +37,10 @@ This annotation cannot be added to an existing bucket and should not be used for
 == Cluster Scheduling
 === Rescheduling To Different Server Groups On Failed Scheduling
 ==== `cao.couchbase.com/rescheduleDifferentServerGroup`
-Used to allow Couchbase Operator to attempt to reschedule a pod to a different server group if the pod fails to schedule on the original server group.
-By default Couchbase Operator will continue to try to schedule the pod on the original server group if it fails to schedule.
-With this annotation applied to a cluster the operator will try to schedule the pod to a different server group that has the same number of Couchbase Pods in it as the original server group. This is to ensure that the cluster remains balanced across the server groups.
-This is a best effort attempt and may not always succeed. If there are no server groups with the same number of pods as the original server group the pod will be scheduled on the original server group.
+Used to allow Couchbase Operator to attempt to reschedule a pod to a different server group if the pod fails to schedule.
+When not set, Couchbase Operator performs full server group rebalancing calculations for all pods (including unschedulable ones) to ensure the cluster remains balanced, and will retry scheduling without tracking or avoiding server groups that previously failed to schedule pods.
+With this annotation set to `true` on a cluster, the operator only reschedules pods from unschedulable server groups (those removed from the cluster specification). When a pod fails to schedule on a server group multiple times, the operator tracks the failure and attempts to schedule the pod on a different server group (with the next least possible size), helping to balance the cluster.
+This is a best effort mechanism. If multiple server groups fail to schedule the pod, the operator will randomly select from the available server groups defined in the server class specification.
 Accepts either `true` or `false`.
 
 === Server Group Shuffling
@@ -53,7 +53,9 @@ Accepts either `true` or `false`.
 == Pod Rescheduling
 === Individual Pod Rescheduling
 ==== `cao.couchbase.com/reschedule`
-Used to force a pod to be rescheduled. When this annotation is applied to a Couchbase pod, the operator will detect it and reschedule the pod. The pods will either be Swap Rebalanced or go through a InPlaceUpgrade depending on xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-upgradeprocess[`couchbaseclusters.spec.upgradeProcess`].
+Used to force a pod to be rescheduled for node maintenance purposes. When this annotation is applied to a Couchbase pod with the value `true`, the operator will detect it and reschedule the pod. The pod will either be Swap Rebalanced or go through an InPlaceUpgrade depending on xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-upgradeprocess[`couchbaseclusters.spec.upgradeProcess`].
+
+This annotation is intended for scenarios such as Kubernetes node maintenance, cordoning, or draining operations. It is not designed for schedule balancing across server groups - server group changes during upgrades are automatically handled by the operator.
 Accepts either `true` or `false`.
 
 == Host Network 
