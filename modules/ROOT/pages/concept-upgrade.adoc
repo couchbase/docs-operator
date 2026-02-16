@@ -68,8 +68,21 @@ During this time, the Operator marks the cluster as Mixed Mode, which may restri
 It determines how the Operator interprets `upgradeOrder` and must be set to Nodes, ServerGroups, ServerClasses, or Services.
 The Operator follows the sequence specified in `upgradeOrder` and applies the default ordering to any items not listed.
 
-NOTE: `InPlaceUpgrade` can interrupt service and increase the risk of data loss.
+[NOTE]
+.Important information about `InPlaceUpgrade`.
+====
+
+`InPlaceUpgrade` can interrupt service and increase the risk of data loss.
 Use this process only when the cluster has at least two nodes running the Data Service.
+
+InplaceUpgrades can only be done performed one pod at a time.
+This is due to restrictions by Couchbase Server’s delta recovery logic, which fails if any pod topology changes occur since the pod was gracefully failed.
+
+InPlaceUpgrades cannot be performed on single node clusters.
+This is considered an “offline” upgrade, and will only work in 2.7.0+
+(See https://jira.issues.couchbase.com/browse/K8S-3542[K8S-3542]).
+
+====
 
 === How to Upgrade a Cluster
 
