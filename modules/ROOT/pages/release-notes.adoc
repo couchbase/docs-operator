@@ -1,101 +1,338 @@
-= Release Notes for Couchbase Kubernetes Operator {operator-version-minor}
-include::partial$constants.adoc[]
+= Release Notes for Couchbase Kubernetes Operator 2.9
+:page-toclevels: 2
 
-Autonomous Operator {operator-version-minor} introduces our new Cluster Migration functionality well as a number of other improvements and minor fixes.
+This page summarizes the fixes and known issues in Couchbase Kubernetes Operator 2.9, and links to the associated issues.
 
-Take a look at the xref:whats-new.adoc[What's New] page for a list of new features and improvements that are available in this release.
+== New Features
 
-== Installation
+For information about new features and major improvements made in Couchbase Kubernetes Operator 2.9, see xref:whats-new.adoc[What's New].
 
-For installation instructions, refer to:
+[#release-290]
+== Release 2.9 (December 2025)
 
-* xref:install-kubernetes.adoc[]
-* xref:install-openshift.adoc[]
+Couchbase Kubernetes Operator 2.9 was released in December 2025.
+This release contains fixes to issues and known issues.
 
-== Upgrading to Kubernetes Operator {operator-version-minor}
+[#fixed-issues-v290]
+=== Fixed Issues in 2.9
 
-The necessary steps needed to upgrade to this release depend on which version of the Kubernetes Operator you are upgrading from.
+For Couchbase Kubernetes Operator 2.9 released in December 2025, these are the fixed issues.
 
-=== Upgrading from 1.x, 2.0, or 2.1
+*https://jira.issues.couchbase.com/browse/K8S-1537/[K8S-1537]*::
 
-There is no direct upgrade path from versions prior to 2.2.0.
-To upgrade from a 1.x, 2.0.x, or 2.1.x release, you must first upgrade to 2.4.x, paying particular attention to supported Kubernetes platforms and Couchbase Server versions.
-Refer to the xref:2.4@operator::howto-operator-upgrade.adoc[Operator 2.4 upgrade steps] if upgrading from a pre-2.2 release.
+The cluster UUID is no longer required when creating remote cluster connections.
 
-=== Upgrading from 2.2, 2.3, 2.4, 2.5, 2.6, or 2.7
+*https://jira.issues.couchbase.com/browse/K8S-2829/[K8S-2829]*::
 
-There are no additional upgrade steps when upgrading from these versions, and you may follow the xref:howto-operator-upgrade.adoc[standard upgrade process].
+You can now specify the `cao.couchbase.com/additionalArgs` annotation on CouchbaseBackup and CouchbaseRestore resources to pass additional `cbbackupmgr` arguments to the container.
 
-For further information read the xref:concept-upgrade.adoc[Couchbase Upgrade] concepts page.
+*https://jira.issues.couchbase.com/browse/K8S-3016/[K8S-3016]*::
 
-include::partial$couchbase-operator-release-notes-2.8.1.adoc[]
+You can now specify the Couchbase Server password policy using the CouchbaseCluster resource.
 
-[#release-v280]
-== Release 2.8.0
+*https://jira.issues.couchbase.com/browse/K8S-3121/[K8S-3121]*::
 
-Couchbase Kubernetes Operator 2.8.0 was released in March 2025.
+You can now specify to preserve the CouchbaseBackupRestore resource after the restore completes.
 
-[#changes-in-behavior-v280]
-=== Changes in Behaviour
+*https://jira.issues.couchbase.com/browse/K8S-3153/[K8S-3153]*::
 
-==== Admission Controller Changes
+New TCP tunables (`tcpKeepAliveIdle`, `tcpKeepAliveInterval`, `tcpKeepAliveProbes`, `tcpUserTimeout`) are now available through the CouchbaseCluster resource when using Couchbase Server 8.0.
 
-The Dynamic Admission Controller (DAC) will now warn if any cluster settings don't match our xref:best-practices.adoc#production-deployments[Best Practices for Production Deployments].
+*https://jira.issues.couchbase.com/browse/K8S-3258/[K8S-3258]*::
 
-The DAC will now prevent changes to the `CouchbaseCluster` spec while a hibernation is taking place.
-If hibernation is enabled while a cluster is migrating, upgrading, scaling, or rebalancing, that process will conclude before the cluster enters hibernation. The DAC will warn when this is the case, and it will be visible in the operator logs.
+Added the `logging.configNameReleasePrefix` boolean to the Helm chart.
+The default value is `false`.
+When set to `true`, the Operator prefixes the Fluent Bit configuration with the release name.
++
+Couchbase recommends enabling this setting only on new clusters because enabling it on existing clusters triggers recreation of all pods.
 
-To prevent any invalid resources failing to reconcile (i.e. if the DAC is not deployed in the current environment), the DAC Validation is now run at the beginning of the reconciliation loop.
-Any invalid resources will be skipped for reconciliation, marked as `NotValid`, and logged.
+*https://jira.issues.couchbase.com/browse/K8S-3371/[K8S-3371]*::
 
-==== Bucket and Index Service Settings
+You can now specify environment variables for the CouchbaseBackup and CouchbaseBackupRestore pods to allow `cbbackupmgr` tuning.
 
-In a previous version of the Operator, `enablePageBloomFilter` was unfortunately missed from the Index Service settings.
-This has been addressed in CAO 2.8.0, and it is now available as xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-cluster-indexer-enablepagebloomfilter[`couchbaseclusters.spec.cluster.indexer.enablePageBloomFilter`].
+*https://jira.issues.couchbase.com/browse/K8S-3434/[K8S-3434]*::
 
-Until CAO 2.8.0, Bucket Compaction settings were only available to be set in the xref:resource/couchbasecluster.adoc[`CouchbaseCluster`] resource, at xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-cluster-autocompaction[`couchbaseclusters.spec.cluster.autoCompaction`].
-These settings have now been added to the xref:resource/couchbasebucket.adoc[`CouchbaseBucket`] resource at xref:resource/couchbasebucket.adoc#couchbasebuckets-spec-autocompaction[`couchbasebuckets.spec.autoCompaction`].
+`spec.monitoring` is deprecated and no longer attaches an exporter sidecar to the Couchbase Server pod.
 
-[IMPORTANT]
-====
-Prior to Operator 2.8.0, the above settings could still be set directly on the cluster.
+*https://jira.issues.couchbase.com/browse/K8S-3535/[K8S-3535]*::
 
-To avoid these being reset to default values during the CAO upgrade, any of the above settings that have been changed must be added to the appropriate resource during the upgrade.
+If `couchbasecluster.spec.buckets.managed` is set to `false`, restoring from backup automatically creates buckets.
 
-Specifically, this needs to be done _after_ updating the CRDs, and _before_ installing the new Operator
+*https://jira.issues.couchbase.com/browse/K8S-3616/[K8S-3616]*::
 
-For further information see xref:howto-operator-upgrade.adoc#update-existing-resources[Update Existing Resources].
-====
+New REST API bucket settings for the Data Service are now available in Couchbase Server 8.0.
 
-==== Metrics Changes
+*https://jira.issues.couchbase.com/browse/K8S-3638/[K8S-3638]*::
 
-A number of new metrics have been added, see xref:reference-prometheus-metrics.adoc[Prometheus Metrics Reference] for details.
+You can now specify a merge schedule on the CouchbaseBackup resource.
 
-It is now possible to include the Couchbase Cluster UUID, or Cluster UUID and Cluster Name, as labels with any Operator metric that is related to a specific Couchbase Cluster.
-This can be enabled by setting `optional-metric-labels` to either `uuid-only` or `uuid-and-name`, when using xref:tools/cao.adoc#cao-create-operator-flags[cao create operator] or xref:tools/cao.adoc#cao-generate-operator-flags[cao generate operator].
+*https://jira.issues.couchbase.com/browse/K8S-3646/[K8S-3646]*::
 
-While adding the Couchbase Cluster UUID and Cluster Name labels, it was discovered that there were inconsistencies regarding the Kubernetes Namespace and Cluster Resource Name labels in some of the existing metrics.
-Some had separate labels for `namespace` and `name`, and some had a combined `namespace/name` label.
-In order to provide consistency, all metrics by default now have separate `name` and `namespace` labels.
-The previous behavior, where a small number of metrics had the combined form of the label, can be achieved by setting `separate-cluster-namespace-and-name` to `false`, when using xref:tools/cao.adoc#cao-create-operator-flags[cao create operator] or xref:tools/cao.adoc#cao-generate-operator-flags[cao generate operator].
+You can now set the Query Service `CompletedStreamSize` using the CouchbaseCluster resource.
 
-==== Annotation Changes
+*https://jira.issues.couchbase.com/browse/K8S-3650/[K8S-3650]*::
 
-===== Storage Backend Migration
+When using Couchbase Server 8.0, you can no longer create Memcached buckets.
 
-As an enhancement to the Couchstore/Magma migration functionality added in Operator 2.7, CAO 2.8.0 adds two new annotations:
+*https://jira.issues.couchbase.com/browse/K8S-3715/[K8S-3715]*::
 
-* Bucket Migrations are now disabled by default, to prevent unexpected node rebalances.  These can be enabled with xref:reference-annotations.adoc#cao-couchbase-combuckets-enablebucketmigrationroutines[`cao.couchbase.com/buckets.enableBucketMigrationRoutines`].
-* Similar to a maintenance upgrade, it is now possible to specify how many Pods can be migrated at a time with xref:reference-annotations.adoc#cao-couchbase-combuckets-maxconcurrentpodswaps[`cao.couchbase.com/buckets.maxConcurrentPodSwaps`].
+Added RBAC roles for users to match new roles added in Couchbase Server 8.0.
 
-===== History Retention
+*https://jira.issues.couchbase.com/browse/K8S-3786/[K8S-3786]*::
 
-The annotations related to History Retention, that were added in Operator 2.4.1, have now been added to the xref:resource/couchbasebucket.adoc[`CouchbaseBucket`], and xref:resource/couchbasecollection.adoc[`CouchbaseCollection`] resources, at xref:resource/couchbasebucket.adoc#couchbasebuckets-spec-historyretention[`couchbasebuckets.spec.historyRetention`], and xref:resource/couchbasecollection.adoc#couchbasecollections-spec-history[`couchbasecollections.spec.history`], respectively.
+You can now specify `default` and `disk_io_optimized` for the Data Service reader threads.
 
-The History Retention annotations should be considered deprecated, and it should be noted that if used, they will take precedence over the equivalent values in the resources.
-Care should be taken to make sure that the annotations are removed as soon as the resources have been updated with the new attributes.
+*https://jira.issues.couchbase.com/browse/K8S-3917/[K8S-3917]*::
 
-include::partial$couchbase-operator-release-notes-2.8.0.adoc[]
+You can now set `overheadMemory` for `autoResourceAllocation` to specify a static overhead amount.
+
+*https://jira.issues.couchbase.com/browse/K8S-3951/[K8S-3951]*::
+
+`cao.couchbase.com/autoCompaction.magmaFragmentationPercentage` has been replaced by a field in the CouchbaseCluster CRD.
+
+*https://jira.issues.couchbase.com/browse/K8S-4013/[K8S-4013]*::
+
+You can now disable DNS resolution verification when creating pods before activating them in the cluster.
+
+*https://jira.issues.couchbase.com/browse/K8S-4016/[K8S-4016]*::
+
+Fixed a bug that caused a panic when a member pod became unresponsive.
+
+*https://jira.issues.couchbase.com/browse/K8S-4028/[K8S-4028]*::
+
+Added an upgrade stanza to the CouchbaseCluster resource to give users more control over upgrades.
+
+*https://jira.issues.couchbase.com/browse/K8S-4091/[K8S-4091]*::
+
+Updated `spec.networking.addressFamily` to accept `IPv4Only`, `IPv4Priority`, `IPv6Only`, and `IPv6Priority`.
+The existing `IPv4` and `IPv6` values retain the `IPv4Only` and `IPv6Only` behavior, so no change is required for existing configurations.
++
+These values are deprecated and will be removed in a future release.
++
+The priority or only option determines whether `addressFamilyOnly` is set to `true` or `false`.
+
+*https://jira.issues.couchbase.com/browse/K8S-4097/[K8S-4097]*::
+
+The MirWatchdog is an out-of-band check that provides additional alerting.
+It is used when the Operator cannot reconcile a cluster due to reasons outside its control and requires manual user intervention.
+Scenarios include, but are not limited to, TLS expiration, Couchbase authentication errors, and loss of quorum.
+This feature is disabled by default but can be enabled and configured by using the `mirWatchdog` field in the CouchbaseCluster CRD.
+If the cluster enters this condition, it will:
++
+. Set the `cluster_manual_intervention` gauge metric to `1`.
+. Add the `ManualInterventionRequired` condition to the cluster, where possible, with a message describing the reason for entering the MIR state.
+. Raise a `ManualInterventionRequired` Kubernetes event, with the message describing the reason for entering manual intervention.
+. Optionally, skips reconciliation until the manual intervention required state is resolved, that is, until the issue that caused the condition is fixed.
+
+*https://jira.issues.couchbase.com/browse/K8S-4101/[K8S-4101]*::
+
+Added support for the Encryption at Rest feature of Couchbase Server 8.0.
+
+*https://jira.issues.couchbase.com/browse/K8S-4108/[K8S-4108]*::
+
+The CouchbaseUser resource now includes an `enabled` flag to allow administrators to enable or disable user accounts.
+
+*https://jira.issues.couchbase.com/browse/K8S-4109/[K8S-4109]*::
+
+The CouchbaseUser resource now allows the administrators to enforce password change on a user’s first login using the `couchbaseuser.spec.userPassword.requireInitialChange` field.
+
+*https://jira.issues.couchbase.com/browse/K8S-4111/[K8S-4111]*::
+
+CouchbaseBucket resources now support `durabilityImpossibleFallback` with values `disabled` and `fallbackToActiveAck`.
+
+*https://jira.issues.couchbase.com/browse/K8S-4112/[K8S-4112]*::
+
+Added multiple settings to CouchbaseBucket resources to configure XDCR Conflict Logging.
+
+*https://jira.issues.couchbase.com/browse/K8S-4114/[K8S-4114]*::
+
+Added a CouchbaseCluster resource setting that enables auto‑failover of Ephemeral Buckets with no replicas in Couchbase Server 8.0 and later versions.
+
+*https://jira.issues.couchbase.com/browse/K8S-4117/[K8S-4117]*::
+
+Added `data.diskUsageLimit` to the CouchbaseCluster resource to enable Disk Usage Guardrails.
+
+*https://jira.issues.couchbase.com/browse/K8S-4118/[K8S-4118]*::
+
+Added support for SDK Telemetry settings in Couchbase Server 8.0 and later versions.
+
+*https://jira.issues.couchbase.com/browse/K8S-4120/[K8S-4120]*::
+
+For CouchbaseBuckets, now the default storage engine is `magma` and the vBucketCount is `128`.
+
+*https://jira.issues.couchbase.com/browse/K8S-4144/[K8S-4144]*::
+
+In the earlier versions of Couchbase Kubernetes Operator, the metrics port annotation `prometheus.io/port` was set to `8091`, even when TLS was enabled.
+It now correctly sets to `18091`.
+
+*https://jira.issues.couchbase.com/browse/K8S-4158/[K8S-4158]*::
+
+EvictionPolicy changes can now be applied to an online bucket during a swap rebalance.
+
+*https://jira.issues.couchbase.com/browse/K8S-4161/[K8S-4161]*::
+
+Operator 2.9.0 allows you to set `spec.cluster.analytics.numReplicas`.
+This feature is supported only on Couchbase Server 7.6 and later versions.
+
+*https://jira.issues.couchbase.com/browse/K8S-4203/[K8S-4203]*::
+
+Fixed an issue where metrics scrapes became too large when the Operator managed many clusters.
+
+*https://jira.issues.couchbase.com/browse/K8S-4209/[K8S-4209]*::
+
+Full backups can now be resumed.
+
+*https://jira.issues.couchbase.com/browse/K8S-4273/[K8S-4273]*::
+
+Fixed an issue where the Operator failed to remove pods from the cluster.
+
+*https://jira.issues.couchbase.com/browse/K8S-4279/[K8S-4279]*::
+
+Fixed an issue where log message tags were inconsistent.
+
+*https://jira.issues.couchbase.com/browse/K8S-4404/[K8S-4404]*::
+
+Fixed an issue that caused upgrades to fail when image definitions used SHA256 digests.
+
+[#known-issues-29]
+=== Known Issues in 2.9
+
+For Couchbase Kubernetes Operator 2.9 released in December 2025, these are the known issues that aren’t yet resolved.
+
+*https://jira.issues.couchbase.com/browse/K8S-3839/[K8S-3839]*::
+
+Removing a server group from a cluster that uses InPlaceUpgrades can cause the Operator to fail to reconcile the cluster.
+
+*https://jira.issues.couchbase.com/browse/K8S-4349/[K8S-4349]*::
+
+The CouchbaseCluster CRD now exceeds the size limit for client-side apply.
+Use the `--server-side` option with `kubectl apply` to apply the resource.
+
+*https://jira.issues.couchbase.com/browse/K8S-4433/[K8S-4433]*::
+
+When running in mixed mode and before the upgrade to 8.0 completes, creating a Memcached bucket can cause the Operator to fail reconciliation.
+
+*https://jira.issues.couchbase.com/browse/K8S-4436/[K8S-4436]*::
+
+Upgrading the Couchbase Kubernetes Operator while the cluster is not fully upgraded causes the Operator to complete the cluster upgrade immediately.
+
+*https://jira.issues.couchbase.com/browse/K8S-4445/[K8S-4445]*::
+
+The CouchbaseRestore resource status may fail to update from Couchbase Backup containers.
+This does not prevent the restore from occurring.
+
+*https://jira.issues.couchbase.com/browse/K8S-4448/[K8S-4448]*::
+
+Changing the server groups applied to a server class while the Operator is recovering a pod can block reconciliation.
+
+*https://jira.issues.couchbase.com/browse/K8S-4456/[K8S-4456]*::
+
+Operator must be paused when using `cao create pod`.
+Otherwise, the Operator identifies the pod as foreign and removes it.
+
+*https://jira.issues.couchbase.com/browse/K8S-4469/[K8S-4469]*::
+
+Editing a Couchbase bucket storage backend while enabling or disabling `BucketMigrationRoutines` on a CouchbaseCluster can trigger a race condition that leads to an unreconcilable state.
+
+*https://jira.issues.couchbase.com/browse/K8S-4471/[K8S-4471]*::
+
+When `spec.networking.addressFamily` is set to `IPv6Priority` or `IPv6Only`, the Operator creates the cluster Service as IPv4 SingleStack, which causes pod launch failures.
+Patching the Service to `PreferDualStack` (IPv4, IPv6) allows the cluster to be created.
+
+*https://jira.issues.couchbase.com/browse/K8S-4474/[K8S-4474]*::
+
+Attempting to change bucket settings during a storage backend migration causes the Operator to fail to reconcile the cluster.
+
+*https://jira.issues.couchbase.com/browse/K8S-4477/[K8S-4477]*::
+
+The admission controller allows you to set the `collectionHistoryDefault` value on Couchstore buckets.
+This setting has no effect on Couchstore buckets.
+
+*https://jira.issues.couchbase.com/browse/K8S-4482/[K8S-4482]*::
+
+Attempting to change the `evictionPolicy` setting during a storage backend migration while `OnlineEvictionPolicyChange` is `true` can lead to an unreconcilable state.
+
+*https://jira.issues.couchbase.com/browse/K8S-4485/[K8S-4485]*::
+
+Manually editing a bucket’s storage backend with BucketMigrationRoutines disabled can prevent the Operator from reconciling the cluster.
+
+*https://jira.issues.couchbase.com/browse/K8S-4486/[K8S-4486]*::
+
+You can start a Couchbase Server upgrade while a Bucket Storage Backend Migration is in progress.
+This can result in an unreconcilable state.
+
+*https://jira.issues.couchbase.com/browse/K8S-4487/[K8S-4487]*::
+
+Manual Intervention Watchdog does not clear the rebalancing condition when entering the Manual Intervention Required condition.
+
+*https://jira.issues.couchbase.com/browse/K8S-4488/[K8S-4488]*::
+
+Reconciliation can begin before the Manual Intervention Watchdog is fully disabled.
+
+*https://jira.issues.couchbase.com/browse/K8S-4490/[K8S-4490]*::
+
+During stabilization, the Operator reconciles some, but not all CouchbaseCluster settings.
+
+*https://jira.issues.couchbase.com/browse/K8S-4496/[K8S-4496]*::
+
+It is possible to set replicas lower than the minimum required for a CouchbaseCluster when using an Ephemeral bucket.
+
+*https://jira.issues.couchbase.com/browse/K8S-4497/[K8S-4497]*::
+
+The dynamic admission controller treats the default bucket storage backend as Couchstore, even on 8.0 clusters.
+
+*https://jira.issues.couchbase.com/browse/K8S-4498/[K8S-4498]*::
+
+The order of password policy updates and user password changes can affect whether the Operator can make these changes successfully.
+
+*https://jira.issues.couchbase.com/browse/K8S-4499/[K8S-4499]*::
+
+It's possible to rotate admin credentials to a password that does not meet the cluster password policy, which can prevent the Operator from reconciling the cluster.
+
+*https://jira.issues.couchbase.com/browse/K8S-4504/[K8S-4504]*::
+
+Setting reader and writer threads to `balanced` during an upgrade from Couchbase Server 7.6 to 8.0 can cause memcached to crash.
+Removing the reader and writer thread settings from the CRD resolves the issue.
+
+*https://jira.issues.couchbase.com/browse/K8S-4507/[K8S-4507]*::
+
+Enabling shard affinity in mixed mode, before the cluster fully supports the setting, can cause the Operator to fail reconciliation.
+
+*https://jira.issues.couchbase.com/browse/K8S-4508/[K8S-4508]*::
+
+The Operator may not clear the unreconcilable condition after the resource is fixed.
+
+*https://jira.issues.couchbase.com/browse/K8S-4509/[K8S-4509]*::
+
+Holding a cluster in mixed mode between 7.2.x and 7.6.x can prevent the Operator from reconciling some cluster settings.
+
+*https://jira.issues.couchbase.com/browse/K8S-4510/[K8S-4510]*::
+
+Remaining in mixed mode on older Couchbase Server versions can cause the Operator to log errors due to incorrect version checks.
+
+*https://jira.issues.couchbase.com/browse/K8S-4511/[K8S-4511]*::
+
+You cannot currently specify Arbiter nodes in the services order during an upgrade.
+
+*https://jira.issues.couchbase.com/browse/K8S-4512/[K8S-4512]*::
+
+The Operator can update Index Storage settings twice accidentally.
+
+*https://jira.issues.couchbase.com/browse/K8S-4514/[K8S-4514]*::
+
+The Operator can update the Fluent Bit configuration accidentally.
+
+*https://jira.issues.couchbase.com/browse/K8S-4515/[K8S-4515]*::
+
+While processing a bucket migration, the Operator does not send the correct online change flag for modifications to Couchbase Server when changing the Eviction Policy.
+
+*https://jira.issues.couchbase.com/browse/K8S-4520/[K8S-4520]*::
+
+The admission controller allows encryption at rest to be enabled in mixed mode.
+
+*https://jira.issues.couchbase.com/browse/K8S-4521/[K8S-4521]*::
+
+The admission controller allows use of the Couchbase User `spec.user` field for users that reference clusters not running version 8.0.0.
 
 == Feedback
 
@@ -109,4 +346,5 @@ Couchbase is thankful to all of the individuals that have created these third-pa
 
 == More Information
 
-* xref:server:release-notes:relnotes.adoc[Couchbase Server Release Notes]
+* xref:server:release-notes:relnotes.adoc[Couchbase Server Release Notes Version 8.0]
+* xref:server:introduction:whats-new.adoc[What's New in Couchbase Server Version 8.0]

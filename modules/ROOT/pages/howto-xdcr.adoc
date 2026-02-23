@@ -14,8 +14,8 @@ This page documents how to setup XDCR to replicate data to a different Kubernete
 In this scenario the remote cluster is accessible with Kubernetes based DNS.
 This applies to both xref:concept-couchbase-networking.adoc#intra-kubernetes-networking[intra-Kubernetes networking] and xref:concept-couchbase-networking.adoc#inter-kubernetes-networking-with-forwarded-dns[inter-Kubernetes networking with forwarded DNS].
 
-When using inter-Kubernetes networking, the local XDCR client must forward DNS requests to the remote cluster in order to resolve DNS names of the target Couchbase instances.
-Refer to the xref:tutorial-remote-dns.adoc[Inter-Kubernetes Networking with Forwarded DNS] tutorial to understand how to configure forwarding DNS servers.
+When using inter-Kubernetes networking, the local XDCR client must forward DNS requests to the remote cluster to resolve DNS names of the target Couchbase instances.
+For more information, see the xref:tutorial-remote-dns.adoc[Inter-Kubernetes Networking with Forwarded DNS] tutorial to understand how to configure forwarding DNS servers.
 
 TLS is optional with this configuration, but shown for completeness.
 To configure without TLS, omit any TLS related attributes.
@@ -56,10 +56,10 @@ spec:
   remoteBucket: destination
 ----
 
-<.> The resource is labeled with `replication:from-my-cluster-to-remote-cluster` to avoid any ambiguity because by default the Operator will select all `CouchbaseReplication` resources in the namespace and apply them to all remote clusters.
-Thus the label is specific to the source cluster and target cluster.
+<.> The resource is labeled with `replication:from-my-cluster-to-remote-cluster` to avoid any ambiguity because by default the Couchbase Autonomous Operator selects all `CouchbaseReplication` resources in the namespace and apply them to all remote clusters.
+The label is specific to the source cluster and target cluster.
 
-We define a remote cluster on our local resource:
+Define a remote cluster on the local resource:
 
 [source,yaml]
 ----
@@ -101,12 +101,12 @@ spec:
 <.> The correct hostname to use is the remote cluster's console service to provide stable naming and service discovery.
 The hostname is calculated as per the xref:howto-client-sdks.adoc#dns-based-addressing[SDK configuration how-to].
 
-<.> As we are not using client certificate authentication we specify a secret containing a username and password on the remote system.
+<.> As we're not using client certificate authentication, specify a secret containing a username and password on the remote system.
 
 <.> **TLS only:** For TLS connections you need to specify the remote cluster CA certificate in order to verify the remote cluster is trusted.
 xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-xdcr-remoteclusters-tls-secret[`couchbaseclusters.spec.xdcr.remoteClusters.tls.secret`] documents the secret format.
 
-<.> Replications are selected that match the labels we specify, in this instance the ones that go from this cluster to the remote one.
+<.> Replications are selected that match the labels specified, in this instance the ones that go from this cluster to the remote cluster.
 
 <.> **Inter-Kubernetes networking with forwarded DNS only:** the xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-servers-pod[`couchbaseclusters.spec.servers.pod.spec.dnsPolicy`] field tells Kubernetes to provide no default DNS configuration.
 
@@ -184,7 +184,7 @@ spec:
 ----
 
 <.> The resource is labeled with `replication:from-my-cluster-to-remote-cluster` to avoid any ambiguity because by default the Operator will select all `CouchbaseReplication` resources in the namespace and apply them to all remote clusters.
-Thus the label is specific to the source cluster and target cluster.
+The label is specific to the source cluster and target cluster.
 
 We define a remote cluster on our local resource:
 
@@ -217,18 +217,32 @@ spec:
 <.> The correct hostname to use is the remote cluster's console service to provide stable naming and service discovery.
 The hostname is calculated as per the xref:howto-client-sdks.adoc#dns-based-addressing-with-external-dns[SDK configuration how-to].
 
-<.> As we are not using client certificate authentication we specify a secret containing a username and password on the remote system.
+<.> As we're not using client certificate authentication, specify a secret containing a username and password on the remote system.
 
 <.> For TLS connections you need to specify the remote cluster CA certificate in order to verify the remote cluster is trusted.
 xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-xdcr-remoteclusters-tls-secret[`couchbaseclusters.spec.xdcr.remoteClusters.tls.secret`] documents the secret format.
 
-<.> Replications are selected that match the labels we specify, in this instance the ones that go from this cluster to the remote one.
+<.> Replications are selected that match the labels specified, in this instance the ones that go from this cluster to the remote cluster.
 
 == IP Based Addressing
 
-In this discouraged scenario, there is no shared DNS between two Kubernetes clusters - we must use IP based addressing.
+In this discouraged scenario, there is no shared DNS between 2 Kubernetes clusters - it must use IP based addressing.
 Pods are exposed by using Kubernetes `NodePort` type services.
-As there is no DNS, TLS is not supported, so security must be maintained between the two clusters using a VPN.
+As there is no DNS, TLS is not supported, so security must be maintained between the 2 clusters using a VPN.
+
+When you use NodePorts on a remote Couchbase cluster for XDCR connections, you risk interruptions if Kubernetes deletes and recreates the Service.
+Kubernetes does not guarantee that a new Service reuses the same NodePort.
+If the port number changes, XDCR connections that rely on the old IP:NodePort become invalid.
+
+The exact outcome depends on the Kubernetes CNI (Container Networking Interface) implementation.
+In some cases, Kubernetes removes the old port before it creates the new service, which causes a brief loss of connectivity.
+In other cases, Kubernetes creates the new NodePort first, which reduces or avoids downtime.
+
+- Single-node Couchbase cluster: When the node's NodePort changes, XDCR cannot reconnect automatically.
+In this case, you must manually update the replication configuration at couchbaseclusters.spec.xdcr.remoteClusters.hostname with the new IP:NodePort of the Couchbase node.
+
+- Multi-node Couchbase cluster: When a node's NodePort changes, XDCR reconnects to another node that still exposes a valid NodePort.
+However, if XDCR tries to reconnect through the updated node, you may still need to update couchbaseclusters.spec.xdcr.remoteClusters.hostname with the new port.
 
 When you use NodePorts on a remote Couchbase cluster for XDCR connections, you risk interruptions if Kubernetes deletes and recreates the Service.
 Kubernetes does not guarantee that a new Service reuses the same NodePort.
@@ -301,7 +315,7 @@ spec:
 ----
 
 <.> The resource is labeled with `replication:from-my-cluster-to-remote-cluster` to avoid any ambiguity because by default the Operator will select all `CouchbaseReplication` resources in the namespace and apply them to all remote clusters.
-Thus the label is specific to the source cluster and target cluster.
+The label is specific to the source cluster and target cluster.
 
 We define a remote cluster on our local resource:
 
@@ -332,14 +346,14 @@ spec:
 <.> The correct hostname to use.
 The hostname is calculated as per the xref:howto-client-sdks.adoc#ip-based-addressing[SDK configuration how-to].
 
-<.> As we are not using client certificate authentication we specify a secret containing a username and password on the remote system.
+<.> As we're not using client certificate authentication, specify a secret containing a username and password on the remote system.
 
-<.> Finally we select replications that match the labels we specify, in this instance the ones that go from this cluster to the remote one.
+<.> Finally, select replications that match the labels specified, in this instance the ones that go from this cluster to the remote cluster.
 
 == Scopes and collections support
 
 With Couchbase Server version 7 and greater, scope and collections support is now present for XDCR.
-The Couchbase Kubernetes Operator fully supports the various options available to the Couchbase Server version it is running with, full details can be found in the xref:server:manage:manage-xdcr/replicate-using-scopes-and-collections.html[official documentation].
+The Couchbase Kubernetes Operator fully supports the various options available to the Couchbase Server version it's running with, full details can be found in the xref:server:manage:manage-xdcr/replicate-using-scopes-and-collections.html[official documentation].
 
 [NOTE]
 ====
@@ -410,7 +424,7 @@ Eventual consistency rules apply so if the bucket is still being created then we
 
 <.> This is an example of replicating only a specific collection `collection1` in scope `scope1`.
 
-<.> The target keyspace must be of identical size so as we are replicating from a collection we must also specify a target collection.
+<.> The target keyspace must be of identical size; as replicating from a collection requires also specifying a target collection.
 
 <.> Deny rules can be used to prevent replication of specific keyspaces.
 This is useful if for example you have a scope with a large number of collections and you want to replicate all but a small number.

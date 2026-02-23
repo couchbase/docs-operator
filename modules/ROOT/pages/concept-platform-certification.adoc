@@ -127,9 +127,9 @@ To submit the self-certification results to Couchbase, follow these steps:
 
 . Capture the Kubernetes platform's version information and other platform-specific components such as storage and networking.
 
-. To upload the results to Couchbase, you will need a JIRA account for Couchbase; you can request a JIRA account here: https://issues.couchbase.com/secure/ContactAdministrators!default.jspa.
+. If you are an existing customer of Couchbase, create a support ticket for instructions on how to submit your certification archive.
 
-. Create a new JIRA ticket, project - Couchbase Kubernetes (K8S), and Summary - [Operator Self-Certification Lifecycle].
+. If you are a new customer of Couchbase, contact your Couchbase Account Team or use our general https://www.couchbase.com/contact/[contact page].
 
 == Platform Requirements
 

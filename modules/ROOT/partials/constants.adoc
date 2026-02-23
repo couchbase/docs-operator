@@ -1,5 +1,5 @@
-:operator-version: 2.8.1
-:operator-version-minor: 2.8
+:operator-version: 2.9.0
+:operator-version-minor: 2.9
 :admission-controller-version: 2.8.1
 :couchbase-version: 7.6.6
 :couchbase-version-upgrade-from: 7.0.0

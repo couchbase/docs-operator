@@ -1,0 +1,6 @@
+sources:
+  docs-server:
+    branches: [release/8.0]
+
+  docs-operator:
+    branches: [release/2.9]
