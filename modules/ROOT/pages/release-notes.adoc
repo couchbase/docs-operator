@@ -184,9 +184,14 @@ Fixed an issue where operator would not respect stabilization period on InPlace 
 
 Fixed an issue where version checks were lexicographical and not numerical.
 
+
+[#known-issues-v291]
+=== Known Issues in 2.9.1
+
 *https://jira.issues.couchbase.com/browse/K8S-4691/[K8S-4691]*::
 
-Fixed an issue where if a bucket resource exists and the storage backend is manually changed via the Couchbase Server API, the operator will not perform the swap rebalances necessary to make these changes, even if the cluster's `spec.buckets.managed` is `false`.
+If a bucket resource exists and the storage backend is manually changed via the Couchbase Server API, the operator will not perform the swap rebalances necessary to make these changes, even if the cluster's `spec.buckets.managed` is `false`.
+
 
 [#release-290]
 == Release 2.9 (December 2025)
