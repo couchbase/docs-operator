@@ -17,6 +17,19 @@ Encryption at rest supports encrypting multiple types of data within your Couchb
 * *Logs* - Server log files (note: encrypting logs will break fluent-bit log streaming)
 * *Audit logs* - Security audit trail data
 
+[NOTE]
+.Field-Level Encryption in Applications
+====
+Applications can use the SDK to encrypt specific fields.
+Depending on your application's requirements, field-level encryption may be more appropriate than encrypting the entire bucket.
+See the SDK documentation for your development language for more information.
+For example:
+
+* Go SDK: xref:go-sdk:howtos:encrypting-using-sdk.adoc[]
+* Java SDK: xref:java-sdk:howtos:encrypting-using-sdk.adoc[]
+* Python SDK: xref:python-sdk:howtos:encrypting-using-sdk.adoc[]
+====
+
 == Key Types
 
 Couchbase offers flexibility in how encryption keys are managed through three different key types:
