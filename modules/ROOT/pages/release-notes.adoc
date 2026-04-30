@@ -8,7 +8,7 @@ This page summarizes the fixes and known issues in Couchbase Kubernetes Operator
 For information about new features and major improvements made in Couchbase Kubernetes Operator 2.9, see xref:whats-new.adoc[What's New].
 
 [#release-291]
-== Release 2.9.1 (December 2026)
+== Release 2.9.1 (April 2026)
 
 Couchbase Kubernetes Operator 2.9.1 was released in April 2026.
 This release contains fixes to issues.
