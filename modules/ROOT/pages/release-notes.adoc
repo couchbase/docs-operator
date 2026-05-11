@@ -20,7 +20,7 @@ This release contains fixes to issues.
 *https://jira.issues.couchbase.com/browse/K8S-4699/[K8S-4699]*::
 
 Added the annotation `cao.couchbase.com/networking.tls.validateShortHostnames`.
-This annotation controls whether operator and dynamic admission controller requires short name entries as part of the SAN list in Couchbase Server TLS Certificates.
+This annotation controls whether the operator and dynamic admission controller requires short name entries as part of the SAN list in Couchbase Server TLS Certificates.
 It defaults to `true`.
 
 Example SAN Entries controlled by this setting:
