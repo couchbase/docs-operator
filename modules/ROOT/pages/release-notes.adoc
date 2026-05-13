@@ -7,6 +7,29 @@ This page summarizes the fixes and known issues in Couchbase Kubernetes Operator
 
 For information about new features and major improvements made in Couchbase Kubernetes Operator 2.9, see xref:whats-new.adoc[What's New].
 
+
+[#release-291]
+== Release 2.9.2 (May 2026)
+
+Couchbase Kubernetes Operator 2.9.2 was released in May 2026.
+This release contains fixes to issues.
+
+[#fixed-issues-v292]
+=== Fixed Issues in 2.9.2
+
+*https://jira.issues.couchbase.com/browse/K8S-4699/[K8S-4699]*::
+
+Added the annotation `cao.couchbase.com/networking.tls.validateShortHostnames`.
+This annotation controls whether the operator and dynamic admission controller requires short name entries as part of the SAN list in Couchbase Server TLS Certificates.
+It defaults to `true`.
+
+Example SAN Entries controlled by this setting:
+
+```
+DNS:*.<cluster>
+DNS:*.<cluster>.<namespace>
+```
+
 [#release-291]
 == Release 2.9.1 (April 2026)
 
