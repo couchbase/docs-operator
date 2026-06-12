@@ -28,6 +28,8 @@ There are no additional upgrade steps when upgrading from these versions, and yo
 
 For further information read the xref:concept-upgrade.adoc[Couchbase Upgrade] concepts page.
 
+include::partial$couchbase-operator-release-notes-2.8.2.adoc[]
+
 include::partial$couchbase-operator-release-notes-2.8.1.adoc[]
 
 [#release-v280]

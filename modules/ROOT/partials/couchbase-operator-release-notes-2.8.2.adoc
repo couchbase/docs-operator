@@ -1,0 +1,55 @@
+[#release-282]
+== Release 2.8.2 (June 2026)
+
+Couchbase Operator 2.8.2 was released in June 2026.
+This maintenance release contains improvements and fixes to issues.
+
+[#improvements-v282]
+[#table-fixed-issues-v282,cols="25,66"]
+
+== Improvements
+
+*https://jira.issues.couchbase.com/browse/K8S-4719[K8S-4719^]*::
+
+Added handling for expired leaf TLS certificates, allowing the Operator to automatically update certificate shadows when a renewed leaf certificate is provided.
+
+[#fixed-issues-v282]
+== Fixed Issues
+
+*https://jira.issues.couchbase.com/browse/K8S-4739[K8S-4739^]*::
+
+Updated the cao binary to remove a warning that Kubernetes 1.35 was unsupported for being too new.
+
+*https://jira.issues.couchbase.com/browse/K8S-4738[K8S-4738^]*::
+
+Fixed an issue where the Dynamic Admission Controller (DAC) incorrectly blocked Couchbase Server upgrades when image definitions used SHA256 digests.
+
+*https://jira.issues.couchbase.com/browse/K8S-4737[K8S-4737^]*::
+
+Fixed an issue where `cao collect-logs` was using a deprecated API.
+
+*https://jira.issues.couchbase.com/browse/K8S-4697[K8S-4697^]*::
+
+Fixed an issue that caused upgrades to fail when image definitions used SHA256 digests.
+
+*https://jira.issues.couchbase.com/browse/K8S-4696[K8S-4696^]*::
+
+Fixed an issue where `spec.networking.addressFamily` is set to `IPv6Priority` or `IPv6Only`, the Operator created the cluster Service as IPv4 SingleStack, which caused pod launch failures.
+
+*https://jira.issues.couchbase.com/browse/K8S-4695[K8S-4695^]*::
+
+Fixed a race condition that allowed Operator to attempt to add a pod before it is ready on port 18091.
+
+*https://jira.issues.couchbase.com/browse/K8S-4694[K8S-4694^]*::
+
+When upgrading Couchbase Server to 8.0, Operator 2.8.x will incorrectly copy files from the previous version causing issues with Disk Usage Guardrails. If this occurs, a swap rebalance of the cluster while on Operator 2.9.x must be initiated to resolve the issue. To avoid this issue, upgrade Operator to 2.9.0 prior to upgrading Server to 8.0.0.
+
+*https://jira.issues.couchbase.com/browse/K8S-4693[K8S-4693^]*::
+
+Fixed an issue with in place upgrades from 7.6 to 8.0 using Operator 2.8.1.
+
+*https://jira.issues.couchbase.com/browse/K8S-3829[K8S-3829^]*::
+
+Fixed a bug where Operator lost track of a pod's status in the cluster.
+
+
