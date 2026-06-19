@@ -1,6 +1,6 @@
 name: operator
 title: Kubernetes Operator
-version: '2.9'
+version: '2.10'
 prerelease: false
 start_page: ROOT:overview.adoc
 nav:
