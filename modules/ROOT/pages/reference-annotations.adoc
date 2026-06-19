@@ -97,3 +97,9 @@ Provide a string that includes any values supported by xref:server:backup-restor
 
 Use this annotation to set additional arguments for the backup container that are not used by `cbbackupmgr`, for example, `--force-delete-lockfile`.
 Provide a string value with the flags to set.
+
+== Operator Logging
+=== Cluster Specific Operator Logging
+==== `cao.couchbase.com/operatorLogLevel`
+
+Use this annotation to override the default operator log level for a specific CouchbaseCluster. Valid values are `info`, `debug`, `error` and `-2`.
