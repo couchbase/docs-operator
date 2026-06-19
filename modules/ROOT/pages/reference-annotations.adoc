@@ -102,4 +102,5 @@ Provide a string value with the flags to set.
 === Cluster Specific Operator Logging
 ==== `cao.couchbase.com/operatorLogLevel`
 
-Use this annotation to override the default operator log level for a specific CouchbaseCluster. Valid values are `info`, `debug`, `error` and `-2`.
+Use this annotation to override the default operator log level for a specific CouchbaseCluster. 
+Valid values are `info`, `debug`, `error` and `-2`.
