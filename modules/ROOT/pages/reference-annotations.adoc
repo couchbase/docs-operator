@@ -80,20 +80,33 @@ The value is passed directly to the Cloud Native Gateway container.
 ==== `cao.couchbase.com/full.additionalArgs`
 
 Use this annotation to set additional arguments for `cbbackupmgr` in full backup jobs.
-Provide a string that includes any values supported by xref:server:backup-restore/cbbackupmgr-backup.html[`cbbackupmgr`].
+Provide a string that includes any values supported by https://docs.couchbase.com/server/current/backup-restore/cbbackupmgr-backup.html[`cbbackupmgr`].
 
 ==== `cao.couchbase.com/incremental.additionalArgs`
 
 Use this annotation to set additional arguments for `cbbackupmgr` in incremental backup jobs.
-Provide a string that includes any values supported by xref:server:backup-restore/cbbackupmgr-backup.html[`cbbackupmgr`].
+Provide a string that includes any values supported by https://docs.couchbase.com/server/current/backup-restore/cbbackupmgr-backup.html[`cbbackupmgr`].
 
 ==== `cao.couchbase.com/merge.additionalArgs`
 
 Use this annotation to set additional arguments for `cbbackupmgr` in merge backup jobs.
-Provide a string that includes any values supported by xref:server:backup-restore/cbbackupmgr-backup.html[`cbbackupmgr`].
+Provide a string that includes any values supported by https://docs.couchbase.com/server/current/backup-restore/cbbackupmgr-merge.html[`cbbackupmgr`].
 
 === Additional Operator Backup Args
 ==== `cao.couchbase.com/additionalOperatorBackupArgs`
 
 Use this annotation to set additional arguments for the backup container that are not used by `cbbackupmgr`, for example, `--force-delete-lockfile`.
 Provide a string value with the flags to set.
+
+== Backup Restore
+=== Additional Args
+==== `cao.couchbase.com/additionalArgs`
+
+Use this annotation to set additional arguments for `cbbackupmgr` in restore jobs.
+Provide a string that includes any values supported by https://docs.couchbase.com/server/current/backup-restore/cbbackupmgr-restore.html[`cbbackupmgr`].
+
+=== Additional Operator Backup Restore Args
+==== `cao.couchbase.com/additionalOperatorRestoreArgs`
+
+Use this annotation to set additional arguments for the backup container that are not used 
+by `cbbackupmgr`, for example, `--force-delete-lockfile`. Provide a string value with the flags to set.
