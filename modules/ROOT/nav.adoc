@@ -47,7 +47,6 @@
   *** xref:concept-migration.adoc[Cluster Migration]
  ** Networking
   *** xref:concept-couchbase-networking.adoc[Couchbase Networking]
-  *** xref:concept-cloud-native-gateway.adoc[Cloud Native Gateway]
  ** TLS
   *** xref:concept-tls.adoc[Couchbase TLS]
  ** Topology
