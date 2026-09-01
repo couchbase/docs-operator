@@ -56,6 +56,23 @@ Accepts either `true` or `false`.
 Used to force a pod to be rescheduled. When this annotation is applied to a Couchbase pod, the operator will detect it and reschedule the pod. The pods will either be Swap Rebalanced or go through a InPlaceUpgrade depending on xref:resource/couchbasecluster.adoc#couchbaseclusters-spec-upgradeprocess[`couchbaseclusters.spec.upgradeProcess`].
 Accepts either `true` or `false`.
 
+== Cluster Upgrade
+=== Rollback Method
+==== `cao.couchbase.com/upgrade.rollbackMethod`
+Used to select how the operator replaces nodes during a xref:concept-upgrade.adoc[rollback].
+A rollback cannot be performed in place, so by default the operator swap rebalances: the replacement pod is created before the old one is removed, so the cluster peaks at its configured size plus `maxUpgradable` pods.
+Where there is no room to schedule those extra pods, the rollback stalls.
+`ConstrainedRebalanceOut` removes the node first instead, so the pod count never exceeds the configured cluster size.
+
+Accepts one of the following values:
+
+* `SwapRebalance` (default): creates the replacement before ejecting the old node.
+Keeps the cluster at full strength, but needs spare capacity to schedule the extra pods.
+* `ConstrainedRebalanceOut`: rebalances the node's data off before creating its replacement.
+Replica coverage is never reduced, but the remaining nodes must have room for the relocated data and it costs two rebalances instead of one.
+
+An unrecognised value logs a warning and falls back to `SwapRebalance`.
+
 == Host Network 
 === Improved Host Network Support
 ==== `cao.couchbase.com/networking.improvedHostNetwork`
