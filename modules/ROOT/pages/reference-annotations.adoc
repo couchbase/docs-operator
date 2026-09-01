@@ -92,6 +92,18 @@ Use this annotation to set a custom OTLP endpoint for the Cloud Native Gateway.
 Apply the annotation to the cluster with a string value such as `https://otel:1234`.
 The value is passed directly to the Cloud Native Gateway container.
 
+== TLS
+=== Node Internal Client Certificate
+==== `cao.couchbase.com/networking.tls.secretSource.nodeClientSecretName`
+Used to supply the internal client certificate that each Couchbase node presents when it acts as a client for node-to-node communication.
+Set the value to the name of a secret in the same namespace as the cluster, using the `kubernetes.io/tls` layout (`tls.crt` and `tls.key`).
+The certificate must be valid for client authentication (`clientAuth` extended key usage), chain to a CA the cluster trusts, and contain a SAN email address of the form `<name>@internal.couchbase.com`.
+
+When set, the operator uploads the certificate to each node and reloads it, so the node's internal client identity is signed by your CA rather than the auto-generated CA of Couchbase Server.
+This allows the auto-generated CA to be removed from the trust pool when mandatory client certificate authentication is used with strict node-to-node encryption.
+
+Requires Couchbase Server 7.6.0 or later; on earlier versions the annotation has no effect.
+
 == Backup
 === Additional Args
 ==== `cao.couchbase.com/full.additionalArgs`
