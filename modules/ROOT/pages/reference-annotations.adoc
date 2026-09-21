@@ -104,3 +104,10 @@ Provide a string value with the flags to set.
 
 Use this annotation to override the default operator log level for a specific CouchbaseCluster. 
 Valid values are `info`, `debug`, `error` and `-2`.
+
+== Cluster Setting
+=== Cluster Rebalance Type
+==== `cao.couchbase.com/dataServiceFileBasedRebalanceEnabled`
+
+For 8.5.0+ clusters, file based rebalances are enabled by default. The Data Service may copy vBucket files directly from the source node to the destination node during the backfill phase of a vBucket move, instead of streaming the data over DCP. File based moves are significantly faster and use less CPU, memory and network.
+Use this annotation if you want to opt out of this behaviour and keep using DCP. 
