@@ -66,7 +66,7 @@ Please consider this interface stability when planning system monitoring.
 
 === Logs
 
-Logs for the Cloud Native Gateway are available via `kubectl logs` and are collected with the xref:tools/cbopinfo.adoc[cbopinfo] command when creating a logs archive.
+Logs for the Cloud Native Gateway are available via `kubectl logs` and are collected with the xref:tools/cao.adoc[`cao collect-logs`] command when creating a logs archive.
 
 One way you may view the logs is through the standard `kubectl logs` specifying the container:
 
