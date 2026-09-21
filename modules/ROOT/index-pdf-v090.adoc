@@ -96,7 +96,7 @@ include::{includedir}/conditions-and-events.adoc[]
 
 include::{includedir}/reference-couchbasecluster-services.adoc[]
 
-include::{includedir}/tools/cbopinfo.adoc[]
+include::{includedir}/tools/cao.adoc[]
 
 :leveloffset: -1
 
