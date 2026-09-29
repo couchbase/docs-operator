@@ -116,15 +116,15 @@ To enable node-to-node encryption, TLS must be Operator managed.
 
 The following modes are available:
 
-Strict TLS kbd:[operator 2.3]::
+`Strict` kbd:[operator 2.3]::
 All traffic between pods, be that internal control communication or user data, is encrypted.
-Additionally non-TLS ports are not exposed and cannot be used.
+Additionally non-TLS ports are not exposed and cannot be used, so TLS is enforced for communication between the cluster and external clients as well as between nodes.
 Strict mode TLS is only available on Couchbase Server 7.1+.
 
-Full TLS::
+`All`::
 All traffic between pods, be that internal control communication or user data, is encrypted.
 
-Control plane TLS::
+`ControlPlaneOnly`::
 Only internal control communication is encrypted.
 While this may be marginally faster, it will expose any user data on the network.
 
