@@ -37,7 +37,7 @@ Refer to the xref:2.0@operator::howto-operator-upgrade.adoc[2.0.x version of thi
 
 [WARNING]
 ====
-The Operator should not be upgraded while any Couchbase clusters are in hibernation. Instructions to wake the cluster can be found in the https://docs.couchbase.com/operator/current/concept-hibernation.html[hibernation] documentation.
+The Operator should not be upgraded while any Couchbase clusters are in hibernation. Instructions to wake the cluster can be found in the xref:concept-hibernation.adoc[hibernation] documentation.
 ====
 
 [#download-operator]
@@ -123,14 +123,14 @@ To re-install the Operator in all namespaces where previous instances operated o
 [#rollback-operator]
 == Operator Rollbacks
 
-While Operator releases are thoroughly tested, there may be scenarios where you need to rollback to a different version. Rolling back the Operator cannot occur while it is orchestrating couchbase pods. Instead, we can use https://docs.couchbase.com/operator/current/concept-hibernation.html[hibernation] to temproarily remove couchbase server pods but retain their volumes and give us a window to change the Operator image. During this window, the cluster will be unavailable.
+While Operator releases are thoroughly tested, there may be scenarios where you need to roll back to a different version. Rolling back the Operator cannot occur while it is orchestrating Couchbase Server pods. Instead, we can use xref:concept-hibernation.adoc[hibernation] to temporarily remove Couchbase Server pods but retain their volumes and give us a window to change the Operator image. During this window, the cluster will be unavailable.
 
 [IMPORTANT]
 ====
-Rolbacks are only supported between maintenance versions of the Couchbase Operator due to CRD changes between versions that break backwards compatibility. Rollbacks across major or minor versions are not supported (major.minor.maintenance). For example, 2.9.3 can be rolled back to 2.9.1, but cannot be rolled back to 2.8.2.
+Rollbacks are only supported between maintenance versions of the Couchbase Operator due to CRD changes between versions that break backwards compatibility. Rollbacks across major or minor versions are not supported (major.minor.maintenance). For example, 2.9.3 can be rolled back to 2.9.1, but cannot be rolled back to 2.8.2.
 ====
 
-=== Step 1:
+=== Step 1: Hibernate the Clusters
 
 All clusters managed by the Couchbase Operator being rolled back must be hibernated:
 
@@ -149,7 +149,7 @@ spec:
 Hibernating your cluster will delete Couchbase Server pods, making it unavailable. It's important to understand how this works before progressing.
 ====
 
-=== Step 2:
+=== Step 2: Change the Operator Image
 
 Change the Operator image to the version you want to roll back to:
 
@@ -160,6 +160,7 @@ kind: Deployment
 metadata:
   name: couchbase-operator
 spec:
+  template:
     spec:
       containers:
       - name: couchbase-operator
@@ -168,7 +169,7 @@ spec:
 
 <.> The image you want to roll back to. This should be the same major.minor as the previous image.
 
-=== Step 3:
+=== Step 3: Wake the Clusters
 
 Once the Couchbase Operator pod has been redeployed, wake the clusters we hibernated earlier by reversing the hibernation field change:
 
