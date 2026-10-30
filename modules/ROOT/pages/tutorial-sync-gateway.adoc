@@ -48,7 +48,8 @@ stringData:
       },
       "databases": {
         "cb-example": { # <.>
-          "server": "couchbase://cb-example-srv.my-namespace?network=default", # <.>
+          "server": "couchbases://cb-example-srv.my-namespace?network=default", # <.>
+          "cacertpath": "/etc/sync_gateway/ca.pem", # <.>
           "bucket": "default", # <.>
           "username": "Administrator", # <.>
           "password": "password", # <.>
@@ -66,6 +67,10 @@ stringData:
         }
       }
     }
+  ca.pem: |- # <.>
+    -----BEGIN CERTIFICATE-----
+    MIIDSzCCAjOgAwIBAgIUDsYnaG+RFwhtoz9hSMwyzfoxOCcwDQYJKoZIhvcNAQEL
+    ...
 ----
 
 <.> `logging.console.enabled` enables logging to the console.
@@ -81,11 +86,12 @@ In this instance we have named it after the `CouchbaseCluster` resource it refer
 <.> `databases.cb-example.server` defines the connection string of the Couchbase Server instance that Sync Gateway will connect to.
 The connection string may be determined in the same way as for xref:howto-client-sdks.adoc[client SDKs].
 +
-The connection string in the example -- `couchbase://cb-example-srv.my-namespace` -- assumes that Sync Gateway and Couchbase Server are running on the same Kubernetes cluster.
+The connection string in the example -- `couchbases://cb-example-srv.my-namespace` -- assumes that Sync Gateway and Couchbase Server are running on the same Kubernetes cluster.
 If we examine each part of the string:
 +
 --
-* `couchbase` (as opposed to `couchbases`) specifies that the connection is over plain text and not secured by TLS
+* `couchbases` (as opposed to `couchbase`) specifies that the connection is secured by TLS.
+Sync Gateway 3.0 and later require TLS by default.
 * `cb-example` is the name of the Couchbase cluster
 * `-srv` specifies that the connection utilizes DNS SRV lookup to xref:howto-client-sdks.adoc#dns-based-addressing[discover] Couchbase cluster pods running the Data Service
 * `?network=default` instructs Sync Gateway to xref:howto-client-sdks.adoc#client-explicit-network-selection[explicitly select] the internal network addresses of Couchbase cluster pods.
@@ -97,11 +103,20 @@ NOTE: The `server` property can technically accept connection endpoints as defin
 However, many of these connection endpoints are not recommended (some not even supported) when connecting to Couchbase Server deployments that are managed by the Kubernetes Operator.
 In particular, there are xref:concept-couchbase-networking.adoc#sync-gateway-exposed-features-limitations[limitations when using exposed features] that affect which connection methods can be used with certain versions of Sync Gateway. 
 
+<.> `databases.cb-example.cacertpath` defines where the CA certificate is read from.
+Sync Gateway uses it to check the certificate that Couchbase Server presents.
+This path is related to the deployment volume mount as described in <<deploying-sync-gateway>> and the file name as described in this `Secret`.
+
 <.> `databases.cb-example.bucket` defines the `metadata.name` to connect to and use to store mobile data.
 
 <.> `databases.cb-example.username` defines the user that will be used to connect to the cluster.
 
 <.> `databases.cb-example.password` defines the user password that will be used to connect to the cluster.
+
+<.> `ca.pem` is the CA certificate that signed the Couchbase cluster's server certificate.
+If TLS for the cluster is set up through the Operator, use the `ca.crt` from the cluster's TLS secret.
+Otherwise, use the CA that Couchbase Server generated, which you can get from the `/pools/default/trustedCAs` REST endpoint.
+The certificate has been truncated for brevity.
 
 If the configuration file is named `sync-gateway-config.yaml`, the command to deploy it would be:
 
@@ -110,12 +125,10 @@ If the configuration file is named `sync-gateway-config.yaml`, the command to de
 $ kubectl create -f sync-gateway-config.yaml
 ----
 
-=== Enabling TLS Connectivity to Couchbase Server
+=== Enabling Mutual TLS Connectivity to Couchbase Server
 
-TLS is fully supported between Sync Gateway and Couchbase Server.
-This includes xref:concept-tls.adoc[server-side TLS or mutual TLS].
-
-Your Sync Gateway configuration can be modified to allow use of TLS as follows:
+The configuration above already connects to Couchbase Server over TLS.
+For xref:concept-tls.adoc[mutual TLS], Sync Gateway also needs a client certificate and key, as follows:
 
 [source,yaml]
 ----

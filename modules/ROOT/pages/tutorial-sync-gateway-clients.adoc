@@ -201,7 +201,8 @@ stringData:
       },
       "databases": {
         "cb-example": {
-          "server": "couchbase://cb-example",
+          "server": "couchbases://cb-example",
+          "cacertpath": "/etc/sync_gateway/ca.pem",
           "bucket": "default",
           "username": "Administrator",
           "password": "password",
@@ -259,7 +260,7 @@ spec:
     spec:
       containers:
       - name: sync-gateway
-        image: couchbase/sync-gateway:2.7.0-enterprise
+        image: couchbase/sync-gateway:4.1.2-enterprise
         volumeMounts:
         - name: config
           mountPath: /etc/sync_gateway

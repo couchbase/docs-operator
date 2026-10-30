@@ -88,7 +88,7 @@ This is considered an “offline” upgrade, and will only work in 2.7.0+
 
 To upgrade a cluster, modify the CouchbaseCluster manifest by setting the `spec.image` field to the Couchbase Server version you want.
 
-For example, if you are upgrading Couchbase Server version from 7.6.7 to 8.0.0, then update the manifest resource as follows:
+For example, if you are upgrading Couchbase Server version from 7.6.7 to 8.0.2, then update the manifest resource as follows:
 
 [source,yaml]
 ---
@@ -97,7 +97,7 @@ kind: CouchbaseCluster
 metadata:
   name: my-couchbase-cluster
 spec:
-  image: couchbase/server:8.0.0
+  image: couchbase/server:8.0.2
 ---
 
 During an upgrade or when the cluster runs in Mixed Mode through `PreviousVersionPodCount`, Couchbase Server disables bucket storage backend migrations.
@@ -117,7 +117,7 @@ To roll back, the Operator replaces the newly created pods with pods running the
 ==== How to Rollback a Cluster
 
 To initiate a rollback, modify the CouchbaseCluster manifest by setting the `spec.image` field to the Couchbase Server version that was running before the upgrade started.
-For example, you were upgrading Couchbase Server version from 7.6.7 to 8.0.0, and encountered issues.
+For example, you were upgrading Couchbase Server version from 7.6.7 to 8.0.2, and encountered issues.
 If these issues require rollback, update the `spec.image` field to change the version back to 7.6.7 in the manifest as follows:
 
 [source,yaml]

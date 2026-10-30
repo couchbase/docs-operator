@@ -33,7 +33,7 @@ spec:
 apiVersion: couchbase.com/v2
 kind: CouchbaseCluster
 spec:
-  image: couchbase/server:8.0.0
+  image: couchbase/server:8.0.2
 ----
 
 --
@@ -45,14 +45,14 @@ The Operator creates new pods, rebalances them into the cluster, and then ejects
 
 === In Place Upgrade
 
-Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.0`, update the manifest to:
+Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.2`, update the manifest to:
 
 [source,yaml]
 ----
 apiVersion: couchbase.com/v2
 kind: CouchbaseCluster
 spec:
-  image: couchbase/server:8.0.0 # <.>
+  image: couchbase/server:8.0.2 # <.>
   upgrade:
     upgradeProcess: InPlaceUpgrade # <.>
 ----
@@ -63,14 +63,14 @@ This process re-creates each pod in place by using the same name and persistent 
 
 === Rolling Upgrade Controls
 
-Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.0`, update the manifest to:
+Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.2`, update the manifest to:
 
 [source,yaml]
 ----
 apiVersion: couchbase.com/v2
 kind: CouchbaseCluster
 spec:
-  image: couchbase/server:8.0.0 # <.>
+  image: couchbase/server:8.0.2 # <.>
   upgrade:
     upgradeProcess: SwapRebalance
     upgradeStrategy: RollingUpgrade
@@ -91,14 +91,14 @@ In this case, the fixed number resolves to a lower value than the percentage.
 
 === Granular Controls
 
-Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.0`, update the manifest to:
+Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.2`, update the manifest to:
 
 [source,yaml]
 ----
 apiVersion: couchbase.com/v2
 kind: CouchbaseCluster
 spec:
-  image: couchbase/server:8.0.0 # <.>
+  image: couchbase/server:8.0.2 # <.>
   upgrade:
     upgradeProcess: SwapRebalance
     upgradeStrategy: RollingUpgrade
@@ -131,7 +131,7 @@ The Operator upgrades any remaining pods not listed by using alphabetical order.
 
 === Order Upgrades by Server Group
 
-Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.0`, update the manifest to:
+Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.2`, update the manifest to:
 
 [source,yaml]
 ----
@@ -142,7 +142,7 @@ spec:
     - zone-1
     - zone-2
     - zone-3
-  image: couchbase/server:8.0.0 # <.>
+  image: couchbase/server:8.0.2 # <.>
   upgrade:
     upgradeOrderType: ServerGroups # <.>
     upgradeOrder # <.>
@@ -156,7 +156,7 @@ The Operator upgrades pods running in server groups not in this list, `zone-1` a
 
 === Order Upgrades by Server Class
 
-Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.0`, update the manifest to:
+Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.2`, update the manifest to:
 
 [source,yaml]
 ----
@@ -173,7 +173,7 @@ spec:
     - index
     - query
     size: 6
-  image: couchbase/server:8.0.0 # <.>
+  image: couchbase/server:8.0.2 # <.>
   upgrade:
     upgradeOrderType: ServerClasses # <.>
     upgradeOrder: # <.>
@@ -190,7 +190,7 @@ If the number of pods in a server class is less than `spec.upgrade.rollingUpgrad
 
 === Order Upgrades by Service
 
-Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.0`, update the manifest to:
+Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.2`, update the manifest to:
 
 [source,yaml]
 ----
@@ -211,7 +211,7 @@ spec:
     services:
     - query
     size: 2
-  image: couchbase/server:8.0.0 # <.>
+  image: couchbase/server:8.0.2 # <.>
   upgrade:
     upgradeOrderType: Services # <.>
     upgradeOrder: # <.>

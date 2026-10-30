@@ -23,7 +23,8 @@ stringData:
       },
       "databases": {
         "cb-example": {
-          "server": "couchbase://cb-example",
+          "server": "couchbases://cb-example",
+          "cacertpath": "/etc/sync_gateway/ca.pem",
           "bucket": "default",
           "username": "Administrator",
           "password": "password",
@@ -41,6 +42,11 @@ stringData:
         }
       }
     }
+  # The CA certificate that signed the Couchbase cluster's server certificate.
+  ca.pem: |-
+    -----BEGIN CERTIFICATE-----
+    ...
+    -----END CERTIFICATE-----
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -58,7 +64,7 @@ spec:
     spec:
       containers:
       - name: sync-gateway
-        image: registry.connect.redhat.com/couchbase/sync-gateway:2.8.2-1
+        image: registry.connect.redhat.com/couchbase/sync-gateway:4.1.2-15
         volumeMounts:
         - name: config
           mountPath: /etc/sync_gateway

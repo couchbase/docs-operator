@@ -36,7 +36,7 @@ spec:
         - -default-file-system-group=true
         command:
         - couchbase-operator-admission
-        image: couchbase/admission-controller:2.2.0 <.>
+        image: couchbase/admission-controller:2.9.4 <.>
         name: couchbase-operator-admission
         ports:
         - containerPort: 8443 # <.>
