@@ -138,7 +138,7 @@ To create a `passthrough` Route, which secures communication between the applica
 
 [source,console]
 ----
-$ oc create route passthrough --service mycluster-cloud-native-gateway-service --port 443
+$ oc create route passthrough --service mycluster-cloud-native-gateway-service --port cloud-native-gateway-https
 ----
 
 Note, you can run `oc get services` to get the name of the service associated with your `CouchbaseCluster` deployment.
