@@ -264,7 +264,7 @@ kind: CouchbaseCluster
 metadata:
   name: cb-example
 spec:
-  image: couchbase/server:6.5.0
+  image: couchbase/server:8.0.2
   security:
     rbac:
       managed: true
