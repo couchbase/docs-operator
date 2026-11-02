@@ -154,6 +154,9 @@ spec:
 <.> Upgrade pods running in server group `zone-3` first.
 The Operator upgrades pods running in server groups not in this list, `zone-1` and `zone-2`, in the order defined in the `couchbasecluster.spec.serverGroups` list.
 
+Pods created before you turned on server groups do not belong to any server group.
+The Operator upgrades these pods first, in alphabetical order, with the orchestrator pod last.
+
 === Order Upgrades by Server Class
 
 Assuming `spec.image` is equal to a version earlier than `couchbase/server:8.0.0`, update the manifest to:
@@ -228,3 +231,5 @@ The Operator orders pods that run multiple services by the first service listed 
 With this manifest, the Operator upgrades pods running the Index Service first, followed by the Data Service, arbiter nodes (those running node services), and then the Query Service.
 If the number of pods running a service is less than `spec.upgrade.rollingUpgrade.maxUpgradable`, the Operator does not upgrade pods from the next service in the list.
 When the sequence does not include all services, the Operator upgrades pods running unlisted services by using the default order: data, query, index, search, analytics, eventing and arbiter.
+
+NOTE: If the Operator cannot order the pods by the configured `upgradeOrderType`, for example when no pod matches the `upgradeOrder` list, it upgrades the pods in alphabetical order, with the orchestrator pod last.
